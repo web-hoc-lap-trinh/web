@@ -10,30 +10,37 @@ import { Layout } from "./layout";
 import LoginPage from "./features/auth/pages/login";
 import AdminPage from "./features/admin/admin-layout";
 import UserPage from "./features/user/user-layout";
+import SignIn from "./features/auth/pages/signin.tsx";
+import Signup from "./features/auth/pages/signup.tsx";
 
 const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <Layout />,
-    children: [
-      { index: true, element: <Navigate to="/login" replace /> },
-      {
-        element: <ProtectedRoute roles={["guest"]} />,
+    {
+        path: "/",
+        element: <Layout />,
         children: [
-          { path: "login", element: <LoginPage /> },
+            { index: true, element: <Navigate to="/signin" replace /> },
+            {
+                element: <ProtectedRoute roles={["guest"]} />,
+                children: [{ path: "signin", element: <SignIn /> }],
+            },
+            {
+                element: <ProtectedRoute roles={["admin"]} />,
+                children: [{ path: "admin", element: <AdminPage /> }],
+            },
+            {
+                element: <ProtectedRoute roles={["user"]} />,
+                children: [{ path: "user", element: <UserPage /> }],
+            },
+            { path: "*", element: <Navigate to="/" replace /> },
         ],
-      },
-      {
-        element: <ProtectedRoute roles={["admin"]} />,
-        children: [{ path: "admin", element: <AdminPage /> }],
-      },
-      {
-        element: <ProtectedRoute roles={["user"]} />,
-        children: [{ path: "user", element: <UserPage /> }],
-      },
-      { path: "*", element: <Navigate to="/" replace /> },
-    ],
-  },
+    },
+    {
+        path: "/signup",
+        element: <Layout />,
+        children: [
+            {index: true, element: <Signup />}
+        ]
+    }
 ]);
 
 const root = document.getElementById("root");
