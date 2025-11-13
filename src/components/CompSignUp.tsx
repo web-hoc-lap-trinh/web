@@ -8,12 +8,19 @@ function CompSignUp() {
     const navigate = useNavigate();
 
     const onSignUp = () => {
+        if(userName === "" || email === "" || password === "") {
+            alert("Vui lòng nhập đầy đủ thông tin")
+            setUserName("");
+            setEmail("");
+            setPassword("");
+            return;
+        }
         alert("Đăng ký thành công")
         navigate("/login");
     }
 
     return (
-        <main className="min-h-screen flex items-center justify-end mr-50">
+        <main className="min-h-screen flex items-center justify-center">
             <div className="w-96 p-8 bg-secondary-700 rounded-xl shadow-2xl flex flex-col space-y-4">
                 <h1 className="text-xl text-primary-200 text-center font-bold mb-4">
                     Đăng ký tài khoản mới
@@ -22,12 +29,14 @@ function CompSignUp() {
                 <input
                     className="w-full px-4 py-3 bg-primary-400 rounded-lg text-white placeholder-gray-300 focus:outline-none"
                     placeholder="Tên tài khoản"
+                    value={userName}
                     onChange={(e) => setUserName(e.target.value)}
                 />
 
                 <input
                     className="w-full px-4 py-3 bg-primary-400 rounded-lg text-white placeholder-gray-300 focus:outline-none"
                     placeholder="Email"
+                    value={email}
                     onChange={(e) => setEmail(e.target.value)}
                 />
 
@@ -35,6 +44,7 @@ function CompSignUp() {
                     className="w-full px-4 py-3 bg-primary-400 rounded-lg text-white placeholder-gray-300 focus:outline-none"
                     placeholder="Mật khẩu"
                     type="password"
+                    value={password}
                     onChange={(e) => setPassword(e.target.value)}
                 />
 

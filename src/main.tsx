@@ -12,6 +12,9 @@ import AdminPage from "./features/admin/admin-layout";
 import UserPage from "./features/user/user-layout";
 import SignIn from "./features/auth/pages/signin.tsx";
 import Signup from "./features/auth/pages/signup.tsx";
+import ForgotPassword from "./features/auth/pages/forgotPwd.tsx";
+import InputOTP from "./features/auth/pages/inputOTP.tsx";
+import ResetPassword from "./features/auth/pages/resetPwd.tsx";
 
 const router = createBrowserRouter([
     {
@@ -39,6 +42,27 @@ const router = createBrowserRouter([
         element: <Layout />,
         children: [
             {index: true, element: <Signup />}
+        ]
+    },
+    {
+        path: "/forgot-password",
+        element: <Layout />,
+        children: [
+            {index: true, element: <ForgotPassword />}
+        ]
+    },
+    {
+        path: "/input-otp",
+        element: <Layout />,
+        children: [
+            {index: true, element: <InputOTP />}
+        ]
+    },
+    {
+        path: "/reset-password",
+        element: <Layout />,
+        children: [
+            {index: true, element: <ResetPassword />}
         ]
     }
 ]);

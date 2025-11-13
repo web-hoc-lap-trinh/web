@@ -13,6 +13,12 @@ function CompSignIn() {
 
     const onLogin = async (e?: React.FormEvent) => {
         if (e) e.preventDefault();
+        if (username === "" || password === "") {
+            setUsername("")
+            setPassword("")
+            alert("Vui lòng nhập thông tin đăng nhập")
+            return;
+        }
         setLoading(true);
         try {
             // Giả lập role dựa vào username
@@ -37,6 +43,7 @@ function CompSignIn() {
                 <input
                     className="w-full px-4 py-3 bg-primary-400 rounded-lg text-white placeholder-gray-300 focus:outline-none"
                     placeholder="Tài khoản"
+                    value={username}
                     onChange={(e) => setUsername(e.target.value)}
                 />
 
