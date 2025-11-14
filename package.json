@@ -13,7 +13,7 @@
     "@ant-design/v5-patch-for-react-19": "^1.0.3",
     "@tailwindcss/cli": "^4.1.13",
     "@tailwindcss/vite": "^4.1.13",
-    "antd": "^5.27.4",
+    "antd": "^5.28.1",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "react-router-dom": "^7.9.1",

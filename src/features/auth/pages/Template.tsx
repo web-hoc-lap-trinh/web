@@ -3,6 +3,7 @@ import { loginAPI } from "../../../services/api";
 import { useNavigate } from "react-router-dom";
 import { useCurrentApp } from "../../../components/context/app.context";
 
+// Giao diện Register mới ổn thì xóa cái này
 const LoginPage = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");

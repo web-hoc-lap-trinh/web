@@ -7,33 +7,64 @@ import enUS from "antd/es/locale/en_US";
 import { AppProvider } from "./components/context/app.context";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { Layout } from "./layout";
-import LoginPage from "./features/auth/pages/login";
-import AdminPage from "./features/admin/admin-layout";
-import UserPage from "./features/user/user-layout";
+import SignInPage from "./features/auth/pages/SignInPage.tsx";
+import AdminPage from "./features/admin/admin-layout.tsx";
+import UserPage from "./features/user/user-layout.tsx";
+import SignUpPage from "./features/auth/pages/SignUpPage.tsx";
+import ForgotPasswordPage from "./features/auth/pages/ForgotPasswordPage.tsx";
+import InputOtpPage from "./features/auth/pages/InputOtpPage.tsx";
+import ResetPasswordPage from "./features/auth/pages/ResetPasswordPage.tsx";
+
 
 const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <Layout />,
-    children: [
-      { index: true, element: <Navigate to="/login" replace /> },
-      {
-        element: <ProtectedRoute roles={["guest"]} />,
+    {
+        path: "/",
+        element: <Layout />,
         children: [
-          { path: "login", element: <LoginPage /> },
+            { index: true, element: <Navigate to="/signin" replace /> },
+            {
+                element: <ProtectedRoute roles={["guest"]} />,
+                children: [{ path: "signin", element: <SignInPage /> }],
+            },
+            {
+                element: <ProtectedRoute roles={["admin"]} />,
+                children: [{ path: "admin", element: <AdminPage /> }],
+            },
+            {
+                element: <ProtectedRoute roles={["user"]} />,
+                children: [{ path: "user", element: <UserPage /> }],
+            },
+            { path: "*", element: <Navigate to="/" replace /> },
         ],
-      },
-      {
-        element: <ProtectedRoute roles={["admin"]} />,
-        children: [{ path: "admin", element: <AdminPage /> }],
-      },
-      {
-        element: <ProtectedRoute roles={["user"]} />,
-        children: [{ path: "user", element: <UserPage /> }],
-      },
-      { path: "*", element: <Navigate to="/" replace /> },
-    ],
-  },
+    },
+    {
+        path: "/signup",
+        element: <Layout />,
+        children: [
+            {index: true, element: <SignUpPage />}
+        ]
+    },
+    {
+        path: "/forgot-password",
+        element: <Layout />,
+        children: [
+            {index: true, element: <ForgotPasswordPage />}
+        ]
+    },
+    {
+        path: "/input-otp",
+        element: <Layout />,
+        children: [
+            {index: true, element: <InputOtpPage />}
+        ]
+    },
+    {
+        path: "/reset-password",
+        element: <Layout />,
+        children: [
+            {index: true, element: <ResetPasswordPage />}
+        ]
+    }
 ]);
 
 const root = document.getElementById("root");
