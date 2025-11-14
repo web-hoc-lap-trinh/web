@@ -1,7 +1,7 @@
-import {useNavigate} from "react-router-dom";
 import {useState} from "react";
+import {useNavigate} from "react-router-dom";
 
-const CompForgotPassword = () => {
+const ForgotPasswordForm = () => {
     const [email, setEmail] = useState("");
     const navigate = useNavigate();
 
@@ -10,7 +10,7 @@ const CompForgotPassword = () => {
             alert("Vui lòng nhập đúng email");
             return;
         }
-        navigate("/input-otp");
+        navigate("/input-otp", { state: { from: 'forgot' } });
     }
 
     return(
@@ -39,4 +39,12 @@ const CompForgotPassword = () => {
     )
 }
 
-export default CompForgotPassword;
+const ForgotPasswordPage = () => {
+    return(
+        <main>
+            <ForgotPasswordForm />
+        </main>
+    )
+}
+
+export default ForgotPasswordPage;

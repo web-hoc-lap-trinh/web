@@ -1,7 +1,7 @@
 import {useState} from "react";
 import {useNavigate} from "react-router-dom";
 
-const CompResetPwd = () => {
+const ResetPasswordForm = () => {
     const [newPassword, setNewPassword] = useState("")
     const [confirmPassword, setConfirmPassword] = useState("")
     const navigate = useNavigate()
@@ -51,4 +51,12 @@ const CompResetPwd = () => {
     )
 }
 
-export default CompResetPwd;
+const ResetPasswordPage = () => {
+    return(
+        <main>
+            <ResetPasswordForm />
+        </main>
+    )
+}
+
+export default ResetPasswordPage;

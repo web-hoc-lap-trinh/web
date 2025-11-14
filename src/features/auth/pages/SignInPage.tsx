@@ -1,10 +1,11 @@
-import {Link, useNavigate} from "react-router-dom";
 import {useState} from "react";
-import {useCurrentApp} from "./context/app.context.tsx";
-import {loginAPI} from "../services/api.ts";
+import {Link, useNavigate} from "react-router-dom";
+import {useCurrentApp} from "../../../components/context/app.context.tsx";
 import * as React from "react";
+import {loginAPI} from "../../../services/api.ts";
+import { Input, Button } from 'antd';
 
-function CompSignIn() {
+function SignInForm() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
@@ -79,4 +80,12 @@ function CompSignIn() {
     );
 }
 
-export default CompSignIn;
+function SignInPage() {
+    return (
+        <main>
+            <SignInForm />
+        </main>
+    )
+}
+
+export default SignInPage

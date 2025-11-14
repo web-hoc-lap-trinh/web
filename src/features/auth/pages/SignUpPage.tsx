@@ -1,7 +1,7 @@
-import {Link, useNavigate} from "react-router-dom";
 import {useState} from "react";
+import {Link, useNavigate} from "react-router-dom";
 
-function CompSignUp() {
+function SignUpForm() {
     const [userName, setUserName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -15,8 +15,8 @@ function CompSignUp() {
             setPassword("");
             return;
         }
-        alert("Đăng ký thành công")
-        navigate("/login");
+        // alert("Đăng ký thành công")
+        navigate("/input-otp", { state: { from: 'signup' }});
     }
 
     return (
@@ -66,4 +66,12 @@ function CompSignUp() {
     );
 }
 
-export default CompSignUp;
+function SignUpPage() {
+    return (
+        <main>
+            <SignUpForm />
+        </main>
+    )
+}
+
+export default SignUpPage;

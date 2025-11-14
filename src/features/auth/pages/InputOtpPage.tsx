@@ -1,16 +1,21 @@
-import {useNavigate} from "react-router-dom";
 import {useState} from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 
-const CompInputOTP = () => {
+const InputOtpForm = () => {
     const [otp, setOtp] = useState("");
     const navigate = useNavigate();
+    const location = useLocation();
+    const fromPath = location.state?.from;
 
     const onInputOTP = () => {
         if (otp === "") {
             alert("Vui lòng nhập mã OTP")
             return;
         }
-        navigate("/reset-password");
+
+        if(fromPath === 'signup') navigate("/signin");
+        else if (fromPath === 'forgot') navigate("/reset-password");
+        else navigate("/signin");
     }
 
     return(
@@ -39,4 +44,12 @@ const CompInputOTP = () => {
     )
 }
 
-export default CompInputOTP;
+const InputOtpPage = () => {
+    return(
+        <main>
+            <InputOtpForm />
+        </main>
+    )
+}
+
+export default InputOtpPage;
