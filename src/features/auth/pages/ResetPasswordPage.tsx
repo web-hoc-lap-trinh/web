@@ -1,55 +1,71 @@
-import {useState} from "react";
-import {useNavigate} from "react-router-dom";
+import { useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import { Input, Button, Typography, Alert } from "antd";
+import { useResetPasswordMutation } from "../../../services/auth/auth.service";
 
 const ResetPasswordForm = () => {
-    const [newPassword, setNewPassword] = useState("")
-    const [confirmPassword, setConfirmPassword] = useState("")
-    const navigate = useNavigate()
+    const [newPassword, setNewPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
+    const navigate = useNavigate();
+    const location = useLocation();
+    const email = location.state?.email as string | undefined;
+    const otp = location.state?.otp as string | undefined;
+    const [resetMutation, resetState] = useResetPasswordMutation();
 
     const onResetPassword = async () => {
-        if (newPassword !== confirmPassword) {
-            setConfirmPassword("")
-            alert("Mật khẩu xác nhận không trùng khớp")
+        if (!email || !otp) {
+            alert("Thiếu email hoặc OTP. Vui lòng thực hiện lại bước xác thực.");
+            navigate("/forgot-password", { replace: true });
             return;
         }
-        alert("Đặt lại mật khẩu thành công")
-        navigate("/signin")
-    }
+        if (newPassword !== confirmPassword) {
+            setConfirmPassword("");
+            alert("Mật khẩu xác nhận không trùng khớp");
+            return;
+        }
+        try {
+            await resetMutation({ email, otp, newPassword }).unwrap();
+            navigate("/signin");
+        } catch (e) {}
+    };
 
-    return(
+    return (
         <main className="min-h-screen flex items-center justify-center">
             <div className="w-96 p-8 bg-secondary-700 rounded-xl flex flex-col space-y-4">
-                <h1 className="text-xl text-primary-200 text-center font-bold mb-4">
+                <Typography.Title level={4} className="!text-primary-200 !m-0 text-center">
                     Đặt lại mật khẩu
-                </h1>
+                </Typography.Title>
 
-                <input
-                    className="w-full px-4 py-3 bg-primary-400 rounded-lg text-white placeholder-gray-300 focus:outline-none"
+                <Input.Password
                     placeholder="Mật khẩu mới"
-                    type="password"
                     value={newPassword}
+                    disabled={resetState.isLoading}
                     onChange={(event) => setNewPassword(event.target.value)}
                 />
 
-                <input
-                    className="w-full px-4 py-3 bg-primary-400 rounded-lg text-white placeholder-gray-300 focus:outline-none"
+                <Input.Password
                     placeholder="Xác nhận mật khẩu mới"
-                    type="password"
                     value={confirmPassword}
+                    disabled={resetState.isLoading}
                     onChange={(event) => setConfirmPassword(event.target.value)}
                 />
 
-                <button
-                    className="w-full py-2 bg-primary-200 rounded-lg text-secondary-700 font-semibold hover:bg-primary-100 transition"
-                    type="submit"
+                {resetState.error && (
+                    <Alert type="error" message="Đặt lại mật khẩu thất bại" showIcon />
+                )}
+
+                <Button
+                    className="w-full"
+                    type="primary"
+                    loading={resetState.isLoading}
                     onClick={onResetPassword}
                 >
                     Đặt lại
-                </button>
+                </Button>
             </div>
         </main>
-    )
-}
+    );
+};
 
 const ResetPasswordPage = () => {
     return(

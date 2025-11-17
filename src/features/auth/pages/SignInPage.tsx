@@ -1,81 +1,85 @@
-import {useState} from "react";
-import {Link, useNavigate} from "react-router-dom";
-import {useCurrentApp} from "../../../components/context/app.context.tsx";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../../../hooks/useAuth";
 import * as React from "react";
-import {loginAPI} from "../../../services/api.ts";
-import { Input, Button } from 'antd';
+import { Input, Button, Typography, Alert } from "antd";
 
 function SignInForm() {
-    const [username, setUsername] = useState("");
+    const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [loading, setLoading] = useState(false);
+    const [localSubmitting, setLocalSubmitting] = useState(false);
     const navigate = useNavigate();
-    const { setIsAuthenticated, setUser } = useCurrentApp();
+    const { login, loginLoading, loginError } = useAuth();
 
-    const onLogin = async (e?: React.FormEvent) => {
+    const handleSubmit = async (e?: React.FormEvent) => {
         if (e) e.preventDefault();
-        if (username === "" || password === "") {
-            setUsername("")
-            setPassword("")
-            alert("Vui lòng nhập thông tin đăng nhập")
+        if (!email || !password) {
+            setEmail("");
+            setPassword("");
+            alert("Vui lòng nhập thông tin đăng nhập");
             return;
         }
-        setLoading(true);
+        setLocalSubmitting(true);
         try {
-            // Giả lập role dựa vào username
-            let role: "admin" | "user" = "user";
-            if (username === "admin") role = "admin";
-            const user = await loginAPI(role, username);
-            setUser(user);
-            setIsAuthenticated(true);
-            navigate(`/${user.role}`);
+            const res = await login({ email, password });
+            const role = res.user.role || "user";
+            navigate(`/${role}`);
         } finally {
-            setLoading(false);
+            setLocalSubmitting(false);
         }
     };
 
+    const submitting = localSubmitting || loginLoading;
+
     return (
         <main className="min-h-screen flex items-center justify-center">
-            <div className="w-96 p-8 bg-secondary-700 rounded-xl shadow-2xl flex flex-col space-y-4">
-                <h1 className="text-xl text-primary-200 text-center font-bold mb-4">
+            <form
+                onSubmit={handleSubmit}
+                className="w-96 p-8 bg-secondary-700 rounded-xl shadow-2xl flex flex-col space-y-4"
+            >
+                <Typography.Title level={4} className="!text-primary-200 !m-0 text-center">
                     Đăng nhập bằng tài khoản
-                </h1>
-
-                <input
-                    className="w-full px-4 py-3 bg-primary-400 rounded-lg text-white placeholder-gray-300 focus:outline-none"
-                    placeholder="Tài khoản"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
+                </Typography.Title>
+                <Input
+                    placeholder="Email"
+                    value={email}
+                    type="email"
+                    disabled={submitting}
+                    onChange={(e) => setEmail(e.target.value)}
                 />
-
-                <input
-                    className="w-full px-4 py-3 bg-primary-400 rounded-lg text-white placeholder-gray-300 focus:outline-none"
+                <Input.Password
                     placeholder="Mật khẩu"
-                    type="password"
                     value={password}
+                    disabled={submitting}
                     onChange={(e) => setPassword(e.target.value)}
                 />
-
-                <Link to="/forgot-password" className="w-full text-right">
-                    <span className="text-sm text-primary-200 hover:text-primary-100 hover:underline transition">
+                <div className="w-full text-right">
+                    <Link to="/forgot-password" className="text-sm text-primary-200 hover:text-primary-100 hover:underline">
                         Quên mật khẩu?
-                    </span>
-                </Link>
-
-                <button
-                    className="w-full py-2 bg-primary-200 rounded-lg text-secondary-700 font-semibold hover:bg-primary-100 transition"
-                    type="submit"
-                    onClick={onLogin}
+                    </Link>
+                </div>
+                {loginError && (
+                    <Alert
+                        type="error"
+                        message="Đăng nhập thất bại"
+                        description="Vui lòng kiểm tra lại email/mật khẩu hoặc thử lại sau."
+                        showIcon
+                    />
+                )}
+                <Button
+                    htmlType="submit"
+                    type="primary"
+                    loading={submitting}
+                    className="w-full"
                 >
                     Đăng nhập
-                </button>
-
-                <Link to="/signup" className="w-full">
-                    <span className="text-sm text-primary-200 hover:text-primary-100 hover:underline transition">
+                </Button>
+                <div className="w-full text-center">
+                    <Link to="/signup" className="text-sm text-primary-200 hover:text-primary-100 hover:underline">
                         Chưa có tài khoản? Đăng ký
-                    </span>
-                </Link>
-            </div>
+                    </Link>
+                </div>
+            </form>
         </main>
     );
 }
@@ -85,7 +89,7 @@ function SignInPage() {
         <main>
             <SignInForm />
         </main>
-    )
+    );
 }
 
 export default SignInPage
