@@ -2,9 +2,13 @@ import { Navigate, type RouteObject } from "react-router-dom";
 import { Layout } from "../layout";
 import PublicRoute from "../components/routes/PublicRoute";
 import ProtectedRoute from "../components/routes/ProtectedRoute";
-import LoginPage from "../features/auth/pages/login";
-import AdminPage from "../features/admin/admin-layout";
-import UserPage from "../features/user/user-layout";
+import SignInPage from "../features/auth/pages/SignInPage";
+import SignUpPage from "../features/auth/pages/SignUpPage";
+import InputOtpPage from "../features/auth/pages/InputOtpPage";
+import ForgotPasswordPage from "../features/auth/pages/ForgotPasswordPage";
+import ResetPasswordPage from "../features/auth/pages/ResetPasswordPage";
+import AdminPage from "../features/admin";
+import UserPage from "../features/user";
 
 export const appRoutes: RouteObject[] = [
   {
@@ -14,8 +18,14 @@ export const appRoutes: RouteObject[] = [
       { index: true, element: <Navigate to="/login" replace /> },
 
       {
-        element: <PublicRoute redirectPath="/" />,
-        children: [{ path: "login", element: <LoginPage /> }],
+        element: <PublicRoute />,
+        children: [
+          { path: "login", element: <SignInPage /> },
+          { path: "signup", element: <SignUpPage /> },
+          { path: "input-otp", element: <InputOtpPage /> },
+          { path: "forgot-password", element: <ForgotPasswordPage /> },
+          { path: "reset-password", element: <ResetPasswordPage /> },
+        ],
       },
 
       {

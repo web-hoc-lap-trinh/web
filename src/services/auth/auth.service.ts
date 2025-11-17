@@ -3,7 +3,7 @@ import type { IUser } from "../../types/user.types";
 import type { AuthResponse, LoginPayload, RegisterPayload, VerifyPayload, ProfileResponse } from "./auth.types";
 import { setCredentials, setUser } from "../../stores/slices/authSlice";
 
-const BASE_URL = "/"; 
+const BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:4000/api"; 
 
 export const authApi = createApi({
   reducerPath: "authApi",
@@ -76,6 +76,24 @@ export const authApi = createApi({
         }
       },
     }),
+
+    forgotPassword: builder.mutation<null, { email: string }>({
+      query: (data) => ({
+        url: "/auth/forgot-password",
+        method: "POST",
+        body: data,
+      }),
+      transformResponse: (response: IApiResponse<null>) => response.result,
+    }),
+
+    resetPassword: builder.mutation<null, { email: string; otp: string; newPassword: string }>({
+      query: (data) => ({
+        url: "/auth/reset-password",
+        method: "POST",
+        body: data,
+      }),
+      transformResponse: (response: IApiResponse<null>) => response.result,
+    }),
   }),
 });
 
@@ -84,5 +102,7 @@ export const {
   useRegisterMutation,
   useVerifyAccountMutation,
   useGetMeQuery,
-  useLazyGetMeQuery, 
+  useLazyGetMeQuery,
+  useForgotPasswordMutation,
+  useResetPasswordMutation,
 } = authApi;

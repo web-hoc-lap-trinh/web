@@ -1,55 +1,104 @@
-import {useState} from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useState } from "react";
+import { useNavigate, useLocation, Link } from "react-router-dom";
+import { Input, Button, Typography, Alert } from "antd";
+import { useVerifyAccountMutation } from "../../../services/auth/auth.service";
 
 const InputOtpForm = () => {
     const [otp, setOtp] = useState("");
     const navigate = useNavigate();
     const location = useLocation();
-    const fromPath = location.state?.from;
+    const fromPath = location.state?.from as ('signup'|'forgot'|undefined);
+    const email = location.state?.email as string | undefined;
+    const [verifyMutation, verifyState] = useVerifyAccountMutation();
 
-    const onInputOTP = () => {
-        if (otp === "") {
-            alert("Vui lòng nhập mã OTP")
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const raw = e.target.value;
+        const filtered = raw.replace(/\D/g, "").slice(0, 4);
+        setOtp(filtered);
+    };
+
+    const handleSubmit = async (e?: React.FormEvent) => {
+        if (e) e.preventDefault();
+        if (!email) {
+            alert("Thiếu email. Vui lòng đăng ký lại.");
+            navigate("/signup", { replace: true });
             return;
         }
+        if (otp.length !== 4) {
+            alert("OTP phải gồm 4 chữ số");
+            return;
+        }
+        try {
+            if (fromPath === 'signup') {
+                const data = await verifyMutation({ email, otp }).unwrap();
+                const role = data.user.role || "user";
+                navigate(`/${role}`);
+            } else if (fromPath === 'forgot') {
+                navigate('/reset-password', { state: { email, otp } });
+            } else {
+                navigate('/signin');
+            }
+        } catch (err) {}
+    };
 
-        if(fromPath === 'signup') navigate("/signin");
-        else if (fromPath === 'forgot') navigate("/reset-password");
-        else navigate("/signin");
-    }
-
-    return(
+    return (
         <main className="min-h-screen flex items-center justify-center">
-            <div className="w-96 p-8 bg-secondary-700 rounded-xl flex flex-col space-y-4">
-                <h1 className="text-xl text-primary-200 text-center font-bold mb-4">
+            <form
+                onSubmit={handleSubmit}
+                className="w-96 p-8 bg-secondary-700 rounded-xl flex flex-col space-y-4"
+            >
+                <Typography.Title level={4} className="!text-primary-200 !m-0 text-center">
                     Nhập OTP
-                </h1>
-
-                <input
-                    className="w-full px-4 py-3 bg-primary-400 rounded-lg text-white placeholder-gray-300 focus:outline-none"
-                    placeholder="Mã OTP"
-                    value={otp}
-                    onChange={(e) => setOtp(e.target.value)}
+                </Typography.Title>
+                {!email && (
+                    <Alert
+                        type="error"
+                        message="Không có email trong phiên"
+                        description={<span>Vui lòng <Link to="/signup">đăng ký lại</Link>.</span>}
+                        showIcon
+                    />
+                )}
+                <Input
+                    placeholder="Mã OTP 4 số"
+                        value={otp}
+                        maxLength={4}
+                        inputMode="numeric"
+                        disabled={verifyState.isLoading || !email}
+                        onChange={handleChange}
                 />
-
-                <button
-                    className="w-full py-2 bg-primary-200 rounded-lg text-secondary-700 font-semibold hover:bg-primary-100 transition"
-                    type="submit"
-                    onClick={onInputOTP}
+                {verifyState.error && (
+                    <Alert
+                        type="error"
+                        message="Xác thực thất bại"
+                        description="OTP không đúng hoặc đã hết hạn."
+                        showIcon
+                    />
+                )}
+                <Button
+                    htmlType="submit"
+                    type="primary"
+                    loading={verifyState.isLoading}
+                    disabled={!email}
+                    className="w-full"
                 >
                     Xác nhận
-                </button>
-            </div>
+                </Button>
+                <div className="text-center">
+                    <Link to="/signup" className="text-sm text-primary-200 hover:underline">
+                        Đăng ký lại
+                    </Link>
+                </div>
+            </form>
         </main>
-    )
-}
+    );
+};
 
 const InputOtpPage = () => {
-    return(
+    return (
         <main>
             <InputOtpForm />
         </main>
-    )
-}
+    );
+};
 
 export default InputOtpPage;

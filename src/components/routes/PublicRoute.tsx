@@ -2,14 +2,15 @@ import { Navigate, Outlet } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
 
 interface PublicRouteProps {
-  redirectPath?: string;
+  redirectPath?: string; 
 }
 
-const PublicRoute = ({ redirectPath = "/" }: PublicRouteProps) => {
-  const { isAuthenticated } = useAuth();
+const PublicRoute = ({ redirectPath }: PublicRouteProps) => {
+  const { isAuthenticated, user } = useAuth();
 
   if (isAuthenticated) {
-    return <Navigate to={redirectPath} replace />;
+    const rolePath = user?.role === "admin" ? "/admin" : "/user";
+    return <Navigate to={redirectPath || rolePath} replace />;
   }
 
   return <Outlet />;

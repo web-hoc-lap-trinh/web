@@ -1,43 +1,55 @@
-import {useState} from "react";
-import {useNavigate} from "react-router-dom";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Input, Button, Typography, Alert } from "antd";
+import { useForgotPasswordMutation } from "../../../services/auth/auth.service";
 
 const ForgotPasswordForm = () => {
     const [email, setEmail] = useState("");
     const navigate = useNavigate();
+    const [forgotMutation, forgotState] = useForgotPasswordMutation();
 
-    const onForgotPassword = () => {
-        if (email === "") {
+    const onForgotPassword = async () => {
+        if (!email) {
             alert("Vui lòng nhập đúng email");
             return;
         }
-        navigate("/input-otp", { state: { from: 'forgot' } });
-    }
+        try {
+            await forgotMutation({ email }).unwrap();
+            navigate("/input-otp", { state: { from: "forgot", email } });
+        } catch (e) {
+        }
+    };
 
-    return(
+    return (
         <main className="min-h-screen flex items-center justify-center">
             <div className="w-96 p-8 bg-secondary-700 rounded-xl flex flex-col space-y-4">
-                <h1 className="text-xl text-primary-200 text-center font-bold mb-4">
+                <Typography.Title level={4} className="!text-primary-200 !m-0 text-center">
                     Quên mật khẩu
-                </h1>
+                </Typography.Title>
 
-                <input
-                    className="w-full px-4 py-3 bg-primary-400 rounded-lg text-white placeholder-gray-300 focus:outline-none"
+                <Input
                     placeholder="Email"
                     value={email}
+                    disabled={forgotState.isLoading}
                     onChange={(e) => setEmail(e.target.value)}
                 />
 
-                <button
-                    className="w-full py-2 bg-primary-200 rounded-lg text-secondary-700 font-semibold hover:bg-primary-100 transition"
-                    type="submit"
+                {forgotState.error && (
+                    <Alert type="error" message="Gửi OTP thất bại" showIcon />
+                )}
+
+                <Button
+                    className="w-full"
+                    type="primary"
+                    loading={forgotState.isLoading}
                     onClick={onForgotPassword}
                 >
                     Gửi OTP
-                </button>
+                </Button>
             </div>
         </main>
-    )
-}
+    );
+};
 
 const ForgotPasswordPage = () => {
     return(

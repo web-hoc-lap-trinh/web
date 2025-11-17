@@ -1,5 +1,4 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import "./styles/input.css";
 import ReactDOM from "react-dom/client";
 import { App, ConfigProvider } from "antd";
 import "@ant-design/v5-patch-for-react-19";
