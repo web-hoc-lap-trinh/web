@@ -530,3 +530,10 @@
     }
   }
 }
+@font-face {
+    font-family: 'Sprintural';
+    src: url('../assets/fonts/SprinturaDemo.otf') format('opentype');
+    font-style: normal;
+    font-weight: bold;
+    font-display: swap;
+}

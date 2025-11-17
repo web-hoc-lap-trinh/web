@@ -14,7 +14,7 @@
     "@reduxjs/toolkit": "^2.10.1",
     "@tailwindcss/cli": "^4.1.13",
     "@tailwindcss/vite": "^4.1.13",
-    "antd": "^5.27.4",
+    "antd": "^5.28.1",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "react-redux": "^9.2.0",
