@@ -1,26 +1,21 @@
 import { useState } from "react";
-import { loginAPI } from "../../../services/api";
 import { useNavigate } from "react-router-dom";
-import { useCurrentApp } from "../../../components/context/app.context";
+import { useAuth } from "../../../hooks/useAuth";
 
 const LoginPage = () => {
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const { setIsAuthenticated, setUser } = useCurrentApp();
+  const { login, loginLoading, loginError, user } = useAuth();
 
   const onLogin = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
     setLoading(true);
     try {
-      // Giả lập role dựa vào username
-      let role: "admin" | "user" = "user";
-      if (username === "admin") role = "admin";
-      const user = await loginAPI(role, username);
-      setUser(user);
-      setIsAuthenticated(true);
-      navigate(`/${user.role}`);
+      const res = await login({ email, password });
+      const role = res.user.role || "user";
+      navigate(`/${role}`);
     } finally {
       setLoading(false);
     }
@@ -40,13 +35,13 @@ const LoginPage = () => {
         <div className="md:w-1/2 w-full flex flex-col justify-center items-center p-8 md:p-12">
           <form className="w-full max-w-sm space-y-5" onSubmit={onLogin}>
             <div>
-              <label className="block text-primary-400 font-semibold mb-1">Email/Số điện thoại</label>
+              <label className="block text-primary-400 font-semibold mb-1">Email</label>
               <input
                 type="text"
                 className="w-full px-4 py-2 border border-primary-300 rounded focus:outline-none focus:ring-2 focus:ring-primary-400"
-                value={username}
-                onChange={e => setUsername(e.target.value)}
-                placeholder="Nhập email hoặc số điện thoại"
+                value={email}
+                onChange={e => setEmail(e.target.value)}
+                placeholder="Nhập email"
                 required
               />
             </div>
@@ -64,10 +59,13 @@ const LoginPage = () => {
             <button
               type="submit"
               className="w-full bg-primary-300 hover:bg-primary-400 text-white font-semibold py-2 rounded transition-colors duration-200 disabled:opacity-60 cursor-pointer"
-              disabled={loading}
+              disabled={loading || loginLoading}
             >
-              {loading ? "Đang đăng nhập..." : "Đăng nhập"}
+              {loading || loginLoading ? "Đang đăng nhập..." : "Đăng nhập"}
             </button>
+            {loginError ? (
+              <div className="text-red-500 text-sm">Đăng nhập thất bại. Vui lòng kiểm tra lại.</div>
+            ) : null}
             <div className="my-2 flex items-center">
               <hr className="flex-grow border-t border-gray-300" />
               <span className="mx-2 text-gray-500">hoặc</span>
