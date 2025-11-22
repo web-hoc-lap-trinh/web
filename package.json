@@ -10,16 +10,18 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@ant-design/cssinjs": "github:ant-design/cssinjs",
     "@ant-design/v5-patch-for-react-19": "^1.0.3",
     "@reduxjs/toolkit": "^2.10.1",
     "@tailwindcss/cli": "^4.1.13",
-    "@tailwindcss/vite": "^4.1.13",
+    "@tailwindcss/vite": "^4.1.17",
     "antd": "^5.28.1",
+    "quill": "^2.0.3",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "react-redux": "^9.2.0",
     "react-router-dom": "^7.9.1",
-    "tailwindcss": "^4.1.13"
+    "tailwindcss": "^4.1.17"
   },
   "devDependencies": {
     "@eslint/js": "^9.36.0",

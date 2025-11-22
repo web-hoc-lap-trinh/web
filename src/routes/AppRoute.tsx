@@ -1,5 +1,5 @@
-import { Navigate, type RouteObject } from "react-router-dom";
-import { Layout } from "../layout";
+import {Navigate, type RouteObject} from "react-router-dom";
+import {Layout} from "../layout";
 import PublicRoute from "../components/routes/PublicRoute";
 import ProtectedRoute from "../components/routes/ProtectedRoute";
 import SignInPage from "../features/auth/pages/SignInPage";
@@ -11,34 +11,34 @@ import AdminPage from "../features/admin";
 import UserPage from "../features/user";
 
 export const appRoutes: RouteObject[] = [
-  {
-    path: "/",
-    element: <Layout />,
-    children: [
-      { index: true, element: <Navigate to="/login" replace /> },
-
-      {
-        element: <PublicRoute />,
+    {
+        path: "/",
+        element: <Layout/>,
         children: [
-          { path: "login", element: <SignInPage /> },
-          { path: "signup", element: <SignUpPage /> },
-          { path: "input-otp", element: <InputOtpPage /> },
-          { path: "forgot-password", element: <ForgotPasswordPage /> },
-          { path: "reset-password", element: <ResetPasswordPage /> },
-        ],
-      },
+            {index: true, element: <Navigate to="/login" replace/>},
 
-      {
-        element: <ProtectedRoute redirectPath="/login" />,
-        children: [
-          { path: "admin", element: <AdminPage /> },
-          { path: "user", element: <UserPage /> },
-        ],
-      },
+            {
+                element: <PublicRoute/>,
+                children: [
+                    {path: "login", element: <UserPage/>},
+                    {path: "signup", element: <SignUpPage/>},
+                    {path: "input-otp", element: <InputOtpPage/>},
+                    {path: "forgot-password", element: <ForgotPasswordPage/>},
+                    {path: "reset-password", element: <ResetPasswordPage/>},
+                ],
+            },
 
-      { path: "*", element: <Navigate to="/" replace /> },
-    ],
-  },
+            {
+                element: <ProtectedRoute redirectPath="/login"/>,
+                children: [
+                    {path: "admin", element: <AdminPage/>},
+                    {path: "user", element: <UserPage/>},
+                ],
+            },
+
+            {path: "*", element: <Navigate to="/" replace/>},
+        ],
+    },
 ];
 
 export default appRoutes;

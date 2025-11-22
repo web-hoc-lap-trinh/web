@@ -354,7 +354,7 @@
         background-color: #49F4CC;
     }
 
-    .bg-secondary-200 {
+    .bg-primary-200 {
         background-color: #0DDB93;
     }
 
@@ -362,11 +362,11 @@
         background-color: #44AD89;
     }
 
-    .bg-secondary-400 {
+    .bg-primary-400 {
         background-color: #528F79;
     }
 
-    .bg-secondary-500 {
+    .bg-primary-500 {
         background-color: #7DAF1A;
     }
 
@@ -714,7 +714,7 @@
 
 @font-face {
     font-family: 'Sprintural';
-    src: url('../assets/fonts/SprinturaDemo.otf') format('opentype');
+    src: url('src/assets/fonts/SprinturaDemo.otf') format('opentype');
     font-style: normal;
     font-weight: bold;
     font-display: swap;
