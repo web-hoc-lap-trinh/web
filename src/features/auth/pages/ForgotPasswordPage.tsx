@@ -22,7 +22,7 @@ const ForgotPasswordForm = () => {
 
     return (
         <main className="min-h-screen flex items-center justify-center">
-            <div className="w-96 p-8 bg-secondary-700 rounded-xl flex flex-col space-y-4">
+            <div className="w-96 p-8 bg-white rounded-xl flex flex-col space-y-4">
                 <Typography.Title level={4} className="!text-primary-200 !m-0 text-center">
                     Quên mật khẩu
                 </Typography.Title>
