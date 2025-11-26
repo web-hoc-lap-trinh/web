@@ -1,5 +1,5 @@
-import {Navigate, type RouteObject} from "react-router-dom";
-import {Layout} from "../layout";
+import {Navigate, Outlet, type RouteObject} from "react-router-dom";
+import { AuthLayout, AdminLayout, UserLayout } from "../layout";
 import PublicRoute from "../components/routes/PublicRoute";
 import ProtectedRoute from "../components/routes/ProtectedRoute";
 import SignInPage from "../features/auth/pages/SignInPage";
@@ -7,38 +7,53 @@ import SignUpPage from "../features/auth/pages/SignUpPage";
 import InputOtpPage from "../features/auth/pages/InputOtpPage";
 import ForgotPasswordPage from "../features/auth/pages/ForgotPasswordPage";
 import ResetPasswordPage from "../features/auth/pages/ResetPasswordPage";
-import AdminPage from "../features/admin";
+import DashboardPage from "../features/admin/Dashboard.tsx";
 import UserPage from "../features/user";
+import LessonPage from "../features/admin/Lesson.tsx";
 
 export const appRoutes: RouteObject[] = [
-    {
-        path: "/",
-        element: <Layout/>,
-        children: [
-            {index: true, element: <Navigate to="/login" replace/>},
+    {path: "/", element: <Navigate to="/admin" replace/>},
 
+    {
+        element: <PublicRoute/>,
+        children: [
             {
-                element: <PublicRoute/>,
+                element: <AuthLayout/>,
                 children: [
-                    {path: "login", element: <UserPage/>},
+                    {path: "signin", element: <SignInPage/>, index: true},
                     {path: "signup", element: <SignUpPage/>},
                     {path: "input-otp", element: <InputOtpPage/>},
                     {path: "forgot-password", element: <ForgotPasswordPage/>},
                     {path: "reset-password", element: <ResetPasswordPage/>},
-                ],
+                ]
+            }
+        ],
+    },
+
+    {
+        element: <Outlet/>,
+        // element: <ProtectedRoute redirectPath="/signin"/>,
+        children: [
+            {
+                path: "admin/*",
+                element: <AdminLayout/>,
+                children: [
+                    {index: true, element: <DashboardPage/>},
+                    {path: "lesson", element: <LessonPage/>}
+                ]
             },
 
             {
-                element: <ProtectedRoute redirectPath="/login"/>,
+                path: "user/*",
+                element: <UserLayout/>,
                 children: [
-                    {path: "admin", element: <AdminPage/>},
-                    {path: "user", element: <UserPage/>},
-                ],
+                    { index: true, element: <UserPage/> }
+                ]
             },
-
-            {path: "*", element: <Navigate to="/" replace/>},
         ],
     },
+
+    {path: "*", element: <Navigate to="/" replace/>},
 ];
 
 export default appRoutes;
