@@ -1,7 +1,7 @@
 import { Outlet } from "react-router-dom";
 // import backgroundImage from "./assets/images/background.png";
 import backgroundImage2 from "./assets/images/background2.jpg";
-import NavigationBar from "./components/NavigationBar.tsx";
+import NavigationBar from "./components/common/NavigationBar.tsx";
 const HEADER_HEIGHT = 68;
 
 /*const Layout = () => {
@@ -57,10 +57,10 @@ const UserLayout = () => {
 const AdminLayout = () => {
     return (
         <main className={"flex min-h-screen bg-secondary-700"}>
-            <div className={"flex items-center p-4"}>
+            <div className={"flex items-center ps-8"}>
                 <NavigationBar/>
             </div>
-            <div className={"flex-1/2 text-white py-14"}>
+            <div className={"flex-1/2 text-white px-8 py-14"}>
                 <Outlet/>
             </div>
         </main>

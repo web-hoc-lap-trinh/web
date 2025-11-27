@@ -7,9 +7,10 @@ import SignUpPage from "../features/auth/pages/SignUpPage";
 import InputOtpPage from "../features/auth/pages/InputOtpPage";
 import ForgotPasswordPage from "../features/auth/pages/ForgotPasswordPage";
 import ResetPasswordPage from "../features/auth/pages/ResetPasswordPage";
-import DashboardPage from "../features/admin/Dashboard.tsx";
+import DashboardPage from "../features/admin/DashboardPage.tsx";
 import UserPage from "../features/user";
-import LessonPage from "../features/admin/Lesson.tsx";
+import LessonPage from "../features/admin/LessonPage.tsx";
+import CategoryPage from "../features/admin/CategoryPage.tsx";
 
 export const appRoutes: RouteObject[] = [
     {path: "/", element: <Navigate to="/admin" replace/>},
@@ -39,7 +40,9 @@ export const appRoutes: RouteObject[] = [
                 element: <AdminLayout/>,
                 children: [
                     {index: true, element: <DashboardPage/>},
-                    {path: "lesson", element: <LessonPage/>}
+                    {path: "dashboard", element: <Navigate to={"/admin"} replace/>},
+                    {path: "lesson", element: <LessonPage/>},
+                    {path: "category", element: <CategoryPage/>}
                 ]
             },
 

@@ -20,7 +20,7 @@ type MenuItem = Required<MenuProps>['items'][number];
 
 const items: MenuItem[] = [
     {
-        key: 'Dashboard',
+        key: 'dashboard',
         label: 'Báo cáo',
         icon: <DashboardOutlined />,
     },
@@ -29,8 +29,8 @@ const items: MenuItem[] = [
         label: 'Quản lý bài học',
         type: 'group',
         children: [
-            { key: 'Lesson1', label: 'Quản lý bài học', icon: <FileAddOutlined /> },
-            { key: 'Lesson2', label: 'Quản lý chủ đề', icon: <FolderAddOutlined /> },
+            { key: 'lesson', label: 'Quản lý bài học', icon: <FileAddOutlined /> },
+            { key: 'category', label: 'Quản lý chủ đề', icon: <FolderAddOutlined /> },
         ],
     },
     {
@@ -38,8 +38,8 @@ const items: MenuItem[] = [
         label: 'Quản lý bài tập & test case',
         type: 'group',
         children: [
-            { key: 'Exercise1', label: 'Quản lý bài tập', icon: <FileOutlined/> },
-            { key: 'Exercise2', label: 'Quản lý test case', icon: <FileDoneOutlined /> },
+            { key: 'exercise', label: 'Quản lý bài tập', icon: <FileOutlined/> },
+            { key: 'testcase', label: 'Quản lý test case', icon: <FileDoneOutlined /> },
         ],
     },
     {
@@ -47,8 +47,8 @@ const items: MenuItem[] = [
         label: 'Quản lý cộng đồng',
         type: 'group',
         children: [
-            { key: 'Community1', label: 'Quản lý bình luận', icon: <CommentOutlined /> },
-            { key: 'Community2', label: 'Báo cáo vi phạm', icon: <WarningOutlined /> },
+            { key: 'comment', label: 'Quản lý bình luận', icon: <CommentOutlined /> },
+            { key: 'report', label: 'Báo cáo vi phạm', icon: <WarningOutlined /> },
         ],
     },
     {
@@ -56,8 +56,8 @@ const items: MenuItem[] = [
         label: 'Quản lý gamification',
         type: 'group',
         children: [
-            { key: 'Gamification1', label: 'Chuỗi & Huy hiệu', icon: <FireOutlined /> },
-            { key: 'Gamification2', label: 'Nhiệm vụ hằng ngày', icon: <TrophyOutlined /> },
+            { key: 'streak', label: 'Chuỗi & Huy hiệu', icon: <FireOutlined /> },
+            { key: 'daily', label: 'Nhiệm vụ hằng ngày', icon: <TrophyOutlined /> },
         ],
     },
     {
@@ -65,9 +65,9 @@ const items: MenuItem[] = [
         label: 'Quản lý người dùng',
         type: 'group',
         children: [
-            { key: 'User1', label: 'Danh sách người dùng', icon: <UserOutlined /> },
-            { key: 'User2', label: 'Thông tin và phân quyền', icon: <KeyOutlined /> },
-            { key: 'User3', label: 'Theo dõi tiến độ học tập', icon: <Loading3QuartersOutlined /> },
+            { key: 'all-user', label: 'Danh sách người dùng', icon: <UserOutlined /> },
+            { key: 'all-admin', label: 'Thông tin và phân quyền', icon: <KeyOutlined /> },
+            { key: 'progress', label: 'Theo dõi tiến độ học tập', icon: <Loading3QuartersOutlined /> },
         ],
     },
 ];
@@ -77,18 +77,8 @@ const NavigationBar = () => {
     const navigate = useNavigate();
 
     const onClick: MenuProps['onClick'] = (e) => {
-
-        console.log('click ', e);
-        switch (e.key) {
-            case 'Dashboard':
-                navigate('/admin');
-                break;
-            case 'Lesson1':
-                navigate('/admin/lesson');
-                break;
-            default:
-                break;
-        }
+        console.log('click ', e.key);
+        navigate(`/admin/${e.key}`)
     };
 
     return (
@@ -104,7 +94,7 @@ const NavigationBar = () => {
                 borderRadius: 10,
                 boxShadow: 'inherit'
             }}
-            defaultSelectedKeys={['Dashboard']}
+            defaultSelectedKeys={['dashboard']}
             mode="inline"
             items={items}
         />
