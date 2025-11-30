@@ -39,8 +39,8 @@ export const appRoutes: RouteObject[] = [
                 path: "admin/*",
                 element: <AdminLayout/>,
                 children: [
-                    {index: true, element: <DashboardPage/>},
-                    {path: "dashboard", element: <Navigate to={"/admin"} replace/>},
+                    {index: true, element: <Navigate to={"/admin/dashboard"} replace/>},
+                    {path: "dashboard", element: <DashboardPage/>},
                     {path: "lesson", element: <LessonPage/>},
                     {path: "category", element: <CategoryPage/>}
                 ]

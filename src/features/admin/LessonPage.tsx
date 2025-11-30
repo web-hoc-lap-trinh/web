@@ -1,5 +1,6 @@
 import HeaderBar from "../../components/common/HeaderBar.tsx";
 import SearchBar from "../../components/common/SearchBar.tsx";
+import DataTable from "../../components/common/TableInfo.tsx";
 
 const LessonPage = () => {
     return (
@@ -12,6 +13,7 @@ const LessonPage = () => {
                 <SearchBar />
             </div>
             <div>Lesson</div>
+            <DataTable/>
         </main>
     )
 };

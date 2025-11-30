@@ -6,9 +6,10 @@ const {Title} = Typography;
 interface HeaderProps {
     title: string;
     buttonText: string;
+    setOpen: () => void;
 }
 
-const HeaderBar = ({title, buttonText}: HeaderProps) => {
+const HeaderBar = ({title, buttonText, setOpen}: HeaderProps) => {
     return (
         <header className={"min-w-full flex pb-8"}>
             <div className={"flex-1/2"}>
@@ -17,7 +18,12 @@ const HeaderBar = ({title, buttonText}: HeaderProps) => {
                 </Title>
             </div>
             <div className={"flex"}>
-                <Button type={'primary'} shape={'default'} icon={<PlusOutlined/>} iconPosition={'end'}>
+                <Button type={'primary'}
+                        shape={'default'}
+                        icon={<PlusOutlined/>}
+                        iconPosition={'end'}
+                        onClick={setOpen}
+                >
                     {buttonText}
                 </Button>
             </div>

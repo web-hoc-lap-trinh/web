@@ -14,7 +14,7 @@ import {
 } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
 import {Menu} from 'antd';
-import {useNavigate} from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 
 type MenuItem = Required<MenuProps>['items'][number];
 
@@ -75,6 +75,9 @@ const items: MenuItem[] = [
 
 const NavigationBar = () => {
     const navigate = useNavigate();
+    const location = useLocation();
+    const pathSegments = location.pathname.split('/');
+    const currentKey = pathSegments[pathSegments.length - 1] || 'dashboard';
 
     const onClick: MenuProps['onClick'] = (e) => {
         console.log('click ', e.key);
@@ -94,7 +97,7 @@ const NavigationBar = () => {
                 borderRadius: 10,
                 boxShadow: 'inherit'
             }}
-            defaultSelectedKeys={['dashboard']}
+            selectedKeys={[currentKey]}
             mode="inline"
             items={items}
         />
