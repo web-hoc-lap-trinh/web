@@ -714,7 +714,7 @@
 
 @font-face {
     font-family: 'Sprintural';
-    src: url('src/assets/fonts/SprinturaDemo.otf') format('opentype');
+    src: url('../assets/fonts/SprinturaDemo.otf') format('opentype');
     font-style: normal;
     font-weight: bold;
     font-display: swap;

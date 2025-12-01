@@ -1,6 +1,7 @@
 import { Outlet } from "react-router-dom";
 // import backgroundImage from "./assets/images/background.png";
 import backgroundImage2 from "./assets/images/background2.jpg";
+import NavigationBar from "./components/common/NavigationBar.tsx";
 const HEADER_HEIGHT = 68;
 
 /*const Layout = () => {
@@ -22,7 +23,22 @@ const HEADER_HEIGHT = 68;
     );
 };*/
 
-const Layout = () => {
+const AuthLayout = () => {
+    return (
+        <main
+            style={{
+                backgroundImage: `url(${backgroundImage2})`,
+                backgroundSize: "cover",
+                backgroundPosition: "center center",
+                paddingTop: HEADER_HEIGHT
+            }}
+        >
+            <Outlet/>
+        </main>
+    )
+}
+
+const UserLayout = () => {
     return (
         <div
             className="bg-primary-200"
@@ -38,5 +54,16 @@ const Layout = () => {
     );
 };
 
-export default Layout;
-export { Layout };
+const AdminLayout = () => {
+    return (
+        <main className={"flex min-h-screen bg-secondary-700"}>
+            <div className={"flex items-center ps-8"}>
+                <NavigationBar/>
+            </div>
+            <div className={"flex-1/2 text-white px-8 py-14"}>
+                <Outlet/>
+            </div>
+        </main>
+    )
+}
+export { AuthLayout, AdminLayout, UserLayout };

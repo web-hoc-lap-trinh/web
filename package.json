@@ -16,6 +16,7 @@
     "@tailwindcss/cli": "^4.1.13",
     "@tailwindcss/vite": "^4.1.17",
     "antd": "^5.28.1",
+    "antd-style": "^3.7.1",
     "quill": "^2.0.3",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
