@@ -1,4 +1,4 @@
-import {Navigate, Outlet, type RouteObject} from "react-router-dom";
+import {Navigate, type RouteObject} from "react-router-dom";
 import { AuthLayout, AdminLayout, UserLayout } from "../layout";
 import PublicRoute from "../components/routes/PublicRoute";
 import ProtectedRoute from "../components/routes/ProtectedRoute";
@@ -8,15 +8,16 @@ import InputOtpPage from "../features/auth/pages/InputOtpPage";
 import ForgotPasswordPage from "../features/auth/pages/ForgotPasswordPage";
 import ResetPasswordPage from "../features/auth/pages/ResetPasswordPage";
 import DashboardPage from "../features/admin/DashboardPage.tsx";
-import UserPage from "../features/user";
+import HomePage from "../features/user/pages/HomePage/HomePage.tsx";
 import LessonPage from "../features/admin/LessonPage.tsx";
 import CategoryPage from "../features/admin/CategoryPage.tsx";
 import ExercisePage from "../features/admin/ExercisePage.tsx";
 import TestcasePage from "../features/admin/TestcasePage.tsx";
 import AllUserPage from "../features/admin/AllUserPage.tsx";
+import ProfilePage from "../features/user/pages/ProfilePage/ProfilePage.tsx";
 
 export const appRoutes: RouteObject[] = [
-    {path: "/", element: <Navigate to="/admin" replace/>},
+    {path: "/", element: <Navigate to="/signin" replace/>},
 
     {
         element: <PublicRoute/>,
@@ -35,8 +36,7 @@ export const appRoutes: RouteObject[] = [
     },
 
     {
-        element: <Outlet/>,
-        // element: <ProtectedRoute redirectPath="/signin"/>,
+        element: <ProtectedRoute redirectPath="/signin" allowedRoles={["ADMIN"]} />,
         children: [
             {
                 path: "admin/*",
@@ -51,12 +51,18 @@ export const appRoutes: RouteObject[] = [
                     {path: "all-user", element: <AllUserPage/>}
                 ]
             },
+        ],
+    },
 
+    {
+        element: <ProtectedRoute redirectPath="/signin" />,
+        children: [
             {
                 path: "user/*",
                 element: <UserLayout/>,
                 children: [
-                    { index: true, element: <UserPage/> }
+                    { index: true, element: <HomePage/> },
+                    { path: "profile", element: <ProfilePage/> }
                 ]
             },
         ],
