@@ -9,7 +9,7 @@ const PublicRoute = ({ redirectPath }: PublicRouteProps) => {
   const { isAuthenticated, user } = useAuth();
 
   if (isAuthenticated) {
-    const rolePath = user?.role === "admin" ? "/admin" : "/user";
+    const rolePath = user?.role === "ADMIN" ? "/admin" : "/user";
     return <Navigate to={redirectPath || rolePath} replace />;
   }
 

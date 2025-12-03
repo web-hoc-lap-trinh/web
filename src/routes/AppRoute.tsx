@@ -1,4 +1,4 @@
-import {Navigate, Outlet, type RouteObject} from "react-router-dom";
+import {Navigate, type RouteObject} from "react-router-dom";
 import { AuthLayout, AdminLayout, UserLayout } from "../layout";
 import PublicRoute from "../components/routes/PublicRoute";
 import ProtectedRoute from "../components/routes/ProtectedRoute";
@@ -13,7 +13,7 @@ import LessonPage from "../features/admin/LessonPage.tsx";
 import CategoryPage from "../features/admin/CategoryPage.tsx";
 
 export const appRoutes: RouteObject[] = [
-    {path: "/", element: <Navigate to="/admin" replace/>},
+    {path: "/", element: <Navigate to="/signin" replace/>},
 
     {
         element: <PublicRoute/>,
@@ -32,8 +32,7 @@ export const appRoutes: RouteObject[] = [
     },
 
     {
-        element: <Outlet/>,
-        // element: <ProtectedRoute redirectPath="/signin"/>,
+        element: <ProtectedRoute redirectPath="/signin" allowedRoles={["ADMIN"]} />,
         children: [
             {
                 path: "admin/*",
@@ -45,7 +44,12 @@ export const appRoutes: RouteObject[] = [
                     {path: "category", element: <CategoryPage/>}
                 ]
             },
+        ],
+    },
 
+    {
+        element: <ProtectedRoute redirectPath="/signin" />, 
+        children: [
             {
                 path: "user/*",
                 element: <UserLayout/>,

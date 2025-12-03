@@ -1,6 +1,6 @@
 import { Outlet } from "react-router-dom";
 // import backgroundImage from "./assets/images/background.png";
-import backgroundImage2 from "./assets/images/background2.jpg";
+// import backgroundImage2 from "./assets/images/background2.jpg";
 import NavigationBar from "./components/common/NavigationBar.tsx";
 const HEADER_HEIGHT = 68;
 
@@ -27,10 +27,8 @@ const AuthLayout = () => {
     return (
         <main
             style={{
-                backgroundImage: `url(${backgroundImage2})`,
                 backgroundSize: "cover",
                 backgroundPosition: "center center",
-                paddingTop: HEADER_HEIGHT
             }}
         >
             <Outlet/>
