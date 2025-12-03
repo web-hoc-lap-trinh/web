@@ -8,9 +8,10 @@ import InputOtpPage from "../features/auth/pages/InputOtpPage";
 import ForgotPasswordPage from "../features/auth/pages/ForgotPasswordPage";
 import ResetPasswordPage from "../features/auth/pages/ResetPasswordPage";
 import DashboardPage from "../features/admin/DashboardPage.tsx";
-import UserPage from "../features/user";
+import HomePage from "../features/user/pages/HomePage/HomePage.tsx";
 import LessonPage from "../features/admin/LessonPage.tsx";
 import CategoryPage from "../features/admin/CategoryPage.tsx";
+import ProfilePage from "../features/user/pages/ProfilePage/ProfilePage.tsx";
 
 export const appRoutes: RouteObject[] = [
     {path: "/", element: <Navigate to="/signin" replace/>},
@@ -54,7 +55,8 @@ export const appRoutes: RouteObject[] = [
                 path: "user/*",
                 element: <UserLayout/>,
                 children: [
-                    { index: true, element: <UserPage/> }
+                    { index: true, element: <HomePage/> },
+                    { path: "profile", element: <ProfilePage/> }
                 ]
             },
         ],

@@ -1,54 +1,31 @@
 import { Outlet } from "react-router-dom";
-// import backgroundImage from "./assets/images/background.png";
-// import backgroundImage2 from "./assets/images/background2.jpg";
+import Header from "./components/common/Header.tsx";
 import NavigationBar from "./components/common/NavigationBar.tsx";
-const HEADER_HEIGHT = 68;
-
-/*const Layout = () => {
-    return (
-        <>
-            <div
-                style={{
-                    backgroundImage: `url(${backgroundImage})`,
-                    backgroundSize: "cover",
-                    backgroundPosition: "center",
-                    paddingTop: HEADER_HEIGHT,
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                }}>
-                <Outlet />
-            </div>
-        </>
-    );
-};*/
 
 const AuthLayout = () => {
     return (
-        <main
-            style={{
-                backgroundSize: "cover",
-                backgroundPosition: "center center",
-            }}
-        >
-            <Outlet/>
-        </main>
+        <>
+            <Header />
+            <main
+                style={{
+                    backgroundSize: "cover",
+                    backgroundPosition: "center center",
+                }}
+            >
+                <Outlet />
+            </main>
+        </>
     )
 }
 
 const UserLayout = () => {
     return (
-        <div
-            className="bg-primary-200"
-            /*style={{
-                backgroundImage: `url(${backgroundImage2})`,
-                backgroundSize: "cover",
-                backgroundPosition: "center center",
-                paddingTop: HEADER_HEIGHT
-            }}*/
-        >
-            <Outlet/>
-        </div>
+        <>
+            <Header />
+            <div className="bg-primary-200">
+                <Outlet />
+            </div>
+        </>
     );
 };
 
@@ -56,10 +33,10 @@ const AdminLayout = () => {
     return (
         <main className={"flex min-h-screen bg-secondary-700"}>
             <div className={"flex items-center ps-8"}>
-                <NavigationBar/>
+                <NavigationBar />
             </div>
             <div className={"flex-1/2 text-white px-8 py-14"}>
-                <Outlet/>
+                <Outlet />
             </div>
         </main>
     )
