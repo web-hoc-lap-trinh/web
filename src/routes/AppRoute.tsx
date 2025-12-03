@@ -11,6 +11,9 @@ import DashboardPage from "../features/admin/DashboardPage.tsx";
 import UserPage from "../features/user";
 import LessonPage from "../features/admin/LessonPage.tsx";
 import CategoryPage from "../features/admin/CategoryPage.tsx";
+import ExercisePage from "../features/admin/ExercisePage.tsx";
+import TestcasePage from "../features/admin/TestcasePage.tsx";
+import AllUserPage from "../features/admin/AllUserPage.tsx";
 
 export const appRoutes: RouteObject[] = [
     {path: "/", element: <Navigate to="/admin" replace/>},
@@ -42,7 +45,10 @@ export const appRoutes: RouteObject[] = [
                     {index: true, element: <Navigate to={"/admin/dashboard"} replace/>},
                     {path: "dashboard", element: <DashboardPage/>},
                     {path: "lesson", element: <LessonPage/>},
-                    {path: "category", element: <CategoryPage/>}
+                    {path: "category", element: <CategoryPage/>},
+                    {path: "exercise", element: <ExercisePage/>},
+                    {path: "testcase", element: <TestcasePage/>},
+                    {path: "all-user", element: <AllUserPage/>}
                 ]
             },
 
