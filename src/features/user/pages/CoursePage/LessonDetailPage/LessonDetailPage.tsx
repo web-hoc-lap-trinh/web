@@ -48,30 +48,20 @@ const LessonDetailPage = () => {
 
   return (
     <div className="min-h-screen bg-[#051311] text-gray-200 font-sans pb-20">
-      {/* Header Section */}
       <LessonHeader lesson={lesson} />
-
-      {/* Actions - Mobile/Tablet View */}
       <div className="lg:hidden container mx-auto max-w-6xl px-4 -mt-4 mb-6">
         <LessonActions />
       </div>
-
-      {/* Content Section */}
       <div className="container mx-auto max-w-6xl px-4 py-10">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Main Content */}
           <div className="lg:col-span-2 space-y-6">
             <LessonContentTabs lesson={lesson} />
           </div>
-
-          {/* Sidebar */}
           <div className="lg:col-span-1">
             <div className="sticky top-24 space-y-6">
-              {/* Actions - Desktop View */}
               <div className="hidden lg:block">
                 <LessonActions />
               </div>
-
               <LessonProgressCard />
               <RelatedLessonsCard />
               <SupportCard />
