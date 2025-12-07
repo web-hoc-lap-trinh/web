@@ -3,10 +3,14 @@ import {
   CodeOutlined, 
   CommentOutlined, 
   FileTextOutlined, 
-  MessageOutlined 
+  MessageOutlined,
+  LaptopOutlined
 } from "@ant-design/icons";
 import { Tabs, Empty, Button } from "antd";
 import type { ILesson } from "../../../../../../types/lesson.types";
+import LessonPlayground from "./LessonPlayground";
+import LessonExercisesTab from "./LessonExercisesTab";
+import LessonDiscussionTab from "./LessonDiscussionTab";
 
 interface LessonContentTabsProps {
   lesson: ILesson;
@@ -82,6 +86,19 @@ const LessonContentTabs = ({ lesson }: LessonContentTabsProps) => {
       )
     },
     {
+      key: 'playground',
+      label: (
+        <span className="flex items-center gap-2">
+          <LaptopOutlined /> Code trực tiếp
+        </span>
+      ),
+      children: (
+        <div className="mt-2">
+            <LessonPlayground lessonId={lesson.lesson_id} />
+        </div>
+      )
+    },
+    {
       key: 'exercises',
       label: (
         <span className="flex items-center gap-2">
@@ -89,13 +106,7 @@ const LessonContentTabs = ({ lesson }: LessonContentTabsProps) => {
         </span>
       ),
       children: (
-        <div className="bg-[#051311] border border-white/10 rounded-2xl p-6 md:p-8 shadow-xl shadow-black/20 min-h-[400px] flex items-center justify-center">
-          <CustomEmpty 
-            icon={<FileTextOutlined />}
-            title="Chưa có bài tập"
-            subTitle="Các bài tập thực hành cho bài học này đang được biên soạn."
-          />
-        </div>
+        <LessonExercisesTab lessonId={lesson.lesson_id} />
       )
     },
     {
@@ -106,13 +117,7 @@ const LessonContentTabs = ({ lesson }: LessonContentTabsProps) => {
         </span>
       ),
       children: (
-        <div className="bg-[#051311] border border-white/10 rounded-2xl p-6 md:p-8 shadow-xl shadow-black/20 min-h-[400px] flex items-center justify-center">
-          <CustomEmpty 
-            icon={<MessageOutlined />}
-            title="Chưa có thảo luận"
-            subTitle="Hãy là người đầu tiên đặt câu hỏi hoặc chia sẻ kiến thức về bài học này."
-          />
-        </div>
+        <LessonDiscussionTab lessonId={lesson.lesson_id} />
       )
     }
   ];

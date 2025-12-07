@@ -22,9 +22,9 @@ const LessonHeader = ({ lesson }: LessonHeaderProps) => {
         <Breadcrumb
           className="mb-4 [&_.ant-breadcrumb-link]:!text-gray-400 [&_.ant-breadcrumb-link]:hover:!text-emerald-400 [&_.ant-breadcrumb-separator]:!text-gray-100"
           items={[
-            { title: <Link to="/user/courses"><span className="text-gray-100">Khóa học</span></Link> },
+            { title: <Link to="/courses"><span className="text-gray-100">Khóa học</span></Link> },
             { 
-              title: <Link to={`/user/courses/${lesson.category.category_id}`}>
+              title: <Link to={`/courses/${lesson.category.category_id}`}>
                 <span className="text-gray-100">{lesson.category.name}</span>
               </Link> 
             },

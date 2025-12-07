@@ -17,7 +17,7 @@ export const authApi = createApi({
       return headers;
     },
   }),
-  tagTypes: ["User", "Category", "Course", "Lesson"], 
+  tagTypes: ["User", "Category", "Course", "Lesson", "TryItYourself", "Language", "ExerciseSession", "Exercise", "AdminExercise", "Discussion", "Reply"], 
   endpoints: (builder) => ({
     
     login: builder.mutation<AuthResponse, LoginPayload>({
