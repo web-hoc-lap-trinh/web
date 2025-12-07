@@ -34,6 +34,7 @@ const ProfileTab = () => {
         try {
             await updateProfile(payload).unwrap();
             message.success("Đã lưu thông tin hồ sơ!");
+            window.dispatchEvent(new Event("userUpdated"));
         } catch (err) {
             console.error(err);
             message.error("Cập nhật hồ sơ thất bại. Vui lòng thử lại.");
@@ -77,6 +78,8 @@ const ProfileTab = () => {
                 
                 onSuccess && onSuccess("ok");
                 message.success("Cập nhật ảnh đại diện thành công!");
+                // Notify NavigationBar to re-render
+                window.dispatchEvent(new Event("userUpdated"));
             } catch (err) {
                 onError && onError(err as any);
                 message.error("Cập nhật ảnh thất bại.");
