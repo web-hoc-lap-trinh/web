@@ -18,7 +18,14 @@ export const profileApi = authApi.injectEndpoints({
         body: toFormData(data),
       }),
       transformResponse: (response: IApiResponse<{ user: IUser }>) => response.result.user,
-      invalidatesTags: ["User"], 
+      invalidatesTags: ["User"],
+      async onQueryStarted(_, { dispatch, queryFulfilled }) {
+        try {
+          const { data: updatedUser } = await queryFulfilled;
+          const { setUser } = await import("../../stores/slices/authSlice");
+          dispatch(setUser(updatedUser));
+        } catch {}
+      },
     }),
 
     changePassword: builder.mutation<null, ChangePasswordPayload>({

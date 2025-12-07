@@ -12,6 +12,9 @@ import HomePage from "../features/user/pages/HomePage/HomePage.tsx";
 import LessonPage from "../features/admin/LessonPage.tsx";
 import CategoryPage from "../features/admin/CategoryPage.tsx";
 import ProfilePage from "../features/user/pages/ProfilePage/ProfilePage.tsx";
+import CoursePage from "../features/user/pages/CoursePage/MainPage/CoursePage.tsx";
+import CourseDetail from "../features/user/pages/CoursePage/CourseDetailPage/CourseDetail.tsx";
+import LessonDetailPage from "../features/user/pages/CoursePage/LessonDetailPage/LessonDetailPage.tsx";
 
 export const appRoutes: RouteObject[] = [
     {path: "/", element: <Navigate to="/signin" replace/>},
@@ -52,11 +55,14 @@ export const appRoutes: RouteObject[] = [
         element: <ProtectedRoute redirectPath="/signin" />, 
         children: [
             {
-                path: "user/*",
+                path: "/*",
                 element: <UserLayout/>,
                 children: [
                     { index: true, element: <HomePage/> },
-                    { path: "profile", element: <ProfilePage/> }
+                    { path: "profile", element: <ProfilePage/> },
+                    { path: "courses", element: <CoursePage/> },
+                    { path: "courses/:categoryId", element: <CourseDetail/> },
+                    { path: "learn/:lessonId", element: <LessonDetailPage/> }
                 ]
             },
         ],
