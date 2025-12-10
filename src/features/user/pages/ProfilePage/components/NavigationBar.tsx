@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { Avatar, Divider } from "antd";
-import { UserOutlined, CodeOutlined } from "@ant-design/icons";
+import { UserOutlined, CodeOutlined, LogoutOutlined } from "@ant-design/icons";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../../../../hooks/useAuth";
 
 type Props = {
     activeTab: "profile" | "submissions";
@@ -14,6 +16,8 @@ interface StoredUser {
 }
 
 export default function NavigationBar({ activeTab, setActiveTab }: Props) {
+    const navigate = useNavigate();
+    const { logout } = useAuth();
     const [userInfo, setUserInfo] = useState({
         name: "Người dùng",
         handle: "@user",
@@ -41,7 +45,7 @@ export default function NavigationBar({ activeTab, setActiveTab }: Props) {
     return (
         <div className="bg-white/5 border border-white/10 rounded-2xl p-6 backdrop-blur-md shadow-xl">
             <div className="text-center mb-6">
-                <div className="inline-block p-1 rounded-full bg-gradient-to-tr from-emerald-500 to-teal-500 mb-4">
+                <div className="inline-block p-1 rounded-full bg-linear-to-tr from-emerald-500 to-teal-500 mb-4">
                     <Avatar 
                         size={100} 
                         src={userInfo.avatar} 
@@ -73,6 +77,21 @@ export default function NavigationBar({ activeTab, setActiveTab }: Props) {
                     label="Bài tập đã nộp"
                 />
             </nav>
+
+            <Divider className="bg-white/10 my-6" />
+
+            <button
+                onClick={() => {
+                    logout();
+                    navigate("/signin");
+                }}
+                className="w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 font-medium text-left text-gray-400 hover:bg-white/5 hover:text-white"
+            >
+                <span className="text-lg text-gray-500">
+                    <LogoutOutlined />
+                </span>
+                Đăng xuất
+            </button>
         </div>
     );
 }
@@ -83,7 +102,7 @@ function NavButton({ active, onClick, icon, label }: { active: boolean; onClick:
             onClick={onClick}
             className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 font-medium text-left group ${
                 active
-                    ? "bg-gradient-to-r from-emerald-600 to-emerald-500 text-white shadow-lg shadow-emerald-500/20 translate-x-1"
+                    ? "bg-linear-to-r from-emerald-600 to-emerald-500 text-white shadow-lg shadow-emerald-500/20 translate-x-1"
                     : "text-gray-400 hover:bg-white/5 hover:text-white hover:translate-x-1"
             }`}
         >

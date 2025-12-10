@@ -76,7 +76,7 @@ const CreateDiscussionModal = ({ visible, onCancel, lessonId }: CreateDiscussion
           rules={[{ required: true, message: "Vui lòng chọn loại bài đăng" }]}
         >
           <Select
-            className="[&_.ant-select-selector]:!bg-white/5 [&_.ant-select-selector]:!border-white/10 [&_.ant-select-selector]:!text-white"
+            className="[&_.ant-select-selector]:bg-white/5! [&_.ant-select-selector]:border-white/10! [&_.ant-select-selector]:text-white!"
             popupClassName="!bg-[#2a2a2a]"
             dropdownStyle={{ border: '1px solid rgba(255,255,255,0.1)' }}
             options={[
@@ -122,7 +122,7 @@ const CreateDiscussionModal = ({ visible, onCancel, lessonId }: CreateDiscussion
         <div className="flex justify-end gap-3 mt-6 pt-4 border-t border-white/10">
           <Button 
             onClick={onCancel}
-            className="bg-transparent border-white/20 text-gray-300 hover:!text-white hover:!border-white"
+            className="bg-transparent border-white/20 text-gray-300 hover:text-white! hover:border-white!"
           >
             Hủy bỏ
           </Button>
@@ -130,7 +130,7 @@ const CreateDiscussionModal = ({ visible, onCancel, lessonId }: CreateDiscussion
             type="primary" 
             htmlType="submit" 
             loading={isLoading}
-            className="bg-emerald-600 hover:!bg-emerald-500 border-none font-semibold shadow-lg shadow-emerald-900/20"
+            className="bg-emerald-600! hover:bg-emerald-500! border-none font-semibold shadow-lg shadow-emerald-900/20"
           >
             Đăng bài
           </Button>

@@ -63,7 +63,7 @@ function SignUpPage() {
                 }
             }}
         >
-            <main className="min-h-screen w-full bg-[#051311] relative overflow-hidden flex items-center justify-center px-4 py-10">
+            <main className="min-h-screen w-full bg-[#051311] relative overflow-hidden flex items-center justify-center px-4 py-10 pt-20">
                 <div className="absolute top-[-10%] right-[20%] w-[400px] h-[400px] bg-emerald-600/20 rounded-full blur-[100px]" />
                 <div className="absolute bottom-[-10%] left-[10%] w-[300px] h-[300px] bg-teal-900/30 rounded-full blur-[100px]" />
 
@@ -80,9 +80,9 @@ function SignUpPage() {
                                 </span>
                             </div>
 
-                            <Typography.Title level={1} className="!m-0 !text-white !font-bold !text-4xl lg:!text-5xl leading-tight">
+                            <Typography.Title level={1} className="m-0! text-white! font-bold! text-4xl! lg:text-5xl! leading-tight">
                                 Tạo tài khoản <br />
-                                <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-300">
+                                <span className="text-transparent bg-clip-text bg-linear-to-r from-emerald-400 to-teal-300">
                                     mở khóa tương lai
                                 </span>
                             </Typography.Title>
@@ -109,7 +109,7 @@ function SignUpPage() {
                     <section className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl shadow-2xl p-8 sm:p-10 w-full max-w-md mx-auto md:mr-0">
                         <form onSubmit={handleSubmit} className="flex flex-col gap-6">
                             <div className="text-center md:text-left">
-                                <Typography.Title level={3} className="!m-0 !text-white !font-bold">
+                                <Typography.Title level={3} className="m-0! text-white! font-bold!">
                                     Đăng ký thành viên
                                 </Typography.Title>
                                 <p className="text-gray-400 mt-2">Hoàn toàn miễn phí và chỉ mất 1 phút.</p>
@@ -125,7 +125,7 @@ function SignUpPage() {
                                         disabled={registerState.isLoading}
                                         onChange={(e) => setFullName(e.target.value)}
                                         size="large"
-                                        className="!bg-white/5 hover:!bg-white/10 focus:!bg-white/10 !border-white/10 !text-white"
+                                        className="bg-white/5! hover:bg-white/10! focus:bg-white/10! border-white/10! text-white!"
                                     />
                                 </div>
 
@@ -139,7 +139,7 @@ function SignUpPage() {
                                         disabled={registerState.isLoading}
                                         onChange={(e) => setEmail(e.target.value)}
                                         size="large"
-                                        className="!bg-white/5 hover:!bg-white/10 focus:!bg-white/10 !border-white/10 !text-white"
+                                        className="bg-white/5! hover:bg-white/10! focus:bg-white/10! border-white/10! text-white!"
                                     />
                                 </div>
 
@@ -152,7 +152,7 @@ function SignUpPage() {
                                         disabled={registerState.isLoading}
                                         onChange={(e) => setPassword(e.target.value)}
                                         size="large"
-                                        className="!bg-white/5 hover:!bg-white/10 focus:!bg-white/10 !border-white/10 !text-white"
+                                        className="bg-white/5! hover:bg-white/10! focus:bg-white/10! border-white/10! text-white!"
                                         iconRender={(visible) => (visible ? <EyeTwoTone twoToneColor={THEME_COLOR} /> : <EyeInvisibleOutlined className="text-gray-400" />)}
                                     />
                                 </div>
@@ -164,7 +164,7 @@ function SignUpPage() {
                                     message="Đăng ký thất bại"
                                     description="Email có thể đã tồn tại hoặc hệ thống đang gặp sự cố."
                                     showIcon
-                                    className="!bg-red-500/10 !border-red-500/20 !text-red-200"
+                                    className="bg-red-500/10! border-red-500/20! text-red-200!"
                                 />
                             )}
 
@@ -173,7 +173,7 @@ function SignUpPage() {
                                 type="primary"
                                 loading={registerState.isLoading}
                                 size="large"
-                                className="w-full h-12 text-base font-semibold tracking-wide border-0 bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 shadow-lg shadow-emerald-900/20 mt-2"
+                                className="w-full h-12 text-base font-semibold tracking-wide border-0 bg-linear-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 shadow-lg shadow-emerald-900/20 mt-2"
                             >
                                 Đăng ký ngay
                             </Button>
@@ -181,7 +181,7 @@ function SignUpPage() {
                             <div className="text-center mt-2 border-t border-white/10 pt-6">
                                 <span className="text-gray-400 text-sm">
                                     Bạn đã có tài khoản?{" "}
-                                    <Link to="/signin" className="text-emerald-400 font-medium hover:text-emerald-300 hover:underline transition-all">
+                                    <Link to="/signin" className="text-emerald-400! font-medium hover:text-emerald-300! hover:underline transition-all">
                                         Đăng nhập tại đây
                                     </Link>
                                 </span>
