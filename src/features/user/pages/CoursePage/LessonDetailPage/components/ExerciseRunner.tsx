@@ -38,10 +38,12 @@ const ExerciseRunner = ({ lessonId, onExit }: ExerciseRunnerProps) => {
 
   const [submitAnswer, { isLoading: isSubmitting }] = useSubmitAnswerMutation();
   useEffect(() => {
-    if (isStartSuccess && startData && !currentExerciseId) {
-      setCurrentExerciseId(startData.exercise.exercise_id);
+    if (!isStartSuccess || currentExerciseId) return;
+    const exerciseId = startData?.exercise?.exercise_id;
+    if (typeof exerciseId === "number") {
+      setCurrentExerciseId(exerciseId);
     }
-  }, [isStartSuccess, startData]);
+  }, [isStartSuccess, startData, currentExerciseId]);
 
   const activeSession = currentExerciseId && detailData ? detailData : startData;
   const currentExercise = activeSession?.exercise;
@@ -153,7 +155,7 @@ const ExerciseRunner = ({ lessonId, onExit }: ExerciseRunnerProps) => {
                     onClick={handleSubmit}
                     loading={isSubmitting}
                     disabled={!selectedOptionId}
-                    className="!bg-emerald-600 hover:!bg-emerald-500 border-none px-8 font-semibold shadow-lg shadow-emerald-900/20"
+                  className="bg-emerald-600! hover:bg-emerald-500! border-none px-8 font-semibold shadow-lg shadow-emerald-900/20"
                 >
                     Kiểm tra
                 </Button>
@@ -164,7 +166,7 @@ const ExerciseRunner = ({ lessonId, onExit }: ExerciseRunnerProps) => {
                     onClick={handleNext}
                     icon={<ArrowRightOutlined />}
                     iconPosition="end"
-                    className="!bg-gray-100 !text-gray-900 hover:!bg-white border-none px-8 font-semibold shadow-lg shadow-white/10"
+                  className="bg-gray-100! text-gray-900! hover:bg-white! border-none px-8 font-semibold shadow-lg shadow-white/10"
                 >
                     {navigation?.is_last ? "Hoàn thành" : "Câu tiếp theo"}
                 </Button>

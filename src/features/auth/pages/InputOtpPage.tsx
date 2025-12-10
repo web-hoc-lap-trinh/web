@@ -50,7 +50,7 @@ const InputOtpPage = () => {
                 components: { Input: { activeBorderColor: THEME_COLOR, hoverBorderColor: THEME_COLOR } }
             }}
         >
-            <main className="min-h-screen w-full bg-[#051311] flex items-center justify-center px-4 relative overflow-hidden">
+            <main className="min-h-screen w-full bg-[#051311] flex items-center justify-center px-4 relative overflow-hidden pt-20">
                 <div className="absolute bottom-[-10%] right-[-5%] w-[400px] h-[400px] bg-teal-800/20 rounded-full blur-[100px]" />
 
                 <div className="w-full max-w-md bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl shadow-2xl p-8 sm:p-10 relative z-10">
@@ -60,7 +60,7 @@ const InputOtpPage = () => {
                                 <SafetyCertificateOutlined className="text-4xl text-emerald-400" />
                             </div>
                             <div>
-                                <Typography.Title level={3} className="!m-0 !text-white !font-bold">
+                                <Typography.Title level={3} className="m-0! text-white! font-bold!">
                                     Xác thực OTP
                                 </Typography.Title>
                                 {email && (
@@ -76,8 +76,8 @@ const InputOtpPage = () => {
                             <Alert
                                 type="error"
                                 message="Lỗi phiên làm việc"
-                                description={<span>Không tìm thấy email. Vui lòng <Link to="/signup" className="text-emerald-400 underline">thử lại</Link>.</span>}
-                                className="!bg-red-500/10 !border-red-500/20 !text-red-200"
+                                description={<span>Không tìm thấy email. Vui lòng <Link to="/signup" className="text-emerald-400! underline!">thử lại</Link>.</span>}
+                                className="bg-red-500/10! border-red-500/20! text-red-200!"
                             />
                         ) : (
                             <div className="space-y-6">
@@ -91,7 +91,7 @@ const InputOtpPage = () => {
                                         disabled={verifyState.isLoading}
                                         onChange={handleChange}
                                         size="large"
-                                        className="!bg-white/5 !border-white/10 !text-white !text-center !text-2xl !tracking-[0.5em] !font-bold h-14"
+                                        className="bg-white/5! border-white/10! text-white! text-center! text-2xl! tracking-[0.5em]! font-bold! h-14"
                                     />
                                 </div>
 
@@ -100,7 +100,7 @@ const InputOtpPage = () => {
                                         type="error"
                                         message="Mã OTP không đúng"
                                         showIcon
-                                        className="!bg-red-500/10 !border-red-500/20 !text-red-200"
+                                        className="bg-red-500/10! border-red-500/20! text-red-200!"
                                     />
                                 )}
 
@@ -109,7 +109,7 @@ const InputOtpPage = () => {
                                     type="primary"
                                     loading={verifyState.isLoading}
                                     disabled={otp.length !== 4}
-                                    className="w-full h-12 font-semibold bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 shadow-lg border-0"
+                                    className="w-full h-12 font-semibold bg-linear-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 shadow-lg border-0"
                                 >
                                     Xác nhận
                                 </Button>

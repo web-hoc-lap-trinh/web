@@ -33,12 +33,12 @@ const Header = () => {
                 <div className="col-span-8 md:col-span-3 flex items-center justify-end gap-3">
                     {!isAuthenticated ? (
                         <>
-                            <Button type="text" className="text-gray-300 hover:text-white hidden sm:block" onClick={() => navigate('/signin')}>
+                            <Button type="text" className="text-gray-300! hover:text-white! hidden sm:block" onClick={() => navigate('/signin')}>
                                 Đăng nhập
                             </Button>
                             <Button 
                                 type="primary" 
-                                className="bg-emerald-500 hover:bg-emerald-400! border-0 font-semibold shadow-lg shadow-emerald-900/40"
+                                className="bg-emerald-500! hover:bg-emerald-400! border-0 font-semibold shadow-lg shadow-emerald-900/40"
                                 onClick={() => navigate('/signup')}
                             >
                                 Đăng ký miễn phí
@@ -50,13 +50,13 @@ const Header = () => {
                                 type="text"
                                 className="text-emerald-400! hover:text-emerald-300!"
                                 icon={<FireOutlined />}
-                                onClick={() => navigate('/user')}
+                                onClick={() => navigate('/')}
                                 title="Streak"
                             />
                             <Button 
                                 type="text"
                                 className="text-gray-200! hover:text-white!"
-                                onClick={() => navigate(user?.role === 'ADMIN' ? '/admin' : '/user/profile')}
+                                onClick={() => navigate(user?.role === 'ADMIN' ? '/admin' : '/profile')}
                                 icon={<Avatar size={28} icon={<UserOutlined />} />}
                                 title="Profile"
                             />
