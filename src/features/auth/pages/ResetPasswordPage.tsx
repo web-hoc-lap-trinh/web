@@ -42,12 +42,12 @@ const ResetPasswordPage = () => {
                 components: { Input: { activeBorderColor: THEME_COLOR, hoverBorderColor: THEME_COLOR } }
             }}
         >
-            <main className="min-h-screen w-full bg-[#051311] flex items-center justify-center px-4 relative overflow-hidden">
+            <main className="min-h-screen w-full bg-[#051311] flex items-center justify-center px-4 relative overflow-hidden pt-20">
                 <div className="absolute top-[10%] right-[10%] w-[300px] h-[300px] bg-emerald-700/20 rounded-full blur-[80px]" />
 
                 <div className="w-full max-w-md bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl shadow-2xl p-8 sm:p-10 relative z-10">
                     <div className="text-center space-y-2 mb-8">
-                        <Typography.Title level={3} className="!m-0 !text-white !font-bold">
+                                <Typography.Title level={3} className="m-0! text-white! font-bold!">
                             Đặt lại mật khẩu
                         </Typography.Title>
                         <p className="text-gray-400 text-sm">Hãy nhập mật khẩu mới cho tài khoản của bạn.</p>
@@ -63,7 +63,7 @@ const ResetPasswordPage = () => {
                                 disabled={resetState.isLoading}
                                 onChange={(e) => setNewPassword(e.target.value)}
                                 size="large"
-                                className="!bg-white/5 !border-white/10 !text-white"
+                                className="bg-white/5! border-white/10! text-white!"
                                 iconRender={(visible) => (visible ? <EyeTwoTone twoToneColor={THEME_COLOR} /> : <EyeInvisibleOutlined className="text-gray-500" />)}
                             />
                         </div>
@@ -77,7 +77,7 @@ const ResetPasswordPage = () => {
                                 disabled={resetState.isLoading}
                                 onChange={(e) => setConfirmPassword(e.target.value)}
                                 size="large"
-                                className="!bg-white/5 !border-white/10 !text-white"
+                                className="bg-white/5! border-white/10! text-white!"
                                 iconRender={(visible) => (visible ? <EyeTwoTone twoToneColor={THEME_COLOR} /> : <EyeInvisibleOutlined className="text-gray-500" />)}
                             />
                         </div>
@@ -88,12 +88,12 @@ const ResetPasswordPage = () => {
                                 message="Lỗi hệ thống" 
                                 description="Không thể đặt lại mật khẩu. Vui lòng thử lại sau."
                                 showIcon 
-                                className="!bg-red-500/10 !border-red-500/20 !text-red-200"
+                                className="bg-red-500/10! border-red-500/20! text-red-200!"
                             />
                         )}
 
                         <Button
-                            className="w-full h-12 font-semibold bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 border-0 shadow-lg mt-2"
+                            className="w-full h-12 font-semibold bg-linear-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 border-0 shadow-lg mt-2"
                             type="primary"
                             loading={resetState.isLoading}
                             onClick={onResetPassword}

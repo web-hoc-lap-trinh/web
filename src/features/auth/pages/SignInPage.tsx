@@ -30,8 +30,12 @@ function SignInPage() {
         setLocalSubmitting(true);
         try {
             const res = await login({ email, password });
-            const role = res?.user?.role || "user";
-            navigate(`/${role}`);
+            const role = (res?.user?.role || "USER").toUpperCase();
+            if (role === "ADMIN") {
+                navigate("/admin");
+            } else {
+                navigate("/");
+            }
         } finally {
             setLocalSubmitting(false);
         }
@@ -66,7 +70,7 @@ function SignInPage() {
                 }
             }}
         >
-            <main className="min-h-screen w-full bg-[#051311] relative overflow-hidden flex items-center justify-center px-4 py-10">
+            <main className="min-h-screen w-full bg-[#051311] relative overflow-hidden flex items-center justify-center px-4 py-10 pt-20">
                 <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-emerald-600/20 rounded-full blur-[120px]" />
                 <div className="absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] bg-emerald-900/20 rounded-full blur-[120px]" />
 
@@ -75,15 +79,15 @@ function SignInPage() {
                     <section className="hidden md:flex flex-col justify-center space-y-8 pr-4">
                         <div className="space-y-4">
                             <div className="flex items-center gap-2 mb-2">
-                                <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-emerald-400 to-emerald-600 flex items-center justify-center shadow-lg shadow-emerald-500/30">
+                                <div className="w-8 h-8 rounded-lg bg-linear-to-tr from-emerald-400 to-emerald-600 flex items-center justify-center shadow-lg shadow-emerald-500/30">
                                     <span className="font-bold text-white text-lg">C</span>
                                 </div>
                                 <span className="text-xl font-bold text-white tracking-wide">Codery</span>
                             </div>
 
-                            <Typography.Title level={1} className="!m-0 !text-white !font-bold !text-4xl lg:!text-5xl leading-tight">
+                            <Typography.Title level={1} className="m-0! text-white! font-bold! text-4xl! lg:text-5xl! leading-tight">
                                 Chào mừng <br />
-                                <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-300">
+                                <span className="text-transparent bg-clip-text bg-linear-to-r from-emerald-400 to-teal-300">
                                     trở lại với chúng tôi
                                 </span>
                             </Typography.Title>
@@ -109,7 +113,7 @@ function SignInPage() {
                     <section className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl shadow-2xl p-8 sm:p-10 w-full max-w-md mx-auto md:mr-0">
                         <form onSubmit={handleSubmit} className="flex flex-col gap-6">
                             <div className="text-center md:text-left">
-                                <Typography.Title level={3} className="!m-0 !text-white !font-bold">
+                                <Typography.Title level={3} className="m-0! text-white! font-bold!">
                                     Đăng nhập
                                 </Typography.Title>
                                 <p className="text-gray-400 mt-2">Nhập thông tin xác thực để truy cập.</p>
@@ -125,7 +129,7 @@ function SignInPage() {
                                         disabled={submitting}
                                         onChange={(e) => setEmail(e.target.value)}
                                         size="large"
-                                        className="!bg-white/5 hover:!bg-white/10 focus:!bg-white/10 !border-white/10 !text-white placeholder:!text-gray-500"
+                                        className="bg-white/5! hover:bg-white/10! focus:bg-white/10! border-white/10! text-white! placeholder:text-gray-500!"
                                     />
                                 </div>
 
@@ -140,7 +144,7 @@ function SignInPage() {
                                         disabled={submitting}
                                         onChange={(e) => setPassword(e.target.value)}
                                         size="large"
-                                        className="!bg-white/5 hover:!bg-white/10 focus:!bg-white/10 !border-white/10 !text-white placeholder:!text-gray-500"
+                                        className="bg-white/5! hover:bg-white/10! focus:bg-white/10! border-white/10! text-white! placeholder:text-gray-500!"
                                         iconRender={(visible) => (visible ? <EyeTwoTone twoToneColor={THEME_COLOR} /> : <EyeInvisibleOutlined className="text-gray-400" />)}
                                     />
                                 </div>
@@ -153,7 +157,7 @@ function SignInPage() {
                                     >
                                         Ghi nhớ tôi
                                     </Checkbox>
-                                    <Link to="/forgot-password" className="text-sm font-medium text-emerald-400 hover:text-emerald-300 transition-colors">
+                                    <Link to="/forgot-password" className="text-sm font-medium text-emerald-400! hover:text-emerald-300! transition-colors">
                                         Quên mật khẩu?
                                     </Link>
                                 </div>
@@ -167,7 +171,7 @@ function SignInPage() {
                                         showIcon
                                         closable
                                         onClose={() => setInputError("")}
-                                        className="!bg-yellow-500/10 !border-yellow-500/20 !text-yellow-200"
+                                        className="bg-yellow-500/10! border-yellow-500/20! text-yellow-200!"
                                     />
                                 )}
                                 {loginError && (
@@ -176,7 +180,7 @@ function SignInPage() {
                                         description="Email hoặc mật khẩu không chính xác."
                                         type="error"
                                         showIcon
-                                        className="!bg-red-500/10 !border-red-500/20 !text-red-200"
+                                        className="bg-red-500/10! border-red-500/20! text-red-200!"
                                     />
                                 )}
                             </div>
@@ -186,7 +190,7 @@ function SignInPage() {
                                 type="primary"
                                 loading={submitting}
                                 size="large"
-                                className="w-full h-12 text-base font-semibold tracking-wide border-0 bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 shadow-lg shadow-emerald-900/20"
+                                className="w-full h-12 text-base font-semibold tracking-wide border-0 bg-linear-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 shadow-lg shadow-emerald-900/20"
                             >
                                 Đăng nhập
                             </Button>
@@ -194,7 +198,7 @@ function SignInPage() {
                             <div className="text-center mt-2">
                                 <span className="text-gray-400 text-sm">
                                     Chưa có tài khoản?{" "}
-                                    <Link to="/signup" className="text-emerald-400 font-medium hover:text-emerald-300 hover:underline transition-all">
+                                    <Link to="/signup" className="text-emerald-400! font-medium hover:text-emerald-300! hover:underline transition-all">
                                         Tạo tài khoản mới
                                     </Link>
                                 </span>

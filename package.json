@@ -12,11 +12,13 @@
   "dependencies": {
     "@ant-design/cssinjs": "github:ant-design/cssinjs",
     "@ant-design/v5-patch-for-react-19": "^1.0.3",
+    "@monaco-editor/react": "^4.7.0",
     "@reduxjs/toolkit": "^2.10.1",
     "@tailwindcss/cli": "^4.1.13",
     "@tailwindcss/vite": "^4.1.17",
     "antd": "^5.28.1",
     "antd-style": "^3.7.1",
+    "clsx": "^2.1.1",
     "quill": "^2.0.3",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",

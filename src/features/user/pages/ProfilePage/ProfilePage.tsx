@@ -1,12 +1,9 @@
 import { useState } from "react";
 import { ConfigProvider, theme } from "antd";
-
-// Import các components con
 import NavigationBar from "./components/NavigationBar";
 import ProfileTab from "./components/ProfileTab";
 import SubmissionHistoryTab from "./components/SubmissionHistoryTab";
 
-// --- THEME CONFIG (Emerald Dark) ---
 const THEME_COLOR = "#34D399";
 const BG_DARK = "#051311";
 const BG_GLASS = "rgba(255, 255, 255, 0.05)";
@@ -35,7 +32,7 @@ const ProfilePage = () => {
                 },
                 components: {
                     Table: {
-                        colorBgContainer: 'transparent', // Để table trong suốt hòa vào nền
+                        colorBgContainer: 'transparent', 
                         headerBg: 'rgba(255, 255, 255, 0.05)',
                         headerColor: '#9CA3AF',
                         borderColor: 'rgba(255, 255, 255, 0.1)',
@@ -50,9 +47,7 @@ const ProfilePage = () => {
         >
             <div className="min-h-screen pt-24 pb-12 px-4 font-sans text-white" style={{ backgroundColor: BG_DARK }}>
                 <div className="container mx-auto max-w-7xl">
-                    {/* --- LAYOUT CONTAINER (Grid) --- */}
                     <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 items-start">
-                        {/* --- LEFT COLUMN: NAVIGATION (1/4 Width) --- */}
                         <aside className="w-full lg:col-span-1 sticky top-24 z-10">
                             <NavigationBar 
                                 activeTab={activeTab} 
@@ -60,9 +55,7 @@ const ProfilePage = () => {
                             />
                         </aside>
 
-                        {/* --- RIGHT COLUMN: CONTENT (3/4 Width) --- */}
                         <main className="w-full lg:col-span-3">
-                            {/* Render có điều kiện dựa trên tab đang chọn */}
                             {activeTab === "profile" ? (
                                 <ProfileTab />
                             ) : (
