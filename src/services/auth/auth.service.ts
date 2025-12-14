@@ -1,23 +1,39 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import type { IUser } from "../../types/user.types";
 import type { AuthResponse, LoginPayload, RegisterPayload, VerifyPayload, ProfileResponse } from "./auth.types";
-import { setCredentials, setUser } from "../../stores/slices/authSlice";
+import { setCredentials, setUser, logout } from "../../stores/slices/authSlice";
 
 const BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:4000/api"; 
 
+const rawBaseQuery = fetchBaseQuery({
+  baseUrl: BASE_URL,
+  prepareHeaders: (headers, { getState }) => {
+    const token = (getState() as any)?.auth?.token;
+    if (token) {
+      headers.set("authorization", `Bearer ${token}`);
+    }
+    return headers;
+  },
+});
+
+const baseQueryWithAutoLogout: typeof rawBaseQuery = async (args, api, extraOptions) => {
+  const result = await rawBaseQuery(args, api, extraOptions);
+  const status = (result as any)?.error?.status;
+  if (status === 401) {
+    api.dispatch(logout());
+    try {
+      if (typeof window !== "undefined") {
+        window.location.assign("/signin");
+      }
+    } catch {}
+  }
+  return result;
+};
+
 export const authApi = createApi({
   reducerPath: "authApi",
-  baseQuery: fetchBaseQuery({
-    baseUrl: BASE_URL,
-    prepareHeaders: (headers, { getState }) => {
-      const token = (getState() as any)?.auth?.token;
-      if (token) {
-        headers.set("authorization", `Bearer ${token}`);
-      }
-      return headers;
-    },
-  }),
-  tagTypes: ["User", "Category", "Course", "Lesson", "TryItYourself", "Language", "ExerciseSession", "Exercise", "AdminExercise", "Discussion", "Reply"], 
+  baseQuery: baseQueryWithAutoLogout,
+  tagTypes: ["User", "Category", "Course", "Lesson", "TryItYourself", "Language", "ExerciseSession", "Exercise", "AdminExercise", "Discussion", "Reply", "Problem", "TestCase"], 
   endpoints: (builder) => ({
     
     login: builder.mutation<AuthResponse, LoginPayload>({
