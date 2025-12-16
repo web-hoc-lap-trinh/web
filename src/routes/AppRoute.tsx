@@ -18,6 +18,8 @@ import ProfilePage from "../features/user/pages/ProfilePage/ProfilePage.tsx";
 import CoursePage from "../features/user/pages/CoursePage/MainPage/CoursePage.tsx";
 import CourseDetail from "../features/user/pages/CoursePage/CourseDetailPage/CourseDetail.tsx";
 import LessonDetailPage from "../features/user/pages/CoursePage/LessonDetailPage/LessonDetailPage.tsx";
+import PracticePage from "../features/user/pages/PracticePage/PracticePage.tsx";
+import ProblemDetailPage from "../features/user/pages/PracticePage/ProblemDetailPage.tsx";
 
 export const appRoutes: RouteObject[] = [
     {path: "/", element: <Navigate to="/signin" replace/>},
@@ -68,7 +70,9 @@ export const appRoutes: RouteObject[] = [
                     { path: "profile", element: <ProfilePage/> },
                     { path: "courses", element: <CoursePage/> },
                     { path: "courses/:categoryId", element: <CourseDetail/> },
-                    { path: "learn/:lessonId", element: <LessonDetailPage/> }
+                    { path: "learn/:lessonId", element: <LessonDetailPage/> },
+                    { path: "practice", element: <PracticePage/> },
+                    { path: "practice/:problemId", element: <ProblemDetailPage/>}
                 ]
             },
         ],
