@@ -17,6 +17,7 @@ import LessonDetailPage from "../features/user/pages/CoursePage/LessonDetailPage
 import PracticePage from "../features/user/pages/PracticePage/PracticePage.tsx";
 import ProblemDetailPage from "../features/user/pages/PracticePage/ProblemDetailPage.tsx";
 import LessonPage from "../features/admin/managements/LessonManangement/LessonPage/LessonPage.tsx";
+import AdminUserPage from "../features/admin/managements/UserManagement/AdminUserPage/AdminUserPage.tsx";
 
 export const appRoutes: RouteObject[] = [
     {path: "/", element: <Navigate to="/signin" replace/>},
@@ -50,7 +51,7 @@ export const appRoutes: RouteObject[] = [
                     {path: "category", element: <CategoryPage/>},
                     // {path: "exercise", element: <ExercisePage/>},
                     // {path: "testcase", element: <TestcasePage/>},
-                    // {path: "list-users", element: <AllUserPage/>}
+                    {path: "user", element: <AdminUserPage/>}
                 ]
             },
         ],

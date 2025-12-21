@@ -49,7 +49,7 @@ const MENU_ITEMS: MenuItem[] = [
         title: 'Quản lý Người dùng',
         icon: <UserOutlined size={20}/>,
         subItems: [
-            {id: 'list-users', title: 'Danh sách người dùng'},
+            {id: 'user', title: 'Danh sách người dùng'},
             {id: 'roles', title: 'Thông tin & phân quyền'},
             {id: 'progress', title: 'Theo dõi tiến độ học tập'}
         ]
