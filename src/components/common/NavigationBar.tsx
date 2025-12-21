@@ -1,106 +1,183 @@
 import {
     DashboardOutlined,
-    FileAddOutlined,
     FolderAddOutlined,
     FileOutlined,
-    FileDoneOutlined,
     CommentOutlined,
-    WarningOutlined,
     FireOutlined,
-    TrophyOutlined,
     UserOutlined,
-    KeyOutlined,
-    Loading3QuartersOutlined
+    KeyOutlined
 } from '@ant-design/icons';
-import type { MenuProps } from 'antd';
-import {Menu} from 'antd';
-import {useLocation, useNavigate} from "react-router-dom";
+import {useEffect, useState} from "react";
+import {useNavigate, useLocation} from "react-router-dom";
 
-type MenuItem = Required<MenuProps>['items'][number];
+interface MenuItem {
+    id: string;
+    title: string;
+    icon: React.ReactNode;
+    subItems?: { id: string; title: string }[];
+    isOpen?: boolean;
+}
 
-const items: MenuItem[] = [
+const MENU_ITEMS: MenuItem[] = [
     {
-        key: 'dashboard',
-        label: 'Báo cáo',
-        icon: <DashboardOutlined />,
+        id: 'dashboard',
+        title: 'Dashboard',
+        icon: <DashboardOutlined size={20}/>,
+        subItems: [{id: 'dashboard', title: 'Tổng quan'}]
     },
     {
-        key: 'Lesson',
-        label: 'Quản lý bài học',
-        type: 'group',
-        children: [
-            { key: 'lesson', label: 'Quản lý bài học', icon: <FileAddOutlined /> },
-            { key: 'category', label: 'Quản lý chủ đề', icon: <FolderAddOutlined /> },
-        ],
+        id: 'lessons',
+        title: 'Quản lý Bài học',
+        icon: <FolderAddOutlined size={20}/>,
+        isOpen: true,
+        subItems: [
+            {id: 'lesson', title: 'Quản lý bài học'},
+            {id: 'category', title: 'Quản lý chủ đề'}
+        ]
     },
     {
-        key: 'Exercise',
-        label: 'Quản lý bài tập & test case',
-        type: 'group',
-        children: [
-            { key: 'exercise', label: 'Quản lý bài tập', icon: <FileOutlined/> },
-            { key: 'testcase', label: 'Quản lý test case', icon: <FileDoneOutlined /> },
-        ],
+        id: 'exercises',
+        title: 'Quản lý Bài tập & Test Case',
+        icon: <FileOutlined size={20}/>,
+        subItems: [
+            {id: 'exercise', title: 'Quản lý bài tập'},
+            {id: 'testcase', title: 'Quản lý test case'}
+        ]
     },
     {
-        key: 'Community',
-        label: 'Quản lý cộng đồng',
-        type: 'group',
-        children: [
-            { key: 'comment', label: 'Quản lý bình luận', icon: <CommentOutlined /> },
-            { key: 'report', label: 'Báo cáo vi phạm', icon: <WarningOutlined /> },
-        ],
+        id: 'users',
+        title: 'Quản lý Người dùng',
+        icon: <UserOutlined size={20}/>,
+        subItems: [
+            {id: 'list-users', title: 'Danh sách người dùng'},
+            {id: 'roles', title: 'Thông tin & phân quyền'},
+            {id: 'progress', title: 'Theo dõi tiến độ học tập'}
+        ]
     },
     {
-        key: 'Gamification',
-        label: 'Quản lý gamification',
-        type: 'group',
-        children: [
-            { key: 'streak', label: 'Chuỗi & Huy hiệu', icon: <FireOutlined /> },
-            { key: 'daily', label: 'Nhiệm vụ hằng ngày', icon: <TrophyOutlined /> },
-        ],
+        id: 'community',
+        title: 'Quản lý Cộng đồng',
+        icon: <CommentOutlined size={20}/>,
+        subItems: [
+            {id: 'comments', title: 'Bình luận & Giải thích'},
+            {id: 'reports', title: 'Báo cáo vi phạm'}
+        ]
     },
     {
-        key: 'User',
-        label: 'Quản lý người dùng',
-        type: 'group',
-        children: [
-            { key: 'all-user', label: 'Danh sách người dùng', icon: <UserOutlined /> },
-            { key: 'all-admin', label: 'Thông tin và phân quyền', icon: <KeyOutlined /> },
-            { key: 'progress', label: 'Theo dõi tiến độ học tập', icon: <Loading3QuartersOutlined /> },
-        ],
+        id: 'gamification',
+        title: 'Quản lý Gamification',
+        icon: <FireOutlined size={20}/>,
+        subItems: [
+            {id: 'badges', title: 'Badge & Streak'},
+            {id: 'challenges', title: 'Challenge hàng ngày'}
+        ]
+    },
+    {
+        id: 'settings',
+        title: 'Cấu hình hệ thống',
+        icon: <KeyOutlined size={20}/>,
+        subItems: [
+            {id: 'editor', title: 'Code Editor & Runner'},
+            {id: 'system-params', title: 'Tham số hệ thống'},
+            {id: 'ai-rules', title: 'Quy tắc gợi ý học tập (AI Rule)'}
+        ]
     },
 ];
 
-
 const NavigationBar = () => {
-    const navigate = useNavigate();
+    const navigation = useNavigate();
     const location = useLocation();
-    const pathSegments = location.pathname.split('/');
-    const currentKey = pathSegments[pathSegments.length - 1] || 'dashboard';
-
-    const onClick: MenuProps['onClick'] = (e) => {
-        console.log('click ', e.key);
-        navigate(`/admin/${e.key}`)
-    };
+    const [activeSubItem, setActiveSubItem] = useState<string>(() => {
+        const pathParts = location.pathname.split('/');
+        return pathParts[pathParts.length - 1] || 'dashboard';
+    });
+    useEffect(() => {
+        const pathParts = location.pathname.split('/');
+        const lastPart = pathParts.pop();
+        const activeId = lastPart === 'admin' || !lastPart ? 'dashboard' : lastPart;
+        setActiveSubItem(activeId);
+    }, [location.pathname]);
 
     return (
-        <Menu
-            theme={'dark'}
-            onClick={onClick}
-            style={{
-                width: 256,
-                fontSize: 16,
-                display: 'flex',
-                flexDirection: 'column',
-                gap: 16,
-                borderRadius: 10,
-                boxShadow: 'inherit'
-            }}
-            selectedKeys={[currentKey]}
-            mode="inline"
-            items={items}
-        />
+        <aside
+            className="w-72 h-screen flex flex-col border-r border-white/5 bg-[#0f1218]/80 backdrop-blur-xl shadow-2xl z-20">
+            {/* Header Sidebar */}
+            <div className="p-8 pb-4">
+                <div className="flex items-center gap-3 mb-1">
+                    <div
+                        className="w-8 h-8 rounded-lg bg-gradient-to-br from-emerald-400 to-cyan-500 flex items-center justify-center shadow-lg shadow-emerald-500/20">
+                        <span className="font-bold text-white text-lg">L</span>
+                    </div>
+                    <h2 className="text-xl font-bold text-white tracking-wide">Codery</h2>
+                </div>
+                <p className="text-xs text-gray-500 font-medium ml-11">Admin</p>
+            </div>
+
+            {/* Navigation List */}
+            <nav className="flex-1 overflow-y-auto px-5 py-4 space-y-8 scrollbar-hide">
+                {MENU_ITEMS.map((item) => (
+                    <div key={item.id} className="group-section">
+                        {/* Group Header (Parent Item) */}
+                        <div className="flex items-center gap-3 px-3 mb-3 text-gray-400 select-none">
+                            <div
+                                className="text-emerald-500 p-1.5 bg-emerald-500/10 rounded-lg shadow-sm ring-1 ring-emerald-500/20">
+                                {item.icon}
+                            </div>
+                            <span className="text-[11px] font-bold uppercase tracking-widest text-gray-500 font-sans">
+                {item.title}
+              </span>
+                        </div>
+
+                        {/* List of Sub-items */}
+                        <div className="space-y-1 pl-2">
+                            {item.subItems?.map((sub) => (
+                                <button
+                                    key={sub.id}
+                                    onClick={() => {
+                                        setActiveSubItem(sub.id)
+                                        navigation(`/admin/${sub.id}`)
+                                    }}
+                                    className={`relative flex items-center w-full text-left py-2.5 px-4 text-[13px] font-medium transition-all duration-300 rounded-xl group
+                    ${activeSubItem === sub.id
+                                        ? 'bg-gradient-to-r from-emerald-500/20 to-teal-500/5 text-emerald-300 shadow-md shadow-emerald-900/20 ring-1 ring-emerald-500/20'
+                                        : 'text-gray-400 hover:text-gray-200 hover:bg-white/5'
+                                    }`}
+                                >
+                                    {sub.title}
+
+                                    {/* Subtle glow dot for active state */}
+                                    {activeSubItem === sub.id && (
+                                        <div
+                                            className="absolute right-3 w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)]"/>
+                                    )}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+                ))}
+            </nav>
+
+            {/* Footer / User Info */}
+            <div className="p-5 border-t border-white/5 bg-black/20">
+                <div
+                    className="flex items-center gap-3 p-3 rounded-xl cursor-pointer hover:bg-white/5 transition-colors border border-transparent hover:border-white/5 group">
+                    <div
+                        className="w-10 h-10 rounded-full bg-gradient-to-tr from-emerald-600 to-teal-400 p-[2px] shadow-lg">
+                        <div
+                            className="w-full h-full rounded-full bg-[#1a1f2e] flex items-center justify-center overflow-hidden">
+                            <span
+                                className="text-xs font-bold text-emerald-100 group-hover:scale-110 transition-transform">AD</span>
+                        </div>
+                    </div>
+                    <div className="flex-1 min-w-0">
+                        <div
+                            className="text-sm font-semibold text-gray-200 truncate group-hover:text-white transition-colors">Administrator
+                        </div>
+                        <div className="text-xs text-gray-500 truncate">admin@system.com</div>
+                    </div>
+                </div>
+            </div>
+        </aside>
     );
 }
 

@@ -1,11 +1,11 @@
-import HeaderBar from "../../components/common/HeaderBar.tsx";
+import HeaderBar from "../../../../components/common/HeaderBar.tsx";
 import {useState} from "react";
-import CreateForm from "../../components/common/CreateForm.tsx";
+import CreateForm from "../../../../components/common/CreateForm.tsx";
 import {Form, Input, Radio} from "antd";
-import SearchBar from "../../components/common/SearchBar.tsx";
-import DataTable from "../../components/common/DataTable.tsx";
-import type {IExercise} from "../../types/data.types.ts";
-import EditForm from "../../components/common/EditForm.tsx";
+import SearchBar from "../../../../components/common/SearchBar.tsx";
+import DataTable from "../../../../components/common/DataTable.tsx";
+import type {IExercise} from "../../../../types/data.types.ts";
+import EditForm from "../../../../components/common/EditForm.tsx";
 
 const ExerciseColunn = [
     {

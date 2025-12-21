@@ -16,6 +16,7 @@
     "@reduxjs/toolkit": "^2.10.1",
     "@tailwindcss/cli": "^4.1.13",
     "@tailwindcss/vite": "^4.1.17",
+    "@uiw/react-md-editor": "^4.0.11",
     "antd": "^5.28.1",
     "antd-style": "^3.7.1",
     "clsx": "^2.1.1",
