@@ -18,6 +18,7 @@ import PracticePage from "../features/user/pages/PracticePage/PracticePage.tsx";
 import ProblemDetailPage from "../features/user/pages/PracticePage/ProblemDetailPage.tsx";
 import LessonPage from "../features/admin/managements/LessonManangement/LessonPage/LessonPage.tsx";
 import AdminUserPage from "../features/admin/managements/UserManagement/AdminUserPage/AdminUserPage.tsx";
+import ExercisePage from "../features/admin/managements/ExerciseManagement/ExercisePage/ExercisePage.tsx";
 
 export const appRoutes: RouteObject[] = [
     {path: "/", element: <Navigate to="/signin" replace/>},
@@ -49,7 +50,7 @@ export const appRoutes: RouteObject[] = [
                     {path: "dashboard", element: <DashboardPage/>},
                     {path: "lesson", element: <LessonPage/>},
                     {path: "category", element: <CategoryPage/>},
-                    // {path: "exercise", element: <ExercisePage/>},
+                    {path: "exercise", element: <ExercisePage/>},
                     // {path: "testcase", element: <TestcasePage/>},
                     {path: "user", element: <AdminUserPage/>}
                 ]
