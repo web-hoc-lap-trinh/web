@@ -31,14 +31,20 @@ const UserLayout = () => {
 
 const AdminLayout = () => {
     return (
-        <main className={"flex min-h-screen bg-secondary-700"}>
-            <div className={"flex items-center ps-8"}>
-                <NavigationBar />
-            </div>
-            <div className={"flex-1/2 text-white px-8 py-14"}>
+        <div
+            className="flex h-screen overflow-hidden font-sans selection:bg-emerald-500/30"
+            style={{
+                fontFamily: "Inter",
+                background: "radial-gradient(circle at top left, #1f2937, #111827, #000000)",
+                backgroundAttachment: "fixed",
+                color: "#f3f4f6"
+            }}>
+            <NavigationBar />
+            <main className="flex-1 flex flex-col overflow-hidden relative">
+                <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-emerald-900/10 via-transparent to-transparent pointer-events-none" />
                 <Outlet />
-            </div>
-        </main>
+            </main>
+        </div>
     )
 }
 export { AuthLayout, AdminLayout, UserLayout };

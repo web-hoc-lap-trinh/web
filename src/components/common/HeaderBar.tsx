@@ -11,7 +11,7 @@ interface HeaderProps {
 
 const HeaderBar = ({title, buttonText, setOpen}: HeaderProps) => {
     return (
-        <header className={"min-w-full flex pb-8"}>
+        <header className="px-10 py-8 flex justify-between items-center z-10">
             <div className={"flex-1/2"}>
                 <Title level={2} style={{color: 'white'}}>
                     {title}

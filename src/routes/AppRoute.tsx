@@ -7,16 +7,16 @@ import SignUpPage from "../features/auth/pages/SignUpPage";
 import InputOtpPage from "../features/auth/pages/InputOtpPage";
 import ForgotPasswordPage from "../features/auth/pages/ForgotPasswordPage";
 import ResetPasswordPage from "../features/auth/pages/ResetPasswordPage";
-import DashboardPage from "../features/admin/DashboardPage.tsx";
+import DashboardPage from "../features/admin/managements/DashboardManagement/DashboardPage.tsx";
 import HomePage from "../features/user/pages/HomePage/HomePage.tsx";
-import LessonPage from "../features/admin/LessonPage.tsx";
-import CategoryPage from "../features/admin/CategoryPage.tsx";
+import CategoryPage from "../features/admin/managements/LessonManangement/CategoryPage/CategoryPage.tsx";
 import ProfilePage from "../features/user/pages/ProfilePage/ProfilePage.tsx";
 import CoursePage from "../features/user/pages/CoursePage/MainPage/CoursePage.tsx";
 import CourseDetail from "../features/user/pages/CoursePage/CourseDetailPage/CourseDetail.tsx";
 import LessonDetailPage from "../features/user/pages/CoursePage/LessonDetailPage/LessonDetailPage.tsx";
 import PracticePage from "../features/user/pages/PracticePage/PracticePage.tsx";
 import ProblemDetailPage from "../features/user/pages/PracticePage/ProblemDetailPage.tsx";
+import LessonPage from "../features/admin/managements/LessonManangement/LessonPage/LessonPage.tsx";
 
 export const appRoutes: RouteObject[] = [
     {path: "/", element: <Navigate to="/signin" replace/>},
@@ -47,14 +47,17 @@ export const appRoutes: RouteObject[] = [
                     {index: true, element: <Navigate to={"/admin/dashboard"} replace/>},
                     {path: "dashboard", element: <DashboardPage/>},
                     {path: "lesson", element: <LessonPage/>},
-                    {path: "category", element: <CategoryPage/>}
+                    {path: "category", element: <CategoryPage/>},
+                    // {path: "exercise", element: <ExercisePage/>},
+                    // {path: "testcase", element: <TestcasePage/>},
+                    // {path: "list-users", element: <AllUserPage/>}
                 ]
             },
         ],
     },
 
     {
-        element: <ProtectedRoute redirectPath="/signin" />, 
+        element: <ProtectedRoute redirectPath="/signin" />,
         children: [
             {
                 path: "/*",

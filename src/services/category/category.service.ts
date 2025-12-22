@@ -29,8 +29,8 @@ export const categoryApi = authApi.injectEndpoints({
 
         getCategory: builder.query<ICategory, string>({
             query: (categoryId) => `/categories/${categoryId}`,
-            transformResponse: (response: IApiResponse<CategoryResponse>) =>
-                response.result.category,
+            transformResponse: (response: IApiResponse<ICategory>) =>
+                response.result,
             providesTags: (_result, _error, categoryId) => [
                 { type: "Category", id: categoryId },
             ],
@@ -56,8 +56,8 @@ export const categoryApi = authApi.injectEndpoints({
                 method: "PUT",
                 body: toFormData(data),
             }),
-            transformResponse: (response: IApiResponse<CategoryResponse>) =>
-                response.result.category,
+            transformResponse: (response: IApiResponse<ICategory>) =>
+                response.result,
             invalidatesTags: (_result, _error, { categoryId }) => [
                 { type: "Category", id: categoryId },
                 { type: "Category", id: "LIST" },

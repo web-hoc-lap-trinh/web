@@ -1,23 +1,28 @@
 import {Form, Modal} from "antd";
-import React, {useState} from "react";
+import React from "react";
 
-interface CreateFormProps<T extends object, K extends keyof T> {
+interface EditFormProps<T extends object, K extends keyof T> {
     open: boolean;
     title: string;
-    key: K;
+    recordKey: K;
+    onSave: (value: T, key: T[K]) => void;
     onClose: () => void;
+    initialData: T | undefined;
     children: React.ReactNode;
 }
 
-const CreateForm = <T extends object, K extends keyof T & (string | number)>(
-    {open, title, key, onClose, children}: CreateFormProps<T, K>
+const EditForm = <T extends object, K extends keyof T>(
+    {open, title, recordKey, onClose, onSave, initialData, children}: EditFormProps<T, K>
 ) => {
     const [form] = Form.useForm();
-    const [formValues, setFormValues] = useState<T>();
 
-    const onCreate = (values: T) => {
-        console.log('Received values of form: ', values);
-        setFormValues(values);
+    const handleSave = (value: T) => {
+        if (initialData) {
+            const recordId = initialData[recordKey];
+            console.log(recordKey)
+            onSave(value, recordId);
+            console.log("Save", recordId);
+        }
         onClose();
     };
 
@@ -25,7 +30,7 @@ const CreateForm = <T extends object, K extends keyof T & (string | number)>(
         <Modal
             open={open}
             title={title}
-            okText="Thêm"
+            okText="Lưu"
             cancelText="Hủy"
             okButtonProps={{ autoFocus: true, htmlType: 'submit' }}
             onCancel={onClose}
@@ -35,9 +40,9 @@ const CreateForm = <T extends object, K extends keyof T & (string | number)>(
                     layout="horizontal"
                     form={form}
                     name="CreateForm"
-                    initialValues={{ modifier: 'public' }}
+                    initialValues={initialData}
                     clearOnDestroy
-                    onFinish={(values: T) => onCreate(values)}
+                    onFinish={(values: T) => handleSave(values)}
                 >
                     {dom}
                 </Form>
@@ -48,4 +53,4 @@ const CreateForm = <T extends object, K extends keyof T & (string | number)>(
     )
 }
 
-export default CreateForm;
+export default EditForm;
