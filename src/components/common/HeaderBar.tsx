@@ -13,7 +13,7 @@ const HeaderBar = ({title, buttonText, setOpen}: HeaderProps) => {
     return (
         <header className="px-10 py-8 flex justify-between items-center z-10">
             <div className={"flex-1/2"}>
-                <Title level={2} style={{color: 'white'}}>
+                <Title level={2} className="text-emerald-600! font-bold!">
                     {title}
                 </Title>
             </div>
@@ -23,6 +23,7 @@ const HeaderBar = ({title, buttonText, setOpen}: HeaderProps) => {
                         icon={<PlusOutlined/>}
                         iconPosition={'end'}
                         onClick={setOpen}
+                        className="bg-emerald-600! hover:bg-emerald-500! border-0 font-semibold shadow-lg shadow-emerald-900/40"
                 >
                     {buttonText}
                 </Button>
