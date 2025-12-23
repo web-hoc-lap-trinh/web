@@ -30,9 +30,9 @@ const DiscussionDetailView = ({ discussionId, onBack }: DiscussionDetailViewProp
   const repliesTree = replyData ? buildReplyTree(replyData.items) : [];
 
   return (
-    <div className="bg-[#262626] min-h-full flex flex-col">
+    <div className=" min-h-full flex flex-col">
       {/* Header Navigation */}
-      <div className="flex items-center border-b border-white/10 px-4 h-12 sticky top-0 bg-[#262626] z-20">
+      <div className="flex items-center px-4 h-12 sticky top-0 z-20">
         <Button 
             type="text" 
             icon={<ArrowLeftOutlined />} 
@@ -107,7 +107,7 @@ const DiscussionDetailView = ({ discussionId, onBack }: DiscussionDetailViewProp
                                 size="small"
                                 className="bg-blue-600 border-none"
                             >
-                                Post
+                                Đăng bài
                             </Button>
                         </div>
                     </Form>

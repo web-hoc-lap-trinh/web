@@ -55,6 +55,7 @@ const CreateDiscussionModal = ({ visible, onCancel, context }: CreateDiscussionM
       title={<span className="text-white text-lg">Tạo thảo luận mới</span>}
       open={visible}
       onCancel={onCancel}
+      centered
       footer={null} 
       width={600}
       styles={{

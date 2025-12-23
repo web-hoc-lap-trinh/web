@@ -44,32 +44,9 @@ const ProblemDiscussion = ({ problemId }: { problemId: number }) => {
   ];
 
   return (
-    <div className="h-full flex flex-col bg-[#262626]">
-        <div className="pt-2 border-b flex justify-between items-center sticky top-0 z-10">
-            <div className="flex-1">
-                <ConfigProvider theme={{
-                    components: {
-                        Tabs: {
-                            itemColor: "#a3a3a3",
-                            itemSelectedColor: "#ffffff",
-                            itemHoverColor: "#ffffff",
-                            inkBarColor: "#ffffff",
-                            margin: 0
-                        }
-                    }
-                }}>
-                    <Tabs 
-                        activeKey={filterType || 'ALL'}
-                        onChange={(key) => {
-                            setFilterType(key === 'ALL' ? undefined : key as DiscussionType);
-                            setPage(1);
-                        }}
-                        items={tabItems}
-                        className="[&_.ant-tabs-nav]:mb-0"
-                    />
-                </ConfigProvider>
-            </div>
-            <Button 
+    <div className="h-full flex flex-col">
+        <div className="py-2 flex justify-end items-center sticky top-0 z-10">
+           <Button 
                 type="primary" 
                 size="small"
                 icon={<PlusOutlined />}
@@ -78,7 +55,9 @@ const ProblemDiscussion = ({ problemId }: { problemId: number }) => {
             >
                 Đặt vấn đề
             </Button>
+            
         </div>
+        
 
         {/* --- List Content --- */}
         <div className="flex-1 overflow-y-auto custom-scrollbar relative">
