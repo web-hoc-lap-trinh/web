@@ -117,7 +117,7 @@ const InputOtpPage = () => {
                         )}
                         
                         <div className="text-center">
-                            <Link to="/signin" className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-gray-300 transition-colors">
+                            <Link to="/signin" className="inline-flex items-center gap-2 text-sm text-gray-500! hover:text-gray-300! transition-colors">
                                 <ArrowLeftOutlined /> Hủy bỏ
                             </Link>
                         </div>
