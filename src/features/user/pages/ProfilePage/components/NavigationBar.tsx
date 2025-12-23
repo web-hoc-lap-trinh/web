@@ -70,12 +70,12 @@ export default function NavigationBar({ activeTab, setActiveTab }: Props) {
                     icon={<UserOutlined />}
                     label="Hồ sơ cá nhân"
                 />
-                <NavButton 
+                {/* <NavButton 
                     active={activeTab === "submissions"} 
                     onClick={() => setActiveTab("submissions")}
                     icon={<CodeOutlined />}
                     label="Bài tập đã nộp"
-                />
+                /> */}
             </nav>
 
             <Divider className="bg-white/10 my-6" />
