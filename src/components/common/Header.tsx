@@ -6,8 +6,7 @@ import { useAuth } from "../../hooks/useAuth";
 const NAV_ITEMS = [
     { label: 'Khóa học', path: '/courses' },
     { label: 'Luyện tập', path: '/practice' },
-    { label: 'Cuộc thi', path: '/contests' },
-    { label: 'Cộng đồng', path: '/community' }
+    { label: 'Thử thách', path: '/challenges' },
 ];
 
 const Header = () => {

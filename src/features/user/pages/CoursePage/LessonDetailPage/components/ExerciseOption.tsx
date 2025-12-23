@@ -46,7 +46,7 @@ const ExerciseOption = ({
       )}
     >
       <div className={clsx(
-        "flex-shrink-0 w-6 h-6 rounded-full border flex items-center justify-center text-xs font-bold mt-0.5",
+        "shrink-0 w-6 h-6 rounded-full border flex items-center justify-center text-xs font-bold mt-0.5",
         !isSubmitted && isSelected ? "border-emerald-500 bg-emerald-500 text-white" : "border-white/20 bg-white/5",
         isSubmitted && isCorrect && "border-emerald-500 bg-emerald-500 text-white",
         isSubmitted && isUserSelected && !isCorrect && "border-red-500 bg-red-500 text-white"

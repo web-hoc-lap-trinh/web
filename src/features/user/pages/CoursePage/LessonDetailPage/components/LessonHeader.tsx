@@ -20,7 +20,7 @@ const LessonHeader = ({ lesson }: LessonHeaderProps) => {
     <div className="bg-linear-to-b from-emerald-900/20 to-[#051311] border-b border-white/5 pt-24 pb-8 px-4">
       <div className="container mx-auto max-w-6xl">
         <Breadcrumb
-          className="mb-4 [&_.ant-breadcrumb-link]:!text-gray-400 [&_.ant-breadcrumb-link]:hover:!text-emerald-400 [&_.ant-breadcrumb-separator]:!text-gray-100"
+          className="mb-4 [&_.ant-breadcrumb-link]:text-gray-400! [&_.ant-breadcrumb-link]:hover:text-emerald-400! [&_.ant-breadcrumb-separator]:text-gray-100!"
           items={[
             { title: <Link to="/courses"><span className="text-gray-100">Khóa học</span></Link> },
             { 

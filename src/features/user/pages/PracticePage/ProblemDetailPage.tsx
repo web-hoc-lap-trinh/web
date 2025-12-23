@@ -22,7 +22,7 @@ const ProblemDetailPage = () => {
     isError,
   } = useGetProblemQuery(Number(idParam));
 
-  const handleBack = () => navigate("/problems");
+  const handleBack = () => navigate("/practice");
 
   const getDifficultyColor = (diff?: string) => {
     switch (diff) {
