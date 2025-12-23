@@ -63,12 +63,12 @@ const AdminUserTable = ({onEdit, users, loading} : AdminUserTableProps) => {
                         />
                     </div>
 
-                    <div className="flex gap-3">
+                    {/*<div className="flex gap-3">
                         <button className="flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-gray-400 hover:text-white hover:bg-white/5 rounded-xl transition-all">
                             <SortAscendingOutlined size={16} />
                             <span>Lọc trạng thái</span>
                         </button>
-                    </div>
+                    </div>*/}
                 </div>
 
                 {/* Table */}
@@ -78,7 +78,7 @@ const AdminUserTable = ({onEdit, users, loading} : AdminUserTableProps) => {
                         <tr>
                             <th className="px-6 py-5 font-semibold">Người dùng</th>
                             <th className="px-6 py-5 font-semibold">User ID</th>
-                            <th className="px-6 py-5 font-semibold text-center">Vai trò</th>
+                            {/*<th className="px-6 py-5 font-semibold text-center">Vai trò</th>*/}
                             <th className="px-6 py-5 font-semibold text-center">Trạng thái</th>
                             <th className="px-6 py-5 font-semibold text-center">Hoạt động cuối</th>
                             <th className="px-6 py-5 font-semibold text-center">Ngày tạo</th>
@@ -104,11 +104,11 @@ const AdminUserTable = ({onEdit, users, loading} : AdminUserTableProps) => {
                       {user.user_id}
                     </span>
                                 </td>
-                                <td className="px-6 py-5 text-center">
+                                {/*<td className="px-6 py-5 text-center">
                     <span className={`inline-flex items-center px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider border ${getRoleBadge(user.role)}`}>
                       {user.role}
                     </span>
-                                </td>
+                                </td>*/}
                                 <td className="px-6 py-5 text-center">
                     <span className={`inline-flex items-center px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider border ${
                         user.status === 'ACTIVE'

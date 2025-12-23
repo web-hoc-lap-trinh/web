@@ -11,6 +11,7 @@ import type {
 	PaginatedResponse,
 } from "../../types/problem.types";
 import type { IApiResponse, ProblemsResponse, ProblemResponse, TestCasesResponse, TestCaseResponse } from "./problem.types";
+import type {IExerciseAdminDetail} from "../../types/exercise.types.ts";
 
 type ProblemTag = { type: "Problem"; id?: number | string };
 type TestCaseTag = { type: "TestCase"; id?: number | string };
@@ -57,7 +58,7 @@ export const problemApi = authApi.injectEndpoints({
 			invalidatesTags: [{ type: "Problem", id: "LIST" } as ProblemTag],
 		}),
 
-		getProblemTestCases: builder.query<PaginatedResponse<ITestCase>, { id: number; page?: number; limit?: number } | number>({
+		/*getProblemTestCases: builder.query<PaginatedResponse<ITestCase>, { id: number; page?: number; limit?: number } | number>({
 			query: (arg) => {
 				if (typeof arg === "number") return { url: `/problems/${arg}/testcases` };
 				const { id, page, limit } = arg;
@@ -71,7 +72,26 @@ export const problemApi = authApi.injectEndpoints({
 						{ type: "TestCase", id: "LIST" } as TestCaseTag,
 					]
 					: [{ type: "TestCase", id: "LIST" } as TestCaseTag],
-		}),
+		}),*/
+
+        getProblemTestCases: builder.query<
+            ITestCase[],
+            number
+        >({
+            query: (problemId) => `/problems/${problemId}/testcases`,
+            transformResponse: (response: IApiResponse<ITestCase[]>) =>
+                response.result,
+            providesTags: (result, error, problemId) =>
+                result
+                    ? [
+                        ...result.map(({ test_case_id }) => ({
+                            type: "TestCase" as const,
+                            id: test_case_id,
+                        })),
+                        { type: "TestCase", id: `LESSON_${problemId}` },
+                    ]
+                    : [{ type: "TestCase", id: `LESSON_${problemId}` }],
+        }),
 
 		createProblemTestCase: builder.mutation<ITestCase, { id: number; data: CreateTestCasePayload }>({
 			query: ({ id, data }) => ({ url: `/problems/${id}/testcases`, method: "POST", body: data }),

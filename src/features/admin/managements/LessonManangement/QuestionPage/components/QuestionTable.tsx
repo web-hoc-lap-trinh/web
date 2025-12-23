@@ -3,7 +3,6 @@ import type {ILesson} from "../../../../../../types/lesson.types.ts";
 import {useEffect, useMemo, useState} from "react";
 import {
     CheckCircleOutlined,
-    CloseOutlined,
     CodeOutlined, DeleteOutlined,
     DownOutlined,
     EditOutlined, ExclamationCircleFilled,
@@ -24,7 +23,7 @@ interface ExerciseTableProps {
     loading: boolean;
 }
 
-const ExerciseTable = ({onEdit, lessons, loading}: ExerciseTableProps) => {
+const QuestionTable = ({onEdit, lessons, loading}: ExerciseTableProps) => {
     const [selectedLessonId, setSelectedLessonId] = useState<number>(0);
     const [searchQuery, setSearchQuery] = useState('');
     const {data: exercises = [], isFetching} = useGetAdminLessonExercisesQuery(selectedLessonId, {
@@ -196,7 +195,7 @@ const ExerciseTable = ({onEdit, lessons, loading}: ExerciseTableProps) => {
                             <th className="px-6 py-5 font-semibold">Bài học</th>
                             <th className="px-6 py-5 font-semibold text-center">Loại bài tập</th>
                             <th className="px-6 py-5 font-semibold text-center">Ngày tạo</th>
-                            <th className="px-6 py-5 font-semibold text-right">Tác vụ</th>
+                            <th className="px-6 py-5 font-semibold text-right"></th>
                         </tr>
                         </thead>
                         <tbody className="divide-y divide-white/5">
@@ -281,4 +280,4 @@ const ExerciseTable = ({onEdit, lessons, loading}: ExerciseTableProps) => {
     );
 }
 
-export default ExerciseTable
+export default QuestionTable

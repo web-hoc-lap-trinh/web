@@ -10,7 +10,7 @@ interface AddExerciseModalProps {
     onClose: () => void;
 }
 
-const AddExerciseModal = ({isOpen, onClose} : AddExerciseModalProps) => {
+const AddQuestionModal = ({isOpen, onClose} : AddExerciseModalProps) => {
     const {data: lessons = []} = useGetAdminLessonsQuery();
     const [createExercise] = useCreateExerciseMutation();
 
@@ -302,4 +302,4 @@ const AddExerciseModal = ({isOpen, onClose} : AddExerciseModalProps) => {
     );
 }
 
-export default AddExerciseModal
+export default AddQuestionModal

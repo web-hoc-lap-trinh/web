@@ -719,3 +719,18 @@
     font-weight: bold;
     font-display: swap;
 }
+
+.w-md-editor {
+    border-color: rgba(255, 255, 255, 0.1) !important;
+}
+.w-md-editor-toolbar {
+    background-color: rgba(255, 255, 255, 0.03) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+}
+.w-md-editor-content {
+    background-color: transparent !important;
+}
+.w-md-editor-preview {
+    background-color: rgba(0, 0, 0, 0.1) !important;
+    border-left: 1px solid rgba(255, 255, 255, 0.05) !important;
+}

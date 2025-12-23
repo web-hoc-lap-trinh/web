@@ -20,7 +20,7 @@ interface EditExerciseModalProps {
     exerciseId: number;
 }
 
-const EditExerciseModal = ({isOpen, onClose, exerciseId} : EditExerciseModalProps) => {
+const EditQuestionModal = ({isOpen, onClose, exerciseId} : EditExerciseModalProps) => {
     const {data: lessons = []} = useGetAdminLessonsQuery();
     const {data: exercise} = useGetAdminExerciseDetailQuery(exerciseId, {
         skip: !exerciseId || !isOpen
@@ -332,4 +332,4 @@ const EditExerciseModal = ({isOpen, onClose, exerciseId} : EditExerciseModalProp
     );
 }
 
-export default EditExerciseModal;
+export default EditQuestionModal;

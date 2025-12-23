@@ -1,12 +1,12 @@
 import HeaderBar from "../../../../../components/common/HeaderBar.tsx";
 import {useGetAdminLessonsQuery} from "../../../../../services/lesson/lesson.service.ts";
 import {useState} from "react";
-import ExerciseTable from "./components/ExerciseTable.tsx";
+import QuestionTable from "./components/QuestionTable.tsx";
 import type {IExerciseAdminDetail} from "../../../../../types/exercise.types.ts";
-import AddExerciseModal from "./components/AddExerciseModal.tsx";
-import EditExerciseModal from "./components/EditExerciseModal.tsx";
+import AddQuestionModal from "./components/AddQuestionModal.tsx";
+import EditQuestionModal from "./components/EditQuestionModal.tsx";
 
-const ExercisePage = () => {
+const QuestionPage = () => {
     const [selectedExerciseId, setSelectedExerciseId] = useState<number>(0);
     const [isExerciseAddOpen, setIsExerciseAddOpen] = useState<boolean>(false);
     const [isExerciseEditOpen, setIsExerciseEditOpen] = useState<boolean>(false);
@@ -19,11 +19,11 @@ const ExercisePage = () => {
 
     return (
         <div className="flex-1 overflow-auto px-10 pb-10 z-10">
-            <HeaderBar title={"Quản lý bài tập"} buttonText={"Thêm bài tập"} setOpen={() => setIsExerciseAddOpen(true)} />
-            <ExerciseTable onEdit={handleEditExercise} lessons={lessons} loading={isLoading} />
+            <HeaderBar title={"Quản lý câu hỏi"} buttonText={"Thêm câu hỏi"} setOpen={() => setIsExerciseAddOpen(true)} />
+            <QuestionTable onEdit={handleEditExercise} lessons={lessons} loading={isLoading} />
 
-            <AddExerciseModal isOpen={isExerciseAddOpen} onClose={() => setIsExerciseAddOpen(false)} />
-            <EditExerciseModal
+            <AddQuestionModal isOpen={isExerciseAddOpen} onClose={() => setIsExerciseAddOpen(false)} />
+            <EditQuestionModal
                 isOpen={isExerciseEditOpen}
                 onClose={() => {
                     setIsExerciseEditOpen(false);
@@ -35,4 +35,4 @@ const ExercisePage = () => {
     )
 }
 
-export default ExercisePage
+export default QuestionPage;
