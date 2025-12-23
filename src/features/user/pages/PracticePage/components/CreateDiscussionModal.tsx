@@ -1,14 +1,15 @@
 import { Modal, Form, Input, Select, Button, message } from "antd";
-import { useCreateDiscussionMutation } from "../../../../../../services/discussion/discussion.service";
+import { useCreateDiscussionMutation } from "../../../../../services/discussion/discussion.service";
 import { useEffect } from "react";
+import type { DiscussionType } from "../../../../../types/discussion.types";
 
 interface CreateDiscussionModalProps {
   visible: boolean;
   onCancel: () => void;
-  lessonId: string;
+  context: { type: 'lesson' | 'problem', id: string | number };
 }
 
-const CreateDiscussionModal = ({ visible, onCancel, lessonId }: CreateDiscussionModalProps) => {
+const CreateDiscussionModal = ({ visible, onCancel, context }: CreateDiscussionModalProps) => {
   const [form] = Form.useForm();
   const [createDiscussion, { isLoading }] = useCreateDiscussionMutation();
 
@@ -18,15 +19,22 @@ const CreateDiscussionModal = ({ visible, onCancel, lessonId }: CreateDiscussion
     }
   }, [visible, form]);
 
-  const handleSubmit = async (values: any) => {
+  const handleSubmit = async (values: { title: string; content: string; discussion_type: DiscussionType }) => {
     try {
-      await createDiscussion({
-        lesson_id: lessonId,
+      const payload: any = {
         title: values.title,
         content: values.content,
         discussion_type: values.discussion_type,
-        is_solution: false, 
-      }).unwrap();
+        is_solution: values.discussion_type === "SOLUTION",
+      };
+
+      if (context.type === 'lesson') {
+        payload.lesson_id = context.id;
+      } else {
+        payload.problem_id = context.id;
+      }
+
+      await createDiscussion(payload).unwrap();
 
       message.success("Đăng thảo luận thành công!");
       onCancel(); 
@@ -35,14 +43,21 @@ const CreateDiscussionModal = ({ visible, onCancel, lessonId }: CreateDiscussion
     }
   };
 
+  const discussionTypeOptions = [
+    { value: "GENERAL", label: "💬 Thảo luận chung" },
+    { value: "QUESTION", label: "❓ Hỏi đáp / Gặp lỗi" },
+    { value: "SOLUTION", label: "💡 Chia sẻ lời giải" },
+    { value: "BUG_REPORT", label: "🐛 Báo lỗi hệ thống/đề bài" },
+  ];
+
   return (
     <Modal
       title={<span className="text-white text-lg">Tạo thảo luận mới</span>}
       open={visible}
       onCancel={onCancel}
+      centered
       footer={null} 
       width={600}
-      className="dark-modal" 
       styles={{
         content: {
             backgroundColor: '#1f1f1f',
@@ -54,12 +69,8 @@ const CreateDiscussionModal = ({ visible, onCancel, lessonId }: CreateDiscussion
             paddingBottom: 16,
             marginBottom: 24,
         },
-        body: {
-            paddingTop: 0
-        },
-        mask: {
-            backdropFilter: 'blur(4px)'
-        }
+        body: { paddingTop: 0 },
+        mask: { backdropFilter: 'blur(4px)' }
       }}
       closeIcon={<span className="text-gray-400 hover:text-white">✕</span>}
     >
@@ -67,9 +78,8 @@ const CreateDiscussionModal = ({ visible, onCancel, lessonId }: CreateDiscussion
         form={form}
         layout="vertical"
         onFinish={handleSubmit}
-        initialValues={{ discussion_type: "DISCUSSION" }}
+        initialValues={{ discussion_type: "GENERAL" }}
       >
-        {/* 1. Chọn loại thảo luận */}
         <Form.Item
           name="discussion_type"
           label={<span className="text-gray-300">Loại bài đăng</span>}
@@ -79,16 +89,11 @@ const CreateDiscussionModal = ({ visible, onCancel, lessonId }: CreateDiscussion
             className="[&_.ant-select-selector]:bg-white/5! [&_.ant-select-selector]:border-white/10! [&_.ant-select-selector]:text-white!"
             popupClassName="!bg-[#2a2a2a]"
             dropdownStyle={{ border: '1px solid rgba(255,255,255,0.1)' }}
-            options={[
-              { value: "DISCUSSION", label: "💬 Thảo luận chung" },
-              { value: "QUESTION", label: "❓ Hỏi đáp / Gặp lỗi" },
-              { value: "SHARE", label: "💡 Chia sẻ kiến thức" },
-              { value: "FEEDBACK", label: "📝 Góp ý bài học" },
-            ]}
+            // SỬA: Sử dụng options đã map lại
+            options={discussionTypeOptions}
           />
         </Form.Item>
 
-        {/* 2. Tiêu đề */}
         <Form.Item
           name="title"
           label={<span className="text-gray-300">Tiêu đề</span>}
@@ -99,26 +104,23 @@ const CreateDiscussionModal = ({ visible, onCancel, lessonId }: CreateDiscussion
           ]}
         >
           <Input 
-            placeholder="Tóm tắt vấn đề của bạn..." 
-            className="bg-white/5 border-white/10 text-white placeholder:text-gray-600 focus:bg-white/10 focus:border-emerald-500"
+            placeholder="Tóm tắt vấn đề..." 
+            className="[&_.ant-input]:bg-white/5! [&_.ant-input]:border-white/10! [&_.ant-input]:text-white placeholder:[&_.ant-input]:text-gray-600 focus:[&_.ant-input]:border-emerald-500"
           />
         </Form.Item>
 
-        {/* 3. Nội dung */}
         <Form.Item
           name="content"
           label={<span className="text-gray-300">Nội dung chi tiết</span>}
           rules={[{ required: true, message: "Vui lòng nhập nội dung" }]}
-          help={<span className="text-xs text-gray-500">Hỗ trợ định dạng Markdown</span>}
         >
           <Input.TextArea
             placeholder="Mô tả chi tiết, đính kèm code nếu cần..."
             rows={6}
-            className="bg-white/5 border-white/10 text-white placeholder:text-gray-600 focus:bg-white/10 focus:border-emerald-500"
+            className="[&_.ant-input]:bg-white/5! [&_.ant-input]:border-white/10! [&_.ant-input]:text-white placeholder:[&_.ant-input]:text-gray-600 focus:[&_.ant-input]:border-emerald-500"
           />
         </Form.Item>
 
-        {/* 4. Action Buttons */}
         <div className="flex justify-end gap-3 mt-6 pt-4 border-t border-white/10">
           <Button 
             onClick={onCancel}
@@ -130,7 +132,7 @@ const CreateDiscussionModal = ({ visible, onCancel, lessonId }: CreateDiscussion
             type="primary" 
             htmlType="submit" 
             loading={isLoading}
-            className="bg-emerald-600! hover:bg-emerald-500! border-none font-semibold shadow-lg shadow-emerald-900/20"
+            className="bg-emerald-600 border-none hover:bg-emerald-500! shadow-lg shadow-emerald-900/20"
           >
             Đăng bài
           </Button>

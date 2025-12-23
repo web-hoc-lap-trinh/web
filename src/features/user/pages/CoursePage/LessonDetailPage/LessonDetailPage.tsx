@@ -3,11 +3,7 @@ import { Button, Empty } from "antd";
 import { useNavigate, useParams } from "react-router-dom";
 import { useGetLessonQuery } from "../../../../../services/lesson/lesson.service";
 import LessonHeader from "./components/LessonHeader";
-import LessonActions from "./components/LessonActions";
 import LessonContentTabs from "./components/LessonContentTabs";
-import LessonProgressCard from "./components/LessonProgressCard";
-import RelatedLessonsCard from "./components/RelatedLessonsCard";
-import SupportCard from "./components/SupportCard";
 import LessonDetailSkeleton from "./components/LessonDetailSkeleton";
 
 const LessonDetailPage = () => {
@@ -49,25 +45,8 @@ const LessonDetailPage = () => {
   return (
     <div className="min-h-screen bg-[#051311] text-gray-200 font-sans pb-20">
       <LessonHeader lesson={lesson} />
-      <div className="lg:hidden container mx-auto max-w-6xl px-4 -mt-4 mb-6">
-        <LessonActions />
-      </div>
       <div className="container mx-auto max-w-6xl px-4 py-10">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <div className="lg:col-span-2 space-y-6">
-            <LessonContentTabs lesson={lesson} />
-          </div>
-          <div className="lg:col-span-1">
-            <div className="sticky top-24 space-y-6">
-              <div className="hidden lg:block">
-                <LessonActions />
-              </div>
-              <LessonProgressCard />
-              <RelatedLessonsCard />
-              <SupportCard />
-            </div>
-          </div>
-        </div>
+        <LessonContentTabs lesson={lesson} />
       </div>
     </div>
   );

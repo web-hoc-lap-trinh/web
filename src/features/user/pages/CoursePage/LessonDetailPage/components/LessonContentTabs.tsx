@@ -1,16 +1,12 @@
 import { 
   BookOutlined, 
   CodeOutlined, 
-  CommentOutlined, 
-  FileTextOutlined, 
-  MessageOutlined,
   LaptopOutlined
 } from "@ant-design/icons";
-import { Tabs, Empty, Button } from "antd";
+import { Tabs } from "antd";
 import type { ILesson } from "../../../../../../types/lesson.types";
-import LessonPlayground from "./LessonPlayground";
 import LessonExercisesTab from "./LessonExercisesTab";
-import LessonDiscussionTab from "./LessonDiscussionTab";
+import TryItYourselfRunner from "./TryItYourselfRunner";
 
 interface LessonContentTabsProps {
   lesson: ILesson;
@@ -54,19 +50,6 @@ const CONTENT_STYLES = `
   [&_td]:text-gray-300 [&_td]:p-4 [&_td]:border-b [&_td]:border-white/5 last:[&_td]:border-0
 `;
 
-const CustomEmpty = ({ icon, title, subTitle }: { icon: React.ReactNode, title: string, subTitle: string }) => (
-  <div className="flex flex-col items-center justify-center py-12 px-4 text-center">
-    <div className="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center text-3xl text-gray-500 mb-4">
-      {icon}
-    </div>
-    <h3 className="text-gray-300 font-medium text-lg mb-1">{title}</h3>
-    <p className="text-gray-500 text-sm max-w-xs mx-auto mb-6">{subTitle}</p>
-    <Button type="dashed" ghost className="border-white/20 text-gray-400 hover:text-emerald-400 hover:border-emerald-400">
-      Đóng góp nội dung
-    </Button>
-  </div>
-);
-
 const LessonContentTabs = ({ lesson }: LessonContentTabsProps) => {
   const items = [
     {
@@ -94,7 +77,7 @@ const LessonContentTabs = ({ lesson }: LessonContentTabsProps) => {
       ),
       children: (
         <div className="mt-2">
-            <LessonPlayground lessonId={lesson.lesson_id} />
+            <TryItYourselfRunner lessonId={lesson.lesson_id.toString()} />
         </div>
       )
     },
@@ -109,17 +92,6 @@ const LessonContentTabs = ({ lesson }: LessonContentTabsProps) => {
         <LessonExercisesTab lessonId={lesson.lesson_id} />
       )
     },
-    {
-      key: 'discussion',
-      label: (
-        <span className="flex items-center gap-2">
-          <CommentOutlined /> Thảo luận
-        </span>
-      ),
-      children: (
-        <LessonDiscussionTab lessonId={lesson.lesson_id} />
-      )
-    }
   ];
 
   return (
@@ -133,7 +105,7 @@ const LessonContentTabs = ({ lesson }: LessonContentTabsProps) => {
           [&_.ant-tabs-nav]:before:border-b
           [&_.ant-tabs-nav]:before:border-white/10
 
-          [&_.ant-tabs-tab]:!text-gray-500
+          [&_.ant-tabs-tab]:text-gray-500!
           [&_.ant-tabs-tab]:text-base
           [&_.ant-tabs-tab]:px-4
           [&_.ant-tabs-tab]:py-3
@@ -141,13 +113,13 @@ const LessonContentTabs = ({ lesson }: LessonContentTabsProps) => {
           [&_.ant-tabs-tab]:duration-300
           hover:[&_.ant-tabs-tab]:text-emerald-300
 
-          [&_.ant-tabs-tab-active_.ant-tabs-tab-btn]:!text-emerald-400
-          [&_.ant-tabs-tab-active_.ant-tabs-tab-btn]:!font-semibold
-          [&_.ant-tabs-tab-active_.ant-tabs-tab-btn]:!shadow-emerald-500/50
+          [&_.ant-tabs-tab-active_.ant-tabs-tab-btn]:text-emerald-400!
+          [&_.ant-tabs-tab-active_.ant-tabs-tab-btn]:font-semibold!
+          [&_.ant-tabs-tab-active_.ant-tabs-tab-btn]:shadow-emerald-500/50!
           
-          [&_.ant-tabs-ink-bar]:!bg-emerald-500
-          [&_.ant-tabs-ink-bar]:!h-[3px]
-          [&_.ant-tabs-ink-bar]:!rounded-t-full
+          [&_.ant-tabs-ink-bar]:bg-emerald-500!
+          [&_.ant-tabs-ink-bar]:h-[3px]!
+          [&_.ant-tabs-ink-bar]:rounded-t-full!
           [&_.ant-tabs-ink-bar]:shadow-[0_-2px_10px_rgba(16,185,129,0.5)]
         "
       />

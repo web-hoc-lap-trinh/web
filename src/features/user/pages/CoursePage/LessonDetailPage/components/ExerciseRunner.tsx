@@ -32,7 +32,6 @@ const ExerciseRunner = ({ lessonId, onExit }: ExerciseRunnerProps) => {
 
   const { 
     data: detailData, 
-    isLoading: isLoadingDetail,
     isFetching: isFetchingDetail
   } = useGetExerciseDetailQuery(currentExerciseId || 0, { skip: !currentExerciseId });
 

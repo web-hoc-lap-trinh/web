@@ -719,3 +719,60 @@
     font-weight: bold;
     font-display: swap;
 }
+
+@layer base {
+    * {
+        scrollbar-width: thin;
+        scrollbar-color: #334155 #000; 
+    }
+
+    ::-webkit-scrollbar {
+        width: 2px; 
+        height: 2px; 
+    }
+
+    ::-webkit-scrollbar-track {
+        background: transparent; 
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background-color: #334155; 
+        border-radius: 20px;       
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background-color: #10b981; 
+    }
+
+    ::-webkit-scrollbar-corner {
+        background: transparent;
+    }
+}
+
+@layer utilities {
+    .custom-scrollbar::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-track {
+        background: #0a1514; 
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+        background-color: #1f2937;
+        border-radius: 4px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+        background-color: #34d399; 
+    }
+    
+    .no-scrollbar::-webkit-scrollbar {
+        display: none;
+    }
+    .no-scrollbar {
+        -ms-overflow-style: none;  
+        scrollbar-width: none;  
+    }
+}

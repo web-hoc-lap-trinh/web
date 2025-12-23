@@ -121,8 +121,9 @@ const CourseDetail = () => {
                             <Button 
                                 type="primary" 
                                 size="large"
-                                className="w-full !bg-emerald-500 hover:!bg-emerald-400 border-none font-semibold h-11 shadow-lg shadow-emerald-900/20"
+                                className="w-full bg-emerald-500! hover:bg-emerald-400! border-none font-semibold h-11 shadow-lg shadow-emerald-900/20"
                                 icon={<PlayCircleFilled />}
+                                onClick={() => navigate(`/learn/${categoryId}`)}
                             >
                                 Học ngay
                             </Button>

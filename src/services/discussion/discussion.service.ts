@@ -89,8 +89,16 @@ export const discussionApi = authApi.injectEndpoints({
 
     getReplies: builder.query<ReplyListResponse, number | string>({
       query: (discussionId) => `/community/discussions/${discussionId}/replies`,
-      transformResponse: (response: IApiResponse<ReplyListResponse>) =>
-        response.result,
+      transformResponse: (response: any) => {
+        const result = response.result;
+        return {
+            total: result.total,
+            items: result.data.map((item: any) => ({
+                ...item,
+                children: [] 
+            }))
+        };
+      },
       providesTags: (result, _error, discussionId) =>
         result
           ? [
