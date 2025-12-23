@@ -7,7 +7,8 @@ import {
     CodeOutlined, 
     UpOutlined, 
     DownOutlined,
-    CloudUploadOutlined 
+    CloudUploadOutlined,
+    CloseOutlined // Import icon Close
 } from "@ant-design/icons";
 import Editor from "@monaco-editor/react";
 import { 
@@ -20,6 +21,7 @@ import ConsoleOutput from "../../CoursePage/LessonDetailPage/components/ConsoleO
 
 interface TryItYourselfRunnerProps {
   lessonId: string;
+  onClose?: () => void; // Thêm prop onClose (optional)
 }
 
 const getMonacoLanguageId = (apiLangCode: string) => {
@@ -36,7 +38,7 @@ const DEFAULT_CODE_SNIPPETS: Record<string, string> = {
     "c++": `#include <iostream>\n\nint main() {\n    std::cout << "Hello World!";\n    return 0;\n}`
 };
 
-const TryItYourselfRunner = ({ lessonId }: TryItYourselfRunnerProps) => {
+const TryItYourselfRunner = ({ lessonId, onClose }: TryItYourselfRunnerProps) => {
   const [code, setCode] = useState<string>("");
   const [selectedLangCode, setSelectedLangCode] = useState<string>("javascript");
   const [isConsoleOpen, setIsConsoleOpen] = useState(false);
@@ -66,7 +68,6 @@ const TryItYourselfRunner = ({ lessonId }: TryItYourselfRunnerProps) => {
     setCode(snippet);
   };
 
-  // Xử lý chạy thử (Run Code)
   const handleRunCode = async () => {
     if (!isConsoleOpen) setIsConsoleOpen(true);
 
@@ -88,28 +89,23 @@ const TryItYourselfRunner = ({ lessonId }: TryItYourselfRunnerProps) => {
     }
   };
 
-  // Xử lý nộp bài (Submit Code)
   const handleSubmit = async () => {
     if (!code.trim()) {
         message.warning("Vui lòng nhập code trước khi nộp!");
         return;
     }
 
-    // Mapping ngôn ngữ để khớp với Enum của Backend (nếu cần)
-    // Ví dụ: Backend nhận 'cpp', frontend đang hiển thị 'c++'
     let submitLang = selectedLangCode;
     if (submitLang === 'c++') submitLang = 'cpp';
 
     try {
         await submitCode({
-            problem_id: Number(lessonId), // lessonId ở workspace chính là problem_id
+            problem_id: Number(lessonId),
             language: submitLang as any,
             code: code
         }).unwrap();
         
         message.success("Nộp bài thành công! Đang chấm điểm...");
-        // Sau khi nộp thành công, bạn có thể chuyển tab sang "Submissions" 
-        // hoặc hiển thị notification chờ kết quả (polling status)
     } catch (error) {
         message.error("Nộp bài thất bại. Vui lòng thử lại.");
     }
@@ -161,10 +157,26 @@ const TryItYourselfRunner = ({ lessonId }: TryItYourselfRunnerProps) => {
             <Tooltip title="Editor Settings">
                  <Button type="text" size="small" icon={<InfoCircleOutlined />} className="text-gray-500 hover:text-white" />
             </Tooltip>
+
+            {/* NÚT ĐÓNG (Close) */}
+            {onClose && (
+                <>
+                    <div className="h-4 w-px bg-white/10 mx-1" />
+                    <Tooltip title="Thu gọn Editor">
+                        <Button 
+                            type="text" 
+                            size="small" 
+                            icon={<CloseOutlined />} 
+                            onClick={onClose} 
+                            className="text-gray-500 hover:text-red-400" 
+                        />
+                    </Tooltip>
+                </>
+            )}
         </div>
       </div>
 
-      {/* 2. MAIN AREA (Editor + Console Split) */}
+      {/* 2. MAIN AREA */}
       <div className="flex-1 relative overflow-hidden flex flex-col">
          {/* Code Editor */}
          <div className={`transition-all duration-300 ease-in-out ${isConsoleOpen ? 'h-[60%]' : 'h-[calc(100%-50px)]'}`}>
@@ -188,7 +200,7 @@ const TryItYourselfRunner = ({ lessonId }: TryItYourselfRunnerProps) => {
             />
          </div>
 
-         {/* Console Panel (Sliding Up) */}
+         {/* Console Panel */}
          {isConsoleOpen && (
             <div className="h-[40%] border-t border-white/10 bg-[#1e1e1e] flex flex-col animate-slide-up">
                 <div className="flex items-center justify-between px-4 py-2 bg-[#262626] border-b border-white/5 h-9 shrink-0">
@@ -230,7 +242,7 @@ const TryItYourselfRunner = ({ lessonId }: TryItYourselfRunnerProps) => {
                 className="bg-gray-700 border-none text-white hover:bg-gray-600! font-medium px-6"
                 onClick={handleRunCode}
                 loading={isRunning}
-                disabled={isSubmitting} // Disable khi đang submit
+                disabled={isSubmitting} 
                 icon={!isRunning && <PlayCircleFilled />}
              >
                 Thực thi
@@ -238,9 +250,9 @@ const TryItYourselfRunner = ({ lessonId }: TryItYourselfRunnerProps) => {
              <Button 
                 className="bg-emerald-600 border-none text-white hover:bg-emerald-500! font-medium px-6 shadow-lg shadow-emerald-900/20"
                 icon={<CloudUploadOutlined />}
-                onClick={handleSubmit} // Gắn hàm submit
-                loading={isSubmitting} // Hiển thị loading khi submit
-                disabled={isRunning} // Disable khi đang run
+                onClick={handleSubmit} 
+                loading={isSubmitting} 
+                disabled={isRunning} 
              >
                 Nộp bài
              </Button>

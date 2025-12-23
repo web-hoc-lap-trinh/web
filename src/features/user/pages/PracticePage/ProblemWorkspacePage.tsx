@@ -1,12 +1,16 @@
+import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Button, Layout, Spin, ConfigProvider, theme, Tabs } from "antd";
+import { Button, Layout, Spin, ConfigProvider, theme, Tabs, Tooltip, FloatButton } from "antd"; // 1. Import FloatButton
 import { 
   MenuOutlined, 
   LeftOutlined, 
   RightOutlined,
   FileTextOutlined,
   HistoryOutlined,
-  BulbOutlined
+  BulbOutlined,
+  RobotOutlined,
+  HomeOutlined,
+  CodeOutlined // Import icon Code
 } from "@ant-design/icons";
 import { useGetProblemQuery } from "../../../../services/problem/problem.service";
 import ProblemContent from "../PracticePage/components/ProblemContent";
@@ -14,6 +18,7 @@ import TryItYourselfRunner from "./components/CodeEditor";
 import ProblemNotFound from "../PracticePage/components/ProblemNotFound";
 import SubmissionHistory from "./SubmissionHistory";
 import ProblemDiscussion from "./ProblemDiscussion";
+import AiChatPanel from "./components/AI/AiChatPanel";
 
 const { Header, Content } = Layout;
 
@@ -22,6 +27,9 @@ const ProblemWorkspacePage = () => {
   const navigate = useNavigate();
   const problemId = Number(id);
   const isValidId = !isNaN(problemId) && problemId > 0;
+
+  // State quản lý hiển thị Editor
+  const [isEditorOpen, setIsEditorOpen] = useState(true);
 
   const { data: problem, isLoading, isError } = useGetProblemQuery(problemId, {
     skip: !isValidId,
@@ -52,12 +60,21 @@ const ProblemWorkspacePage = () => {
     {
       key: 'submissions',
       label: <span className="flex items-center gap-2"><HistoryOutlined /> Bài nộp</span>,
-      children: <div className="p-5 text-gray-400"><SubmissionHistory problemId={problem.problem_id} /></div>,
+      children: <div className="p-0 h-full"><SubmissionHistory problemId={problem.problem_id} /></div>,
     },
-     {
+    {
       key: 'discussion',
       label: <span className="flex items-center gap-2"><BulbOutlined /> Thảo luận</span>,
-      children: <div className="p-5 text-gray-400"><ProblemDiscussion problemId={problem.problem_id} /></div>,
+      children: <div className="p-0 h-full"><ProblemDiscussion problemId={problem.problem_id} /></div>,
+    },
+    {
+      key: 'ai_chat',
+      label: <span className="flex items-center gap-2 text-emerald-400"><RobotOutlined /> AI Assistant</span>,
+      children: (
+        <div className="h-full overflow-hidden">
+            <AiChatPanel problemId={problem.problem_id} />
+        </div>
+      ),
     },
   ] : [];
 
@@ -87,7 +104,8 @@ const ProblemWorkspacePage = () => {
         }
       }}
     >
-      <Layout className="h-screen overflow-hidden flex flex-col font-sans">
+      <Layout className="h-screen overflow-hidden flex flex-col font-sans relative">
+        {/* Header */}
         <Header className="flex items-center justify-between px-4 h-12 bg-linear-to-br from-emerald-900/20 to-[#0a1916] border-b border-white/10 shrink-0 z-20">
           <div className="flex items-center gap-4">
             <div className="flex items-center cursor-pointer" onClick={() => navigate('/')}>
@@ -104,14 +122,30 @@ const ProblemWorkspacePage = () => {
           </div>
           
           <div className="flex items-center gap-2">
+             {/* Cách 1: Nút Mở Editor trên Header (Luôn hiển thị hoặc chỉ hiện khi đóng) */}
+             {!isEditorOpen && (
+                <Tooltip title="Mở trình biên dịch (CMD + B)">
+                    <Button 
+                        icon={<CodeOutlined />} 
+                        size="small" 
+                        onClick={() => setIsEditorOpen(true)}
+                        className="bg-emerald-600 border-none text-white hover:bg-emerald-500 animate-fade-in flex items-center gap-1"
+                    >
+                        Code
+                    </Button>
+                </Tooltip>
+             )}
+
              <Button type="text" size="small" icon={<LeftOutlined />} className="text-gray-500 hover:text-white bg-white/5" />
              <Button type="text" size="small" icon={<RightOutlined />} className="text-gray-500 hover:text-white bg-white/5" />
           </div>
         </Header>
 
-        <Content className="flex-1 overflow-hidden p-2">
-          <div className="flex h-full gap-2">
-            <div className="flex-1 lg:max-w-[45%] h-full bg-linear-to-br! from-emerald-900/20! to-[#0a1916]! rounded-lg overflow-y-auto border border-white/5 flex flex-col">
+        <Content className="flex-1 overflow-hidden p-2 relative">
+          <div className="flex h-full gap-2 transition-all duration-300">
+            {/* Left Panel: Tabs */}
+            {/* Nếu Editor đóng -> width 100%, Nếu mở -> width 45% */}
+            <div className={`flex-1 h-full bg-linear-to-br! from-emerald-900/20! to-[#0a1916]! rounded-lg overflow-y-auto border border-white/5 flex flex-col transition-all duration-300 ${isEditorOpen ? 'lg:max-w-[45%]' : 'max-w-full'}`}>
                <Tabs 
                   defaultActiveKey="description" 
                   items={tabItems} 
@@ -119,11 +153,26 @@ const ProblemWorkspacePage = () => {
                />
             </div>
 
-            <div className="flex-1 h-full bg-[#262626] rounded-lg overflow-hidden border border-white/5 relative">
-               <TryItYourselfRunner lessonId={problem.problem_id.toString()} />
+            {/* Right Panel: Editor */}
+            <div className={`flex-1 h-full bg-[#262626] rounded-lg overflow-hidden border border-white/5 relative transition-all duration-300 ${!isEditorOpen ? 'hidden' : ''}`}>
+               <TryItYourselfRunner 
+                  lessonId={problem.problem_id.toString()} 
+                  onClose={() => setIsEditorOpen(false)} // Truyền hàm đóng để ẩn Editor
+               />
             </div>
-            
           </div>
+
+          {/* Cách 2: Nút Float Button (Nổi ở góc dưới) - Chỉ hiện khi Editor đóng */}
+          {!isEditorOpen && (
+            <FloatButton 
+                icon={<CodeOutlined />} 
+                type="primary" 
+                onClick={() => setIsEditorOpen(true)}
+                tooltip={<div>Mở trình biên dịch</div>}
+                style={{ right: 24, bottom: 24 }}
+                className="animate-bounce-in"
+            />
+          )}
         </Content>
       </Layout>
     </ConfigProvider>
