@@ -1,4 +1,4 @@
-export type ExerciseType = "MULTIPLE_CHOICE" | "FILL_IN_BLANK" | "CODE";
+export type ExerciseType = "MULTIPLE_CHOICE" | "TRUE_FALSE";
 
 export interface IExerciseOption {
   id: string; 
@@ -17,7 +17,7 @@ export interface IExerciseNavigation {
 
 export interface IExerciseUserDetail {
   exercise_id: number;
-  lesson_id: number | string;
+  lesson_id: number;
   question: string;
   exercise_type: ExerciseType;
   options: IExerciseOption[];
@@ -34,5 +34,5 @@ export interface IExercisePreview {
 export interface IExerciseAdminDetail extends IExerciseUserDetail {
   correct_answer: string; 
   explanation: string;
-  created_at?: string;
+  created_at: string;
 }

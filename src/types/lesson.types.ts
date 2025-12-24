@@ -3,7 +3,7 @@ import type {ICategory} from "./category.types.ts";
 export type DifficultyLevel = "BEGINNER" | "INTERMEDIATE" | "ADVANCED";
 
 export interface ILesson {
-  lesson_id: string;
+  lesson_id: number;
   title: string;
   description: string;
   content: string;
