@@ -114,7 +114,7 @@ const LessonTable = ({onEdit, lessons, loading}: LessonTableProps) => {
                         />
                     </div>
 
-                    {/*<div className="flex gap-3">
+                    <div className="flex gap-3">
                         <button
                             className="flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-gray-400 hover:text-white hover:bg-white/5 rounded-xl transition-all">
                             <SortAscendingOutlined size={16}/>
@@ -125,7 +125,7 @@ const LessonTable = ({onEdit, lessons, loading}: LessonTableProps) => {
                             Gần đây nhất
                             <DownOutlined size={16} className="text-gray-400"/>
                         </button>
-                    </div>*/}
+                    </div>
                 </div>
 
                 {/* Table */}
@@ -133,14 +133,14 @@ const LessonTable = ({onEdit, lessons, loading}: LessonTableProps) => {
                     <table className="w-full text-sm text-left">
                         <thead className="text-xs text-gray-400 uppercase bg-black/20">
                         <tr>
-                            {/*<th className="px-6 py-5 font-semibold tracking-wider text-gray-500">Mã bài học</th>*/}
+                            <th className="px-6 py-5 font-semibold tracking-wider text-gray-500">Mã bài học</th>
                             <th className="px-6 py-5 font-semibold tracking-wider text-gray-500">Tên bài học</th>
                             <th className="px-6 py-5 font-semibold tracking-wider text-gray-500">Chủ đề</th>
                             <th className="px-6 py-5 font-semibold tracking-wider text-gray-500 text-center">Mức độ</th>
                             <th className="px-6 py-5 font-semibold tracking-wider text-gray-500 text-center">Thời gian
                             </th>
                             <th className="px-6 py-5 font-semibold tracking-wider text-gray-500">Trạng thái</th>
-                            <th className="px-6 py-5 font-semibold tracking-wider text-gray-500 text-right"></th>
+                            <th className="px-6 py-5 font-semibold tracking-wider text-gray-500 text-right">Tác vụ</th>
                         </tr>
                         </thead>
                         <tbody className="divide-y divide-white/5">
@@ -149,12 +149,12 @@ const LessonTable = ({onEdit, lessons, loading}: LessonTableProps) => {
                             return (
                                 <tr key={lesson.lesson_id}
                                     className="group hover:bg-white/[0.02] transition-colors duration-200">
-                                    {/*<td className="px-6 py-5">
+                                    <td className="px-6 py-5">
                     <span
                         className="font-mono text-xs text-emerald-400/80 bg-emerald-400/10 px-2 py-1 rounded border border-emerald-400/20">
                       {lesson.lesson_id}
                     </span>
-                                    </td>*/}
+                                    </td>
                                     <td className="px-6 py-5">
                                         <div
                                             className="font-semibold text-gray-200 group-hover:text-emerald-300 transition-colors">
@@ -196,7 +196,7 @@ const LessonTable = ({onEdit, lessons, loading}: LessonTableProps) => {
                                     </td>
                                     <td className="px-6 py-5 text-right">
                                         <div
-                                            className="p-2.5 flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                            className="flex items-center justify-end gap-2 opacity-60 group-hover:opacity-100 transition-opacity">
                                             <button
                                                 onClick={() => onEdit(lesson)}
                                                 className="p-2 text-gray-400 hover:text-emerald-400 hover:bg-emerald-400/10 rounded-lg transition-all transform hover:scale-110"
@@ -221,7 +221,7 @@ const LessonTable = ({onEdit, lessons, loading}: LessonTableProps) => {
 
                 {/* Pagination placeholder with soft style */}
                 <div className="h-14 bg-black/20 border-t border-white/5 flex items-center justify-center">
-                    <span className="text-xs text-gray-600 font-medium">Hiển thị {lessons.length} bài học</span>
+                    <span className="text-xs text-gray-600 font-medium">Hiển thị {lessons.length} / 24 bài học</span>
                 </div>
             </div>
         </div>

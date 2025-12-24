@@ -18,7 +18,7 @@ export interface SubmitAnswerResponse {
 }
 
 export interface CreateExercisePayload {
-  lesson_id: number;
+  lesson_id: number | string;
   question: string;
   exercise_type: ExerciseType;
   options: IExerciseOption[];

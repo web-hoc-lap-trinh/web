@@ -20,19 +20,18 @@ export interface IProblemAuthor {
 export interface IProblem {
   problem_id: number;
   title: string;
-  description: string;
+  description?: string;
   difficulty: Difficulty;
   tag_ids: number[];
   tags?: IProblemTag[];
-  input_format: string;
-  output_format: string;
-  constraints: string;
+  input_format?: string;
+  output_format?: string;
+  constraints?: string;
   samples?: IProblemSample[];
-  time_limit: number;
-  memory_limit: number;
-  points: number;
+  time_limit?: number;   
+  memory_limit?: number; 
+  points?: number;
   is_published: boolean;
-  is_daily?: boolean;
   submission_count?: number; 
   accepted_count?: number;   
   acceptance_rate?: string;  
@@ -62,7 +61,7 @@ export interface CreateProblemPayload {
 	title: string;
 	description: string;
 	difficulty: Difficulty;
-	tag_ids?: number[];
+	tag_ids: number[];
 	input_format?: string;
 	output_format?: string;
 	constraints?: string;
@@ -71,7 +70,6 @@ export interface CreateProblemPayload {
 	memory_limit?: number;
 	points?: number;
 	is_published?: boolean;
-    is_daily?: boolean;
 }
 
 export type UpdateProblemPayload = Partial<CreateProblemPayload>;
@@ -85,7 +83,6 @@ export interface ITestCase {
   is_hidden: boolean;
   score: number;
   explanation?: string | null;
-  created_at: string;
 }
 
 export interface CreateTestCasePayload {

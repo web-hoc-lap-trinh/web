@@ -65,7 +65,7 @@ export const exerciseApi = authApi.injectEndpoints({
 
         getAdminLessonExercises: builder.query<
             IExerciseAdminDetail[],
-            number
+            string | number
         >({
             query: (lessonId) => `/exercises/admin/lesson/${lessonId}`,
             transformResponse: (response: IApiResponse<IExerciseAdminDetail[]>) =>
@@ -84,7 +84,7 @@ export const exerciseApi = authApi.injectEndpoints({
 
         getAdminExerciseDetail: builder.query<
             IExerciseAdminDetail,
-            number
+            number | string
         >({
             query: (exerciseId) => `/exercises/admin/${exerciseId}`,
             transformResponse: (response: IApiResponse<IExerciseAdminDetail>) =>
@@ -99,7 +99,7 @@ export const exerciseApi = authApi.injectEndpoints({
             CreateExercisePayload
         >({
             query: (data) => ({
-                url: "/exercises",
+                url: "/exercise",
                 method: "POST",
                 body: data,
             }),

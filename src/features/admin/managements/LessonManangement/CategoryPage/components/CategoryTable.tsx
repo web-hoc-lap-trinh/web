@@ -66,12 +66,12 @@ const CategoryTable = ({ onEdit, categories, loading }: CategoryTableProps) => {
                         />
                     </div>
 
-                    {/*<div className="flex gap-3">
+                    <div className="flex gap-3">
                         <button className="flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-gray-400 hover:text-white hover:bg-white/5 rounded-xl transition-all">
                             <SortAscendingOutlined size={16} />
                             <span>Sắp xếp</span>
                         </button>
-                    </div>*/}
+                    </div>
                 </div>
 
                 {/* Table */}
@@ -85,7 +85,7 @@ const CategoryTable = ({ onEdit, categories, loading }: CategoryTableProps) => {
                             <th className="px-6 py-5 font-semibold">Mã ID</th>
                             {/*<th className="px-6 py-5 font-semibold text-center">Thứ tự</th>*/}
                             {/*<th className="px-6 py-5 font-semibold">Trạng thái</th>*/}
-                            <th className="px-6 py-5 font-semibold text-right"></th>
+                            <th className="px-6 py-5 font-semibold text-right">Tác vụ</th>
                         </tr>
                         </thead>
                         <tbody className="divide-y divide-white/5">

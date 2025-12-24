@@ -32,16 +32,15 @@ const MENU_ITEMS: MenuItem[] = [
         isOpen: true,
         subItems: [
             {id: 'lesson', title: 'Quản lý bài học'},
-            {id: 'category', title: 'Quản lý chủ đề'},
-            {id: 'question', title: 'Quản lý câu hỏi'}
+            {id: 'category', title: 'Quản lý chủ đề'}
         ]
     },
     {
-        id: 'problems',
+        id: 'exercises',
         title: 'Quản lý Bài tập & Test Case',
         icon: <FileOutlined size={20}/>,
         subItems: [
-            {id: 'problem', title: 'Quản lý bài tập'},
+            {id: 'exercise', title: 'Quản lý bài tập'},
             {id: 'testcase', title: 'Quản lý test case'}
         ]
     },
@@ -50,12 +49,12 @@ const MENU_ITEMS: MenuItem[] = [
         title: 'Quản lý Người dùng',
         icon: <UserOutlined size={20}/>,
         subItems: [
-            {id: 'user', title: 'Danh sách người dùng'},
-            // {id: 'roles', title: 'Thông tin & phân quyền'},
-            // {id: 'progress', title: 'Theo dõi tiến độ học tập'}
+            {id: 'list-users', title: 'Danh sách người dùng'},
+            {id: 'roles', title: 'Thông tin & phân quyền'},
+            {id: 'progress', title: 'Theo dõi tiến độ học tập'}
         ]
     },
-    /*{
+    {
         id: 'community',
         title: 'Quản lý Cộng đồng',
         icon: <CommentOutlined size={20}/>,
@@ -63,8 +62,8 @@ const MENU_ITEMS: MenuItem[] = [
             {id: 'comments', title: 'Bình luận & Giải thích'},
             {id: 'reports', title: 'Báo cáo vi phạm'}
         ]
-    },*/
-    /*{
+    },
+    {
         id: 'gamification',
         title: 'Quản lý Gamification',
         icon: <FireOutlined size={20}/>,
@@ -72,8 +71,8 @@ const MENU_ITEMS: MenuItem[] = [
             {id: 'badges', title: 'Badge & Streak'},
             {id: 'challenges', title: 'Challenge hàng ngày'}
         ]
-    },*/
-    /*{
+    },
+    {
         id: 'settings',
         title: 'Cấu hình hệ thống',
         icon: <KeyOutlined size={20}/>,
@@ -82,7 +81,7 @@ const MENU_ITEMS: MenuItem[] = [
             {id: 'system-params', title: 'Tham số hệ thống'},
             {id: 'ai-rules', title: 'Quy tắc gợi ý học tập (AI Rule)'}
         ]
-    },*/
+    },
 ];
 
 const NavigationBar = () => {
