@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom"; // 1. Import hook
 import { Avatar, Button, Divider } from "antd";
 import {
     CheckCircleOutlined,
@@ -5,13 +6,20 @@ import {
     HddOutlined,
     TrophyOutlined,
     UserOutlined,
+    CodeOutlined
 } from "@ant-design/icons";
 import type { IProblem } from "../../../../../types/problem.types";
 
 const ProblemSidebar = ({ problem }: { problem: IProblem }) => {
+    const navigate = useNavigate(); // 2. Init hook
+
+    const handleSolveClick = () => {
+        // 3. Điều hướng đến trang Workspace
+        navigate(`/practice/${problem.problem_id}/solve`);
+    };
+
     return (
         <div className="space-y-6 lg:col-span-4">
-            {/* Submit Card (Sticky) */}
             <div className="sticky top-24 rounded-3xl border border-white/5 bg-[#0a1916] p-6 shadow-xl">
                 <div className="mb-6 flex items-center justify-between">
                     <div className="flex flex-col">
@@ -29,9 +37,11 @@ const ProblemSidebar = ({ problem }: { problem: IProblem }) => {
                     type="primary"
                     block
                     size="large"
-                    className="mb-4 h-12 rounded-xl border-0 bg-emerald-600 font-bold shadow-lg shadow-emerald-900/40 hover:bg-emerald-500"
+                    icon={<CodeOutlined />}
+                    onClick={handleSolveClick} // 4. Gắn sự kiện click
+                    className="mb-4 h-12 rounded-xl border-0 bg-emerald-600 font-bold shadow-lg shadow-emerald-900/40 hover:!bg-emerald-500 transition-all active:scale-95"
                 >
-                    NỘP BÀI GIẢI
+                    GIẢI BÀI TẬP
                 </Button>
 
                 <div className="grid grid-cols-2 gap-3">

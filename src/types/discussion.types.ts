@@ -1,6 +1,6 @@
 import type { IUser } from "./user.types";
 
-export type DiscussionType = "DISCUSSION" | "QUESTION" | "SHARE" | "FEEDBACK";
+export type DiscussionType = "QUESTION" | "SOLUTION" | "GENERAL" | "BUG_REPORT";
 export type VoteType = "UPVOTE" | "DOWNVOTE";
 
 export interface IDiscussion {

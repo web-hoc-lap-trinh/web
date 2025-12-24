@@ -126,6 +126,8 @@ export const {
 	useCreateProblemMutation,
 	useUpdateProblemMutation,
 	useDeleteProblemMutation,
+	useGetDailyChallengeQuery,
+	useTriggerDailyChallengeMutation,
 	useGetProblemTestCasesQuery,
 	useCreateProblemTestCaseMutation,
 	useBulkCreateProblemTestCasesMutation,

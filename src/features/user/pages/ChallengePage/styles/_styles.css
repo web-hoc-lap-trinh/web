@@ -1,0 +1,22 @@
+.custom-calendar-wrapper .ant-picker-calendar {
+  background: transparent !important;
+}
+.custom-calendar-wrapper .ant-picker-panel {
+  background: transparent !important;
+  border: none !important;
+}
+.custom-calendar-wrapper .ant-picker-date-panel .ant-picker-body {
+  padding: 8px 0 !important;
+}
+.custom-calendar-wrapper .ant-picker-cell-in-view.ant-picker-cell-today .ant-picker-cell-inner::before {
+  border-color: #10b981 !important;
+}
+.custom-calendar-wrapper .ant-picker-content th {
+  color: #6b7280 !important; /* gray-500 */
+}
+.custom-calendar-wrapper .ant-picker-cell {
+  color: #d1d5db !important; /* gray-300 */
+}
+.custom-calendar-wrapper .ant-picker-cell-inner:hover {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+}
