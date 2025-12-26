@@ -143,10 +143,6 @@ const CategoryTable = ({ onEdit, categories, loading }: CategoryTableProps) => {
                         </tbody>
                     </table>
                 </div>
-
-                <div className="h-14 bg-black/30 border-t border-white/5 flex items-center justify-center">
-                    <span className="text-[10px] text-gray-600 font-bold uppercase tracking-[0.2em]">Tổng cộng: {filteredCategories.length} danh mục công nghệ</span>
-                </div>
             </div>
         </div>
     );

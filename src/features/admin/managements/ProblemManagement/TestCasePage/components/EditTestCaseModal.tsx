@@ -12,6 +12,7 @@ import {
     InfoCircleOutlined, StarFilled
 } from "@ant-design/icons";
 import type {IProblem} from "../../../../../../types/problem.types.ts";
+import {createPortal} from "react-dom";
 
 interface EditTestCaseModalProps {
     isOpen: boolean;
@@ -85,7 +86,7 @@ const EditTestCaseModal = ({isOpen, onClose, problems, testCaseId}: EditTestCase
 
     const selectedExTitle = problems.find(e => e.problem_id === formData.problemId)?.title || 'Chọn bài tập';
 
-    return (
+    return createPortal(
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
             <div className="absolute inset-0 bg-black/80 backdrop-blur-md transition-opacity animate-in fade-in" onClick={onClose} />
             <div className="relative w-full max-w-xl bg-[#111827] rounded-[32px] shadow-2xl border border-white/10 overflow-hidden transform transition-all animate-in zoom-in-95 duration-200 flex flex-col max-h-[92vh]">
@@ -241,7 +242,8 @@ const EditTestCaseModal = ({isOpen, onClose, problems, testCaseId}: EditTestCase
                     </button>
                 </div>
             </div>
-        </div>
+        </div>,
+        document.body
     );
 }
 

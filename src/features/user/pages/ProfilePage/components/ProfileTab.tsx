@@ -78,7 +78,7 @@ const ProfileTab = () => {
                 
                 onSuccess && onSuccess("ok");
                 message.success("Cập nhật ảnh đại diện thành công!");
-                // Notify NavigationBar to re-render
+                // Notify SideBar to re-render
                 window.dispatchEvent(new Event("userUpdated"));
             } catch (err) {
                 onError && onError(err as any);

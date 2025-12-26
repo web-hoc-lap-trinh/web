@@ -11,7 +11,7 @@ export interface IDiscussion {
   content: string; 
   discussion_type: DiscussionType;
   is_solution: boolean;
-  total_replies: number;
+    reply_count: number;
   vote_count: number; 
   view_count: number;
   user_vote_type?: VoteType | null; 
@@ -31,4 +31,17 @@ export interface IReply {
   created_at: string;
   updated_at: string;
   children?: IReply[]; 
+}
+
+export interface IAdminReply {
+    reply_id: number;
+    discussion_id: number;
+    user_id: number;
+    content: string;
+    upvotes: number;
+    downvotes: number;
+    created_at: string;
+    updated_at: string;
+    user: IUser;
+    discussion: IDiscussion;
 }

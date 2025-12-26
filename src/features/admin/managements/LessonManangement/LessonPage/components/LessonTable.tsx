@@ -268,11 +268,6 @@ const LessonTable = ({onEdit, categories, loading}: LessonTableProps) => {
                     </div>
                 </div>
             </div>
-
-            {/* Pagination placeholder with soft style */}
-            <div className="h-14 bg-black/20 border-t border-white/5 flex items-center justify-center">
-                <span className="text-xs text-gray-600 font-medium">Hiển thị {lessons.length} bài học</span>
-            </div>
         </div>
     )
 }

@@ -4,6 +4,7 @@ import {useGetAdminLessonsQuery} from "../../../../../../services/lesson/lesson.
 import {CheckCircleOutlined, CheckSquareOutlined, CloseOutlined, DownOutlined, InfoCircleOutlined} from "@ant-design/icons";
 import {useCreateExerciseMutation} from "../../../../../../services/exercise/exercise.service.ts";
 import {message} from "antd";
+import {createPortal} from "react-dom";
 
 interface AddExerciseModalProps {
     isOpen: boolean;
@@ -114,7 +115,7 @@ const AddQuestionModal = ({isOpen, onClose} : AddExerciseModalProps) => {
         ? ['A', 'B', 'C', 'D'].indexOf(formData.correct_answer)
         : (formData.correct_answer === 'TRUE' ? 0 : formData.correct_answer === 'FALSE' ? 1 : -1);
 
-    return (
+    return createPortal(
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
             <div className="absolute inset-0 bg-black/70 backdrop-blur-md" onClick={onClose} />
             <div className="relative w-full max-w-2xl bg-[#1a202c] rounded-3xl shadow-2xl border border-white/10 overflow-hidden transform transition-all animate-in zoom-in-95 duration-200 flex flex-col max-h-[90vh]">
@@ -298,7 +299,8 @@ const AddQuestionModal = ({isOpen, onClose} : AddExerciseModalProps) => {
                     </button>
                 </div>
             </div>
-        </div>
+        </div>,
+        document.body
     );
 }
 

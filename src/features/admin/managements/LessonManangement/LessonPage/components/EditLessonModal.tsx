@@ -20,6 +20,7 @@ import type {
     UpdateTryItYourselfPayload
 } from "../../../../../../services/try-it-yourself/try-it-yourself.types.ts";
 import type {UpdateLessonPayload} from "../../../../../../services/lesson/lesson.types.ts";
+import {createPortal} from "react-dom";
 
 interface EditLessonModalProps {
     isOpen: boolean;
@@ -96,7 +97,7 @@ const EditLessonModal = ({ isOpen, onClose, lessonId }: EditLessonModalProps) =>
 
     if (!isOpen) return null;
 
-    return (
+    return createPortal(
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6">
             <div className="absolute inset-0 bg-black/60 backdrop-blur-md transition-opacity" onClick={onClose} />
 
@@ -224,7 +225,8 @@ const EditLessonModal = ({ isOpen, onClose, lessonId }: EditLessonModalProps) =>
                     </button>
                 </div>
             </div>
-        </div>
+        </div>,
+        document.body
     );
 };
 

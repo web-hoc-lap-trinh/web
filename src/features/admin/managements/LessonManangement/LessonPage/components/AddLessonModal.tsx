@@ -10,6 +10,7 @@ import type {CreateTryItYourselfPayload} from "../../../../../../services/try-it
 import {
     useCreateLessonTryItYourselfMutation
 } from "../../../../../../services/try-it-yourself/try-it-yourself.service.ts";
+import TextEditor from "../../../../../../components/common/TextEditor.tsx";
 
 interface AddLessonModalProps {
     isOpen: boolean;
@@ -26,12 +27,16 @@ const AddLessonModal = ({ isOpen, onClose }: AddLessonModalProps) => {
         category_id: "",
         difficulty_level: "BEGINNER" as DifficultyLevel,
         description: "",
-        content: "**Bắt đầu viết nội dung tại đây...**",
+        content: "",
     });
 
     const handleClose = () => {
         setFormData({ title: "", category_id: "", difficulty_level: "BEGINNER", description: "", content: "" });
         onClose();
+    };
+
+    const handleChange = (field: string, value: any) => {
+        setFormData(prev => ({ ...prev, [field]: value }));
     };
 
     const handleSubmit = async () => {
@@ -125,18 +130,9 @@ const AddLessonModal = ({ isOpen, onClose }: AddLessonModalProps) => {
                     </div>
 
                     {/* UIW Markdown Editor */}
-                    <div className="space-y-2 flex flex-col h-full min-h-[400px]">
-                        <label className="text-[10px] font-bold text-gray-500 uppercase tracking-[0.2em] ml-1">Nội dung chi tiết</label>
-                        <div data-color-mode="dark" className="mt-2 flex-1 rounded-xl overflow-hidden border border-white/10">
-                            <MDEditor
-                                value={formData.content}
-                                onChange={(val) => setFormData(prev => ({ ...prev, content: val || "" }))}
-                                height={400}
-                                preview="live"
-                                className="!bg-[#0f131a] !border-none"
-                            />
-                        </div>
-                    </div>
+                    <TextEditor
+                        value={formData.content}
+                        onChange={(val) => handleChange('content', val)}/>
                 </div>
 
                 {/* Footer */}
