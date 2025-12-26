@@ -36,7 +36,7 @@ export const tryItYourselfApi = authApi.injectEndpoints({
         response.result,
     }),
 
-    getLessonTryItYourself: builder.query<ITryItYourselfConfig, string>({
+    getLessonTryItYourself: builder.query<ITryItYourselfConfig, number>({
       query: (lessonId) => `/lessons/${lessonId}/try-it-yourself`,
       transformResponse: (response: IApiResponse<ITryItYourselfConfig>) =>
         response.result,
@@ -47,7 +47,7 @@ export const tryItYourselfApi = authApi.injectEndpoints({
 
     createLessonTryItYourself: builder.mutation<
       ITryItYourselfConfig,
-      { lessonId: string; data: CreateTryItYourselfPayload }
+      { lessonId: number; data: CreateTryItYourselfPayload }
     >({
       query: ({ lessonId, data }) => ({
         url: `/lessons/${lessonId}/try-it-yourself`,
@@ -63,7 +63,7 @@ export const tryItYourselfApi = authApi.injectEndpoints({
 
     updateLessonTryItYourself: builder.mutation<
       ITryItYourselfConfig,
-      { lessonId: string; data: UpdateTryItYourselfPayload }
+      { lessonId: number; data: UpdateTryItYourselfPayload }
     >({
       query: ({ lessonId, data }) => ({
         url: `/lessons/${lessonId}/try-it-yourself`,

@@ -1,9 +1,10 @@
 import React, {useEffect, useState} from "react";
 import type {Difficulty} from "../../../../../../types/problem.types.ts";
 import {
+    CheckCircleOutlined,
     CloseOutlined, CodeOutlined, CodeSandboxOutlined, DownOutlined, EyeInvisibleOutlined, EyeOutlined,
     FieldTimeOutlined, FileTextOutlined,
-    FireFilled, FireOutlined, ThunderboltOutlined, TrophyOutlined
+    FireFilled, FireOutlined, TagsOutlined, ThunderboltOutlined, TrophyOutlined
 } from "@ant-design/icons";
 import {
     useGetProblemQuery,
@@ -11,16 +12,20 @@ import {
 } from "../../../../../../services/problem/problem.service.ts";
 import {message} from "antd";
 import MDEditor from "@uiw/react-md-editor";
+import {createPortal} from "react-dom";
+import type {ITag} from "../../../../../../types/tag.types.ts";
 
 interface EditProblemModalProps {
     isOpen: boolean;
     onClose: () => void;
+    tags: ITag[];
     problemId: number;
 }
 
-const EditProblemModal = ({isOpen, onClose, problemId}: EditProblemModalProps) => {
+const EditProblemModal = ({isOpen, onClose, tags, problemId}: EditProblemModalProps) => {
     const {data: problem} = useGetProblemQuery(problemId);
     const [updateProblem] = useUpdateProblemMutation();
+    const [selectedTagIds, setSelectedTagIds] = useState<number[]>([]);
 
     const [formData, setFormData] = useState({
         title: '',
@@ -51,6 +56,9 @@ const EditProblemModal = ({isOpen, onClose, problemId}: EditProblemModalProps) =
                 time_limit: problem.time_limit,
                 memory_limit: problem.memory_limit,
             });
+            if (problem.tags) {
+                setSelectedTagIds(problem.tags.map(t => t.tag_id));
+            }
         }
     }, [problem, isOpen]);
 
@@ -64,6 +72,12 @@ const EditProblemModal = ({isOpen, onClose, problemId}: EditProblemModalProps) =
         const { name, value, type } = e.target;
         const val = type === 'number' ? parseFloat(value) : value;
         setFormData(prev => ({ ...prev, [name]: val }));
+    };
+
+    const handleLabelToggle = (labelId: number) => {
+        setSelectedTagIds(prev =>
+            prev.includes(labelId) ? prev.filter(id => id !== labelId) : [...prev, labelId]
+        );
     };
 
     const handleDescriptionChange = (value?: string) => {
@@ -88,12 +102,14 @@ const EditProblemModal = ({isOpen, onClose, problemId}: EditProblemModalProps) =
 
     const handleClose = () => {
         setFormData(prev => ({ ...prev}));
+        setSelectedTagIds([]);
         onClose();
     }
 
     const handleSubmit = async () => {
         const finalData = {
             ...formData,
+            tag_ids: selectedTagIds,
         };
         try {
             await updateProblem({
@@ -107,7 +123,7 @@ const EditProblemModal = ({isOpen, onClose, problemId}: EditProblemModalProps) =
         }
     };
 
-    return (
+    return createPortal(
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
             <div className="absolute inset-0 bg-black/80 backdrop-blur-md" onClick={onClose} />
             <div className="relative w-full max-w-4xl bg-[#111827] rounded-3xl shadow-2xl border border-white/10 overflow-hidden transform transition-all animate-in zoom-in-95 duration-200 flex flex-col max-h-[92vh]">
@@ -148,6 +164,33 @@ const EditProblemModal = ({isOpen, onClose, problemId}: EditProblemModalProps) =
                                     placeholder="Ví dụ: Tính tổng hai số nguyên"
                                     className="w-full px-4 py-3 bg-[#0f131a]/50 text-gray-200 rounded-xl border border-white/10 focus:ring-2 focus:ring-emerald-500/50 outline-none transition-all shadow-inner text-sm"
                                 />
+                            </div>
+
+                            <div className="space-y-3 md:col-span-2 bg-black/20 p-5 rounded-[24px] border border-white/5">
+                                <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1 flex items-center gap-2">
+                                    <TagsOutlined size={14} className="text-emerald-400" /> Gắn nhãn bài tập (Chọn nhiều)
+                                </label>
+                                <div className="flex flex-wrap gap-2">
+                                    {(tags ?? []).filter(t => t.is_active).map((tag) => {
+                                        const isSelected = selectedTagIds.includes(tag.tag_id);
+                                        return (
+                                            <button
+                                                key={tag.tag_id}
+                                                type="button"
+                                                onClick={() => handleLabelToggle(tag.tag_id)}
+                                                style={{
+                                                    backgroundColor: isSelected ? `${tag.color}25` : 'transparent',
+                                                    color: isSelected ? tag.color : '#6b7280',
+                                                    borderColor: isSelected ? tag.color : '#374151'
+                                                }}
+                                                className={`flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs font-bold border transition-all hover:scale-105 active:scale-95`}
+                                            >
+                                                {isSelected && <CheckCircleOutlined size={14} />}
+                                                {tag.name}
+                                            </button>
+                                        );
+                                    })}
+                                </div>
                             </div>
 
                             <div className="space-y-2 md:col-span-2 flex flex-col">
@@ -409,7 +452,8 @@ const EditProblemModal = ({isOpen, onClose, problemId}: EditProblemModalProps) =
                     </button>
                 </div>
             </div>
-        </div>
+        </div>,
+        document.body
     );
 }
 

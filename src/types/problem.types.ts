@@ -62,7 +62,7 @@ export interface CreateProblemPayload {
 	title: string;
 	description: string;
 	difficulty: Difficulty;
-	tag_ids?: number[];
+	tags_ids?: number[];
 	input_format?: string;
 	output_format?: string;
 	constraints?: string;
@@ -84,7 +84,7 @@ export interface ITestCase {
   is_sample: boolean;
   is_hidden: boolean;
   score: number;
-  explanation?: string | null;
+  explanation: string;
   created_at: string;
 }
 

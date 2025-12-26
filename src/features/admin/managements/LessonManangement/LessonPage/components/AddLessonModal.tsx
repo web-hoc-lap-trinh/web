@@ -5,6 +5,11 @@ import { useCreateLessonMutation } from "../../../../../../services/lesson/lesso
 import { useGetCategoriesQuery } from "../../../../../../services/category/category.service.ts";
 import type { DifficultyLevel } from "../../../../../../types/lesson.types.ts";
 import MDEditor from '@uiw/react-md-editor';
+import {createPortal} from "react-dom";
+import type {CreateTryItYourselfPayload} from "../../../../../../services/try-it-yourself/try-it-yourself.types.ts";
+import {
+    useCreateLessonTryItYourselfMutation
+} from "../../../../../../services/try-it-yourself/try-it-yourself.service.ts";
 
 interface AddLessonModalProps {
     isOpen: boolean;
@@ -14,6 +19,7 @@ interface AddLessonModalProps {
 const AddLessonModal = ({ isOpen, onClose }: AddLessonModalProps) => {
     const { data: categories = [] } = useGetCategoriesQuery();
     const [createLesson, { isLoading: isCreating }] = useCreateLessonMutation();
+    const [createTIY] = useCreateLessonTryItYourselfMutation();
 
     const [formData, setFormData] = useState({
         title: "",
@@ -33,7 +39,15 @@ const AddLessonModal = ({ isOpen, onClose }: AddLessonModalProps) => {
             return message.warning("Vui lòng điền đầy đủ tiêu đề và nội dung!");
         }
         try {
-            await createLesson(formData).unwrap();
+            const res = await createLesson(formData).unwrap();
+            const payload: CreateTryItYourselfPayload = {
+                language_code: 'cpp',
+                example_code: "a"
+            }
+            await createTIY({
+                lessonId: res.lesson_id,
+                data: payload,
+            });
             message.success("Tạo bài học thành công!");
             handleClose();
         } catch (error: any) {
@@ -43,7 +57,7 @@ const AddLessonModal = ({ isOpen, onClose }: AddLessonModalProps) => {
 
     if (!isOpen) return null;
 
-    return (
+    return createPortal(
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
             <div className="absolute inset-0 bg-black/70 backdrop-blur-md" onClick={handleClose} />
 
@@ -137,7 +151,8 @@ const AddLessonModal = ({ isOpen, onClose }: AddLessonModalProps) => {
                     </button>
                 </div>
             </div>
-        </div>
+        </div>,
+        document.body
     );
 };
 

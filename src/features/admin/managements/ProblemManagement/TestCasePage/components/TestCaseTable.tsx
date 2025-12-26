@@ -1,13 +1,19 @@
 import type {IProblem, ITestCase} from "../../../../../../types/problem.types.ts";
 import {useEffect, useMemo, useState} from "react";
-import {useGetProblemTestCasesQuery} from "../../../../../../services/problem/problem.service.ts";
+import {
+    useDeleteTestCaseMutation,
+    useGetProblemTestCasesQuery
+} from "../../../../../../services/problem/problem.service.ts";
 import {
     AppstoreOutlined,
     CheckCircleOutlined,
     ClockCircleOutlined, CloseCircleOutlined, CodeOutlined,
-    DeleteOutlined, DownOutlined, EditOutlined, ReadOutlined, SearchOutlined, StarFilled, UnorderedListOutlined
+    DeleteOutlined, DownOutlined, EditOutlined,
+    ExclamationCircleFilled, ReadOutlined, SearchOutlined, StarFilled, UnorderedListOutlined
 } from "@ant-design/icons";
-import {Skeleton} from "antd";
+import {message, Modal, Skeleton} from "antd";
+
+const {confirm} = Modal;
 
 interface TestCaseTableProps {
     onEdit: (testCase: ITestCase) => void;
@@ -23,6 +29,7 @@ const TestCaseTable = ({onEdit, problems, loading}: TestCaseTableProps) => {
         skip: selectedProblemId === 0,
         refetchOnMountOrArgChange: true
     });
+    const [deleteTestCase, {isLoading: isDeleting}] = useDeleteTestCaseMutation()
 
     useEffect(() => {
         if (problems.length > 0 && selectedProblemId === 0) {
@@ -59,6 +66,26 @@ const TestCaseTable = ({onEdit, problems, loading}: TestCaseTableProps) => {
             year: 'numeric',
             hour: '2-digit',
             minute: '2-digit',
+        });
+    };
+
+    const handleDelete = (id: number, name: string) => {
+        confirm({
+            title: 'Xác nhận xóa Test case?',
+            icon: <ExclamationCircleFilled />,
+            content: `Bạn có chắc chắn muốn xóa "${name}"? Hành động này không thể hoàn tác.`,
+            okText: 'Xóa ngay',
+            okType: 'danger',
+            cancelText: 'Hủy',
+            centered: true,
+            async onOk() {
+                try {
+                    await deleteTestCase(id).unwrap();
+                    message.success('Đã xóa test case thành công');
+                } catch (error: any) {
+                    message.error(error?.data?.message || 'Không thể xóa test case này');
+                }
+            },
         });
     };
 
@@ -222,6 +249,8 @@ const TestCaseTable = ({onEdit, problems, loading}: TestCaseTableProps) => {
                                                 </button>
                                                 <button
                                                     className="p-2 text-gray-400 hover:text-red-400 hover:bg-red-400/10 rounded-lg transition-all"
+                                                    onClick={() => handleDelete(tc.test_case_id, tc.test_case_id.toString())}
+                                                    disabled={isDeleting}
                                                 >
                                                     <DeleteOutlined size={18} />
                                                 </button>

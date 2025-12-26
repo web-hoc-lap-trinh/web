@@ -20,7 +20,7 @@ interface AddProblemModalProps {
 
 const AddProblemModal = ({isOpen, onClose, tags}: AddProblemModalProps) => {
     const [createProblem] = useCreateProblemMutation();
-    const [selectedTagId, setSelectedTagId] = useState<number[]>([]);
+    const [selectedTagIds, setSelectedTagIds] = useState<number[]>([]);
 
     const [formData, setFormData] = useState({
         title: '',
@@ -48,7 +48,7 @@ const AddProblemModal = ({isOpen, onClose, tags}: AddProblemModalProps) => {
     };
 
     const handleLabelToggle = (labelId: number) => {
-        setSelectedTagId(prev =>
+        setSelectedTagIds(prev =>
             prev.includes(labelId) ? prev.filter(id => id !== labelId) : [...prev, labelId]
         );
     };
@@ -86,7 +86,7 @@ const AddProblemModal = ({isOpen, onClose, tags}: AddProblemModalProps) => {
             time_limit: 1.0,
             memory_limit: 256,
         });
-        setSelectedTagId([]);
+        setSelectedTagIds([]);
         setSamples([{ input: '', output: '', explanation: '' }]);
         onClose();
     }
@@ -94,10 +94,11 @@ const AddProblemModal = ({isOpen, onClose, tags}: AddProblemModalProps) => {
     const handleSubmit = async () => {
         const finalData = {
             ...formData,
-            labelIds: selectedTagId,
+            tag_ids: selectedTagIds,
             samples: samples,
         };
         try {
+            console.log("Payload gửi đi:", finalData);
             await createProblem(finalData).unwrap();
             message.success("Tạo bài tập thành công")
             handleClose();
@@ -156,7 +157,7 @@ const AddProblemModal = ({isOpen, onClose, tags}: AddProblemModalProps) => {
                                 </label>
                                 <div className="flex flex-wrap gap-2">
                                     {(tags ?? []).filter(t => t.is_active).map((tag) => {
-                                        const isSelected = selectedTagId.includes(tag.tag_id);
+                                        const isSelected = selectedTagIds.includes(tag.tag_id);
                                         return (
                                             <button
                                                 key={tag.tag_id}

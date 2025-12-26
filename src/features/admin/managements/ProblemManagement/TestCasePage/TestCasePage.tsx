@@ -4,6 +4,7 @@ import {useGetProblemsQuery} from "../../../../../services/problem/problem.servi
 import TestCaseTable from "./components/TestCaseTable.tsx";
 import type {ITestCase} from "../../../../../types/problem.types.ts";
 import AddTestCaseModal from "./components/AddTestCaseModal.tsx";
+import EditTestCaseModal from "./components/EditTestCaseModal.tsx";
 
 const TestCasePage = () => {
     const [selectedTestCaseId, setSelectedTestCaseId] = useState<number>(0);
@@ -14,7 +15,7 @@ const TestCasePage = () => {
 
     const handleEditTestCase = (testCase: ITestCase) => {
         setSelectedTestCaseId(testCase.test_case_id)
-        setIsTestCaseAddOpen(true)
+        setIsTestCaseEditOpen(true)
     }
 
     return (
@@ -23,6 +24,11 @@ const TestCasePage = () => {
             <TestCaseTable onEdit={handleEditTestCase} problems={problems} loading={isLoading} />
 
             <AddTestCaseModal problems={problems} isOpen={isTestCaseAddOpen} onClose={() => setIsTestCaseAddOpen(false)} />
+            <EditTestCaseModal
+                isOpen={isTestCaseEditOpen}
+                onClose={() => setIsTestCaseEditOpen(false)}
+                problems={problems}
+                testCaseId={selectedTestCaseId}/>
         </div>
     )
 }

@@ -52,7 +52,7 @@ export const lessonApi = authApi.injectEndpoints({
           : [{ type: "Lesson", id: "ADMIN_LIST" }],
     }),
 
-    getLessonsByCategory: builder.query<ILesson[], string | number>({
+    getLessonsByCategory: builder.query<ILesson[], number>({
       query: (categoryId) => `/lessons/category/${categoryId}`,
       transformResponse: (response: IApiResponse<ILesson[]>) => response.result,
       providesTags: (result) =>
@@ -75,6 +75,14 @@ export const lessonApi = authApi.injectEndpoints({
         { type: "Lesson", id: lessonId },
       ],
     }),
+
+      getAdminLesson: builder.query<ILesson, number>({
+          query: (lessonId) => `/lessons/admin/${lessonId}`,
+          transformResponse: (response: IApiResponse<ILesson>) => response.result,
+          providesTags: (_result, _error, lessonId) => [
+              { type: "Lesson", id: lessonId },
+          ],
+      }),
 
     // 6. Create Lesson
     createLesson: builder.mutation<ILesson, CreateLessonPayload>({
@@ -130,6 +138,7 @@ export const {
   useGetAdminLessonsQuery,
   useGetLessonsByCategoryQuery,
   useGetLessonQuery,
+    useGetAdminLessonQuery,
   useCreateLessonMutation,
   useUpdateLessonMutation,
   useDeleteLessonMutation,

@@ -33,6 +33,7 @@ const ProblemPage = () => {
                     setIsProblemEditOpen(false)
                     setSelectedProblemId(0)
                 }}
+                tags={tags}
                 problemId={selectedProblemId} />
         </div>
     )

@@ -9,7 +9,7 @@ import {
 } from "@ant-design/icons";
 import {message, Modal, Skeleton} from "antd";
 import {
-    useDeleteLessonMutation,
+    useDeleteLessonMutation, useGetAdminLessonsQuery,
     useGetLessonsByCategoryQuery
 } from "../../../../../../services/lesson/lesson.service.ts";
 import {useEffect, useMemo, useState} from "react";
@@ -28,10 +28,7 @@ const LessonTable = ({onEdit, categories, loading}: LessonTableProps) => {
     const [selectedCategoryId, setSelectedCategoryId] = useState<number>(0);
     const [searchQueryCategory, setSearchQueryCategory] = useState('');
     const [searchQueryLesson, setSearchQueryLesson] = useState('');
-    const {data: lessons = []} = useGetLessonsByCategoryQuery(selectedCategoryId, {
-        skip: selectedCategoryId === 0,
-        refetchOnMountOrArgChange: true
-    });
+    const {data: lessons = []} = useGetAdminLessonsQuery()
 
     const filteredCategories = useMemo(() => {
         if (!categories) return [];
