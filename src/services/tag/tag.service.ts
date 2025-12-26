@@ -31,7 +31,7 @@ export const tagApi = authApi.injectEndpoints({
         getProblemsByTag: builder.query<PaginatedProblemResult, GetTagProblemsParams>({
             query: ({ id, ...params }) => ({
                 url: `/tags/${id}/problems`,
-                params,
+                params: params || undefined
             }),
             transformResponse: (response: IApiResponse<TagProblemsResponse>) => {
                 const { problems, pagination } = response.result;
@@ -51,10 +51,10 @@ export const tagApi = authApi.injectEndpoints({
                     : [],
         }),
 
-        getTags: builder.query<PaginatedTagResult, GetTagsParams>({
+        getTags: builder.query<PaginatedTagResult, GetTagsParams | void>({
             query: (params) => ({
                 url: "/tags",
-                params,
+                params: params || undefined,
             }),
             transformResponse: (response: IApiResponse<TagListResponse>) => {
                 const { tags, pagination } = response.result;

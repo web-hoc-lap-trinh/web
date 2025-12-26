@@ -68,7 +68,7 @@ export const lessonApi = authApi.injectEndpoints({
     }),
 
     // 5. Get Lesson Detail
-    getLesson: builder.query<ILesson, string>({
+    getLesson: builder.query<ILesson, number>({
       query: (lessonId) => `/lessons/${lessonId}`,
       transformResponse: (response: IApiResponse<ILesson>) => response.result,
       providesTags: (_result, _error, lessonId) => [
@@ -93,7 +93,7 @@ export const lessonApi = authApi.injectEndpoints({
     // 7. Update Lesson
     updateLesson: builder.mutation<
       ILesson,
-      { lessonId: string; data: UpdateLessonPayload }
+      { lessonId: number; data: UpdateLessonPayload }
     >({
       query: ({ lessonId, data }) => ({
         url: `/lessons/${lessonId}`,
@@ -109,7 +109,7 @@ export const lessonApi = authApi.injectEndpoints({
     }),
 
     // 8. Delete Lesson
-    deleteLesson: builder.mutation<void, string>({
+    deleteLesson: builder.mutation<void, number>({
       query: (lessonId) => ({
         url: `/lessons/${lessonId}`,
         method: "DELETE",

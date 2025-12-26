@@ -31,8 +31,8 @@ const MENU_ITEMS: MenuItem[] = [
         icon: <FolderAddOutlined size={20}/>,
         isOpen: true,
         subItems: [
-            {id: 'lesson', title: 'Quản lý bài học'},
             {id: 'category', title: 'Quản lý chủ đề'},
+            {id: 'lesson', title: 'Quản lý bài học'},
             {id: 'question', title: 'Quản lý câu hỏi'}
         ]
     },
@@ -41,6 +41,7 @@ const MENU_ITEMS: MenuItem[] = [
         title: 'Quản lý Bài tập & Test Case',
         icon: <FileOutlined size={20}/>,
         subItems: [
+            {id: 'tag', title: 'Quản lý nhãn'},
             {id: 'problem', title: 'Quản lý bài tập'},
             {id: 'testcase', title: 'Quản lý test case'}
         ]

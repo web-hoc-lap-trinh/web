@@ -10,7 +10,7 @@ const CategoryPage = () => {
     const { data: categories = [], isLoading } = useGetCategoriesQuery();
     const [isCategoryAddOpen, setCategoryAddOpen] = useState(false);
     const [isCategoryEditOpen, setCategoryEditOpen] = useState(false);
-    const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null);
+    const [selectedCategoryId, setSelectedCategoryId] = useState<number>(0);
 
     const handleEditCategory = (category: ICategory) => {
         setSelectedCategoryId(category.category_id);
@@ -27,7 +27,7 @@ const CategoryPage = () => {
                 isOpen={isCategoryEditOpen}
                 onClose={() => {
                     setCategoryEditOpen(false)
-                    setSelectedCategoryId(null)
+                    setSelectedCategoryId(0)
                 }}
                 categoryId={selectedCategoryId} />
         </div>

@@ -1,5 +1,5 @@
 export interface ICategory {
-  category_id: string;
+  category_id: number;
   name: string;
   icon_url: string;
   order_index: number;

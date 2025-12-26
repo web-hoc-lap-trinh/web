@@ -1,20 +1,26 @@
 import React, {useState} from "react";
 import type {Difficulty, IProblemSample} from "../../../../../../types/problem.types.ts";
 import {
+    CheckCircleOutlined,
     CloseOutlined, CodeOutlined, CodeSandboxOutlined, DeleteOutlined, DownOutlined, EyeInvisibleOutlined, EyeOutlined,
-    FieldTimeOutlined, FileTextOutlined, InfoCircleOutlined, PlusOutlined, ThunderboltOutlined, TrophyOutlined
+    FieldTimeOutlined, FileTextOutlined, InfoCircleOutlined, PlusOutlined,
+    TagsOutlined, ThunderboltOutlined, TrophyOutlined
 } from "@ant-design/icons";
 import {useCreateProblemMutation} from "../../../../../../services/problem/problem.service.ts";
 import {message} from "antd";
 import MDEditor from "@uiw/react-md-editor";
+import type {ITag} from "../../../../../../types/tag.types.ts";
+import { createPortal } from "react-dom";
 
 interface AddProblemModalProps {
     isOpen: boolean;
     onClose: () => void;
+    tags: ITag[];
 }
 
-const AddProblemModal = ({isOpen, onClose}: AddProblemModalProps) => {
+const AddProblemModal = ({isOpen, onClose, tags}: AddProblemModalProps) => {
     const [createProblem] = useCreateProblemMutation();
+    const [selectedTagId, setSelectedTagId] = useState<number[]>([]);
 
     const [formData, setFormData] = useState({
         title: '',
@@ -41,6 +47,12 @@ const AddProblemModal = ({isOpen, onClose}: AddProblemModalProps) => {
         setFormData(prev => ({ ...prev, [name]: val }));
     };
 
+    const handleLabelToggle = (labelId: number) => {
+        setSelectedTagId(prev =>
+            prev.includes(labelId) ? prev.filter(id => id !== labelId) : [...prev, labelId]
+        );
+    };
+
     const handleDescriptionChange = (value?: string) => {
         setFormData(prev => ({ ...prev, description: value || "" }));
     };
@@ -62,13 +74,27 @@ const AddProblemModal = ({isOpen, onClose}: AddProblemModalProps) => {
     };
 
     const handleClose = () => {
-        setFormData(prev => ({ ...prev}));
+        setFormData({
+            title: '',
+            description: '',
+            difficulty: 'EASY',
+            points: 10,
+            is_published: true,
+            input_format: '',
+            output_format: '',
+            constraints: '',
+            time_limit: 1.0,
+            memory_limit: 256,
+        });
+        setSelectedTagId([]);
+        setSamples([{ input: '', output: '', explanation: '' }]);
         onClose();
     }
 
     const handleSubmit = async () => {
         const finalData = {
             ...formData,
+            labelIds: selectedTagId,
             samples: samples,
         };
         try {
@@ -80,13 +106,13 @@ const AddProblemModal = ({isOpen, onClose}: AddProblemModalProps) => {
         }
     };
 
-    return (
+    return createPortal(
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
             <div className="absolute inset-0 bg-black/80 backdrop-blur-md" onClick={onClose} />
-            <div className="relative w-full max-w-4xl bg-[#111827] rounded-3xl shadow-2xl border border-white/10 overflow-hidden transform transition-all animate-in zoom-in-95 duration-200 flex flex-col max-h-[92vh]">
+            <div className="relative w-full max-w-4xl sm:w-[90vw] lg:max-w-4xl bg-[#111827] rounded-3xl shadow-2xl border border-white/10 overflow-hidden transform transition-all animate-in zoom-in-95 duration-200 flex flex-col max-h-[92vh]">
 
                 {/* Header */}
-                <div className="px-8 py-6 border-b border-white/5 flex justify-between items-center bg-white/[0.02] shrink-0">
+                <div className="px-5 py-4 sm:px-8 sm:py-6 border-b border-white/5 flex justify-between items-center bg-white/[0.02] shrink-0">
                     <div className="flex items-center gap-4">
                         <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20">
                             <CodeOutlined className="text-emerald-400" size={24} />
@@ -102,7 +128,7 @@ const AddProblemModal = ({isOpen, onClose}: AddProblemModalProps) => {
                 </div>
 
                 {/* Body */}
-                <div className="p-8 space-y-10 overflow-y-auto scrollbar-hide">
+                <div className="p-4 sm:p-8 space-y-6 sm:space-y-10 flex-1 overflow-y-auto scrollbar-hide">
 
                     {/* Section 1: Thông tin cơ bản */}
                     <section className="space-y-6">
@@ -111,7 +137,7 @@ const AddProblemModal = ({isOpen, onClose}: AddProblemModalProps) => {
                             <h4 className="text-sm font-bold text-gray-200 uppercase tracking-widest">Thông tin cơ bản</h4>
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
                             <div className="space-y-2 md:col-span-2">
                                 <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Tên bài tập</label>
                                 <input
@@ -124,6 +150,33 @@ const AddProblemModal = ({isOpen, onClose}: AddProblemModalProps) => {
                                 />
                             </div>
 
+                            <div className="space-y-3 md:col-span-2 bg-black/20 p-5 rounded-[24px] border border-white/5">
+                                <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1 flex items-center gap-2">
+                                    <TagsOutlined size={14} className="text-emerald-400" /> Gắn nhãn bài tập (Chọn nhiều)
+                                </label>
+                                <div className="flex flex-wrap gap-2">
+                                    {(tags ?? []).filter(t => t.is_active).map((tag) => {
+                                        const isSelected = selectedTagId.includes(tag.tag_id);
+                                        return (
+                                            <button
+                                                key={tag.tag_id}
+                                                type="button"
+                                                onClick={() => handleLabelToggle(tag.tag_id)}
+                                                style={{
+                                                    backgroundColor: isSelected ? `${tag.color}25` : 'transparent',
+                                                    color: isSelected ? tag.color : '#6b7280',
+                                                    borderColor: isSelected ? tag.color : '#374151'
+                                                }}
+                                                className={`flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs font-bold border transition-all hover:scale-105 active:scale-95`}
+                                            >
+                                                {isSelected && <CheckCircleOutlined size={14} />}
+                                                {tag.name}
+                                            </button>
+                                        );
+                                    })}
+                                </div>
+                            </div>
+
                             <div className="space-y-2 md:col-span-2 flex flex-col">
                                 <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">
                                     Mô tả bài tập (Markdown)
@@ -132,7 +185,7 @@ const AddProblemModal = ({isOpen, onClose}: AddProblemModalProps) => {
                                     <MDEditor
                                         value={formData.description}
                                         onChange={handleDescriptionChange}
-                                        height={300}
+                                        height={window.innerWidth < 640 ? 200 : 300}
                                         preview="live"
                                         className="!bg-[#0f131a]/50 !border-white/10 !rounded-xl overflow-hidden"
                                     />
@@ -180,7 +233,7 @@ const AddProblemModal = ({isOpen, onClose}: AddProblemModalProps) => {
                             <h4 className="text-sm font-bold text-gray-200 uppercase tracking-widest">Định dạng & Ràng buộc</h4>
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
                             <div className="space-y-2">
                                 <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Định dạng đầu vào (Input Format)</label>
                                 <textarea
@@ -226,7 +279,7 @@ const AddProblemModal = ({isOpen, onClose}: AddProblemModalProps) => {
                             <h4 className="text-sm font-bold text-gray-200 uppercase tracking-widest">Giới hạn kỹ thuật</h4>
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
                             <div className="space-y-2">
                                 <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Giới hạn thời gian (Time Limit)</label>
                                 <div className="relative">
@@ -290,7 +343,7 @@ const AddProblemModal = ({isOpen, onClose}: AddProblemModalProps) => {
                                     </div>
                                     <div className="text-[10px] font-bold text-gray-600 mb-4 uppercase tracking-widest">Mẫu #{idx + 1}</div>
 
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
                                         <div className="space-y-2">
                                             <label className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Input mẫu</label>
                                             <textarea
@@ -348,7 +401,7 @@ const AddProblemModal = ({isOpen, onClose}: AddProblemModalProps) => {
                 </div>
 
                 {/* Footer */}
-                <div className="px-8 py-6 border-t border-white/5 bg-black/20 flex justify-end gap-3 shrink-0">
+                <div className="px-5 py-4 sm:px-8 border-t border-white/5 bg-black/20 flex justify-end gap-3 shrink-0">
                     <button
                         onClick={onClose}
                         className="px-6 py-2.5 rounded-xl text-sm font-semibold text-gray-400 hover:bg-white/5 transition-all"
@@ -363,7 +416,8 @@ const AddProblemModal = ({isOpen, onClose}: AddProblemModalProps) => {
                     </button>
                 </div>
             </div>
-        </div>
+        </div>,
+        document.body
     );
 }
 

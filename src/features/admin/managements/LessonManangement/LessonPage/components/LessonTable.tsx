@@ -1,42 +1,69 @@
 import type {ILesson} from "../../../../../../types/lesson.types.ts";
 import {
+    AppstoreOutlined,
     DeleteOutlined,
-    DownOutlined,
     EditOutlined,
-    ExclamationCircleFilled,
+    ExclamationCircleFilled, ReadOutlined,
     SearchOutlined,
-    SortAscendingOutlined
+    UnorderedListOutlined
 } from "@ant-design/icons";
 import {message, Modal, Skeleton} from "antd";
-import {useDeleteLessonMutation} from "../../../../../../services/lesson/lesson.service.ts";
+import {
+    useDeleteLessonMutation,
+    useGetLessonsByCategoryQuery
+} from "../../../../../../services/lesson/lesson.service.ts";
+import {useEffect, useMemo, useState} from "react";
+import type {ICategory} from "../../../../../../types/category.types.ts";
 
 const {confirm} = Modal;
 
 interface LessonTableProps {
     onEdit: (lesson: ILesson) => void;
-    lessons: ILesson[];
+    categories: ICategory[];
     loading: boolean;
 }
 
-const LessonTable = ({onEdit, lessons, loading}: LessonTableProps) => {
+const LessonTable = ({onEdit, categories, loading}: LessonTableProps) => {
     const [deleteLesson, {isLoading: isDeleting}] = useDeleteLessonMutation();
+    const [selectedCategoryId, setSelectedCategoryId] = useState<number>(0);
+    const [searchQueryCategory, setSearchQueryCategory] = useState('');
+    const [searchQueryLesson, setSearchQueryLesson] = useState('');
+    const {data: lessons = []} = useGetLessonsByCategoryQuery(selectedCategoryId, {
+        skip: selectedCategoryId === 0,
+        refetchOnMountOrArgChange: true
+    });
 
-    const showDeleteConfirm = (id: string, title: string) => {
+    const filteredCategories = useMemo(() => {
+        if (!categories) return [];
+        return categories.filter(res => {
+            const searchLower = searchQueryCategory.toLowerCase();
+            return res.name.toLowerCase().includes(searchLower)
+        });
+    }, [searchQueryCategory, categories]);
+
+    const filteredLessons = useMemo(() => {
+        if (!lessons) return [];
+        return lessons.filter(res => {
+            const searchLower = searchQueryLesson.toLowerCase();
+            return res.title.toLowerCase().includes(searchLower)
+        });
+    }, [lessons, searchQueryLesson]);
+
+    useEffect(() => {
+        if (categories.length > 0 && !selectedCategoryId) {
+            setSelectedCategoryId(categories[0].category_id);
+        }
+    }, [categories]);
+
+    const handleDelete = (id: number, name: string) => {
         confirm({
             title: 'Xác nhận xóa bài học?',
-            icon: <ExclamationCircleFilled/>,
-            content: (
-                <div className="text-gray-300">
-                    Bạn có chắc chắn muốn xóa bài học <span className="text-emerald-400 font-bold">"{title}"</span>?
-                    Hành động này không thể hoàn tác.
-                </div>
-            ),
+            icon: <ExclamationCircleFilled />,
+            content: `Bạn có chắc chắn muốn xóa "${name}"? Hành động này không thể hoàn tác.`,
             okText: 'Xóa ngay',
             okType: 'danger',
             cancelText: 'Hủy',
             centered: true,
-            // Style cho Modal confirm để hợp với theme Dark
-            className: "dark-confirm-modal",
             async onOk() {
                 try {
                     await deleteLesson(id).unwrap();
@@ -76,153 +103,178 @@ const LessonTable = ({onEdit, lessons, loading}: LessonTableProps) => {
         }
     };
 
-    const formatDateTime = (dateString: string) => {
-        const date = new Date(dateString);
-        const timeStr = date.toLocaleTimeString('vi-VN', {
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit',
-            hour12: false
-        });
-        const dateStr = date.toLocaleDateString('vi-VN', {
+    const formatDateTime = (isoString: string) => {
+        const date = new Date(isoString);
+        return date.toLocaleString('vi-VN', {
             day: '2-digit',
             month: '2-digit',
-            year: 'numeric'
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
         });
-        return {timeStr, dateStr};
     };
 
     return (
-        <div className="relative">
+        <div className="space-y-8">
             {/* Glassmorphism Card Container */}
-            <div
-                className="bg-[#1a202c]/60 backdrop-blur-xl rounded-3xl border border-white/5 shadow-2xl overflow-hidden">
-
-                {/* Header Controls */}
-                <div
-                    className="p-6 border-b border-white/5 flex sm:flex-row gap-5 justify-between items-center bg-white/5">
-                    <div className="relative flex-1 w-full sm:max-w-md group">
-                        <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                            <SearchOutlined
-                                className="text-gray-400 group-focus-within:text-emerald-400 transition-colors"
-                                size={18}/>
-                        </div>
+            {/* Header Controls */}
+            <div className="space-y-4">
+                <div className="flex items-center justify-between px-1">
+                    <div className="flex items-center gap-2">
+                        <AppstoreOutlined size={18} className="text-emerald-400" />
+                        <h3 className="text-xs font-bold text-gray-400 uppercase tracking-[0.2em]">Chọn chủ đề cần quản lý</h3>
+                    </div>
+                    <div className="relative group w-2/3 sm:w-80">
+                        <SearchOutlined size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-emerald-400 transition-colors" />
                         <input
                             type="text"
-                            placeholder="Tìm kiếm bài học, chủ đề..."
-                            className="w-full pl-11 pr-4 py-3 bg-[#0f131a]/50 text-gray-200 rounded-xl border border-white/5 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:bg-[#0f131a] focus:border-emerald-500/30 transition-all placeholder-gray-500 shadow-inner"
+                            value={searchQueryCategory}
+                            onChange={(e) => setSearchQueryCategory(e.target.value)}
+                            placeholder="Tìm kiếm bài học"
+                            className="w-full pl-11 pr-4 py-2.5 bg-[#0f131a]/60 text-gray-200 rounded-2xl border border-white/10 outline-none focus:ring-2 focus:ring-emerald-500/30 transition-all placeholder-gray-600 shadow-inner text-sm"
                         />
                     </div>
-
-                    {/*<div className="flex gap-3">
-                        <button
-                            className="flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-gray-400 hover:text-white hover:bg-white/5 rounded-xl transition-all">
-                            <SortAscendingOutlined size={16}/>
-                            <span>Bộ lọc</span>
-                        </button>
-                        <button
-                            className="flex items-center gap-2 px-5 py-2.5 bg-[#2d3748]/50 text-gray-200 rounded-xl text-sm font-medium hover:bg-[#2d3748] border border-white/5 hover:border-white/10 shadow-lg shadow-black/20 transition-all">
-                            Gần đây nhất
-                            <DownOutlined size={16} className="text-gray-400"/>
-                        </button>
-                    </div>*/}
                 </div>
 
-                {/* Table */}
-                <div className="overflow-x-auto">
-                    <table className="w-full text-sm text-left">
-                        <thead className="text-xs text-gray-400 uppercase bg-black/20">
-                        <tr>
-                            {/*<th className="px-6 py-5 font-semibold tracking-wider text-gray-500">Mã bài học</th>*/}
-                            <th className="px-6 py-5 font-semibold tracking-wider text-gray-500">Tên bài học</th>
-                            <th className="px-6 py-5 font-semibold tracking-wider text-gray-500">Chủ đề</th>
-                            <th className="px-6 py-5 font-semibold tracking-wider text-gray-500 text-center">Mức độ</th>
-                            <th className="px-6 py-5 font-semibold tracking-wider text-gray-500 text-center">Thời gian
-                            </th>
-                            <th className="px-6 py-5 font-semibold tracking-wider text-gray-500">Trạng thái</th>
-                            <th className="px-6 py-5 font-semibold tracking-wider text-gray-500 text-right"></th>
-                        </tr>
-                        </thead>
-                        <tbody className="divide-y divide-white/5">
-                        {lessons.map((lesson) => {
-                            const {timeStr, dateStr} = formatDateTime(lesson.updated_at);
-                            return (
-                                <tr key={lesson.lesson_id}
-                                    className="group hover:bg-white/[0.02] transition-colors duration-200">
-                                    {/*<td className="px-6 py-5">
-                    <span
-                        className="font-mono text-xs text-emerald-400/80 bg-emerald-400/10 px-2 py-1 rounded border border-emerald-400/20">
-                      {lesson.lesson_id}
-                    </span>
-                                    </td>*/}
-                                    <td className="px-6 py-5">
-                                        <div
-                                            className="font-semibold text-gray-200 group-hover:text-emerald-300 transition-colors">
-                                            {lesson.title}
-                                        </div>
-                                    </td>
-                                    <td className="px-6 py-5">
-                    <span
-                        className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-white/5 text-gray-400 border border-white/10">
-                      {lesson.category.name}
-                    </span>
-                                    </td>
-                                    <td className="px-6 py-5 text-center">
-                    <span
-                        className={`inline-flex items-center px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wide border ${getLevelBadge(lesson.difficulty_level)}`}>
-                      {lesson.difficulty_level}
-                    </span>
-                                    </td>
-                                    <td className="px-6 py-5 text-center">
-                                        <div className="flex flex-col items-center">
-                                            <span
-                                                className="text-gray-300 font-medium text-xs bg-white/5 px-2 py-0.5 rounded-md mb-1">{timeStr}</span>
-                                            <span
-                                                className="text-gray-600 text-[10px] font-medium tracking-wide">{dateStr}</span>
-                                        </div>
-                                    </td>
-                                    <td className="px-6 py-5">
-                                        <div className="flex items-center gap-2">
-                                            <span className={`w-2 h-2 rounded-full shadow-[0_0_8px] ${
-                                                lesson.is_published ? 'bg-emerald-500 shadow-emerald-500/50' : 'bg-gray-500 shadow-gray-500/50'
-                                            }`}/>
-                                            <span className={`text-sm font-medium ${
-                                                lesson.is_published ? 'text-emerald-100' : 'text-gray-500'
-                                            }`}>
-                                                {/* Chỉnh sửa hiển thị text trạng thái */}
-                                                {lesson.is_published ? 'Đã xuất bản' : 'Bản nháp'}
-                                            </span>
-                                        </div>
-                                    </td>
-                                    <td className="px-6 py-5 text-right">
-                                        <div
-                                            className="p-2.5 flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                                            <button
-                                                onClick={() => onEdit(lesson)}
-                                                className="p-2 text-gray-400 hover:text-emerald-400 hover:bg-emerald-400/10 rounded-lg transition-all transform hover:scale-110"
-                                            >
-                                                <EditOutlined size={18}/>
-                                            </button>
-                                            <button
-                                                className="p-2 text-gray-400 hover:text-red-400 hover:bg-red-400/10 rounded-lg transition-all transform hover:scale-110"
-                                                onClick={() => showDeleteConfirm(lesson.lesson_id, lesson.title)}
-                                                disabled={isDeleting}
-                                            >
-                                                <DeleteOutlined size={18}/>
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            )
-                        })}
-                        </tbody>
-                    </table>
+                <div className="max-h-[290px] overflow-y-auto pr-2">
+                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+                        {filteredCategories.length > 0 ? (filteredCategories.map((category) => (
+                            <button
+                                key={category.category_id}
+                                onClick={() => setSelectedCategoryId(category.category_id)}
+                                className={`group relative flex flex-col p-4 rounded-[24px] border transition-all duration-300 text-left overflow-hidden h-full ${
+                                    selectedCategoryId === category.category_id
+                                        ? 'bg-emerald-500/10 border-emerald-500/50 shadow-[0_0_25px_rgba(16,185,129,0.15)] ring-1 ring-emerald-500/20'
+                                        : 'bg-[#0f131a]/40 border-white/5 hover:border-white/20 hover:bg-[#1a202c]/40'
+                                }`}
+                            >
+                                <div className={`w-10 h-10 rounded-xl mb-3 flex items-center justify-center transition-all duration-300 ${
+                                    selectedCategoryId === category.category_id ? 'bg-emerald-500 text-white shadow-lg' : 'bg-white/5 text-gray-500'
+                                }`}>
+                                    <ReadOutlined size={20} />
+                                </div>
+                                <span className={`text-sm font-bold tracking-tight line-clamp-1 ${selectedCategoryId === category.category_id ? 'text-emerald-400' : 'text-gray-300'}`}>
+                                    {category.name}
+                                </span>
+                            </button>
+                        ))) : (
+                            <td className="px-8 py-8 text-center">
+                                <div className="flex flex-col items-center gap-3 opacity-20">
+                                    <UnorderedListOutlined size={40} className="text-gray-400" />
+                                    <p className="text-sm font-bold text-gray-300">Không có dữ liệu</p>
+                                </div>
+                            </td>
+                        )}
+                    </div>
+                </div>
+            </div>
+
+            <div className="space-y-4">
+                <div className="flex sm:flex-row justify-between items-end sm:items-center gap-4 px-2">
+                    <div className="flex items-center gap-2">
+                        <div className="w-2 h-6 bg-emerald-500 rounded-full" />
+                        <h4 className="text-lg font-bold text-white tracking-tight">Danh sách bài học</h4>
+                        <span className="text-xs text-gray-500 font-medium ml-2">({filteredLessons.length} kết quả)</span>
+                    </div>
+
+                    {/* Neat Compact Search Bar */}
+                    <div className="relative group w-2/3 sm:w-80">
+                        <SearchOutlined size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-emerald-400 transition-colors" />
+                        <input
+                            type="text"
+                            value={searchQueryLesson}
+                            onChange={(e) => setSearchQueryLesson(e.target.value)}
+                            placeholder="Tìm kiếm câu hỏi"
+                            className="w-full pl-11 pr-4 py-2.5 bg-[#0f131a]/60 text-gray-200 rounded-2xl border border-white/10 outline-none focus:ring-2 focus:ring-emerald-500/30 transition-all placeholder-gray-600 shadow-inner text-sm"
+                        />
+                    </div>
                 </div>
 
-                {/* Pagination placeholder with soft style */}
-                <div className="h-14 bg-black/20 border-t border-white/5 flex items-center justify-center">
-                    <span className="text-xs text-gray-600 font-medium">Hiển thị {lessons.length} bài học</span>
+                <div className="bg-[#1a202c]/60 backdrop-blur-xl rounded-[32px] border border-white/5 shadow-2xl overflow-hidden">
+                    <div className="overflow-x-auto">
+                        <table className="w-full text-sm text-left">
+                            <thead className="text-xs text-gray-400 uppercase bg-black/20">
+                            <tr>
+                                {/*<th className="px-6 py-5 font-semibold tracking-wider text-gray-500">Mã bài học</th>*/}
+                                <th className="px-6 py-5 font-semibold tracking-wider text-gray-500">Tên bài học</th>
+                                <th className="px-6 py-5 font-semibold tracking-wider text-gray-500 text-center">Mức độ</th>
+                                <th className="px-6 py-5 font-semibold tracking-wider text-gray-500 text-center">Thời gian
+                                </th>
+                                <th className="px-6 py-5 font-semibold tracking-wider text-gray-500">Trạng thái</th>
+                                <th className="px-6 py-5 font-semibold tracking-wider text-gray-500 text-center"></th>
+                            </tr>
+                            </thead>
+                            <tbody className="divide-y divide-white/5">
+                            {filteredLessons.map((lesson) => {
+                                return (
+                                    <tr key={lesson.lesson_id}
+                                        className="group hover:bg-white/[0.02] transition-colors duration-200">
+                                        {/*<td className="px-6 py-5">
+                        <span
+                            className="font-mono text-xs text-emerald-400/80 bg-emerald-400/10 px-2 py-1 rounded border border-emerald-400/20">
+                          {lesson.lesson_id}
+                        </span>
+                                        </td>*/}
+                                        <td className="px-6 py-5">
+                                            <div
+                                                className="font-semibold text-gray-200 group-hover:text-emerald-300 transition-colors">
+                                                {lesson.title}
+                                            </div>
+                                        </td>
+                                        <td className="px-6 py-5 text-center">
+                        <span
+                            className={`inline-flex items-center px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wide border ${getLevelBadge(lesson.difficulty_level)}`}>
+                          {lesson.difficulty_level}
+                        </span>
+                                        </td>
+                                        <td className="px-6 py-5 text-center">
+                        <span className="text-gray-500 text-[10px] font-bold">
+                          {formatDateTime(lesson.updated_at)}
+                        </span>
+                                        </td>
+                                        <td className="px-6 py-5">
+                                            <div className="flex items-center gap-2">
+                                                <span className={`w-2 h-2 rounded-full shadow-[0_0_8px] ${
+                                                    lesson.is_published ? 'bg-emerald-500 shadow-emerald-500/50' : 'bg-gray-500 shadow-gray-500/50'
+                                                }`}/>
+                                                <span className={`text-sm font-medium ${
+                                                    lesson.is_published ? 'text-emerald-100' : 'text-gray-500'
+                                                }`}>
+                                                    {/* Chỉnh sửa hiển thị text trạng thái */}
+                                                    {lesson.is_published ? 'Đã xuất bản' : 'Bản nháp'}
+                                                </span>
+                                            </div>
+                                        </td>
+                                        <td className="px-6 py-5 text-center">
+                                            <div
+                                                className="p-2.5 flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                <button
+                                                    onClick={() => onEdit(lesson)}
+                                                    className="p-2 text-gray-400 hover:text-emerald-400 hover:bg-emerald-400/10 rounded-lg transition-all transform hover:scale-110"
+                                                >
+                                                    <EditOutlined size={18}/>
+                                                </button>
+                                                <button
+                                                    className="p-2 text-gray-400 hover:text-red-400 hover:bg-red-400/10 rounded-lg transition-all transform hover:scale-110"
+                                                    onClick={() => handleDelete(lesson.lesson_id, lesson.title)}
+                                                    disabled={isDeleting}
+                                                >
+                                                    <DeleteOutlined size={18}/>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                )
+                            })}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
+            </div>
+
+            {/* Pagination placeholder with soft style */}
+            <div className="h-14 bg-black/20 border-t border-white/5 flex items-center justify-center">
+                <span className="text-xs text-gray-600 font-medium">Hiển thị {lessons.length} bài học</span>
             </div>
         </div>
     )

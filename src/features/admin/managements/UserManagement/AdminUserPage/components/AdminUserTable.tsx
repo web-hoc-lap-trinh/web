@@ -1,6 +1,14 @@
 import type {IUser} from "../../../../../../types/user.types.ts";
 import {Skeleton} from "antd";
-import {DeleteOutlined, EditOutlined, SearchOutlined, SortAscendingOutlined} from "@ant-design/icons";
+import {
+    AppstoreOutlined,
+    DeleteOutlined,
+    DownOutlined,
+    EditOutlined,
+    SearchOutlined,
+    SortAscendingOutlined
+} from "@ant-design/icons";
+import {useMemo, useState} from "react";
 
 interface AdminUserTableProps {
     onEdit: (user: IUser) => void;
@@ -9,6 +17,16 @@ interface AdminUserTableProps {
 }
 
 const AdminUserTable = ({onEdit, users, loading} : AdminUserTableProps) => {
+    const [searchQuery, setSearchQuery] = useState("");
+
+    const filteredUsers = useMemo(() => {
+        if(!users) return [];
+        return users.filter(res => {
+            const searchLower = searchQuery.toLowerCase();
+            return res.full_name.toLowerCase().includes(searchLower);
+        })
+    }, [users, searchQuery]);
+
     const formatDateTime = (isoString: string) => {
         const date = new Date(isoString);
         return date.toLocaleString('vi-VN', {
@@ -47,31 +65,36 @@ const AdminUserTable = ({onEdit, users, loading} : AdminUserTableProps) => {
     }
 
     return (
-        <div className="relative">
-            <div className="bg-[#1a202c]/60 backdrop-blur-xl rounded-3xl border border-white/5 shadow-2xl overflow-hidden">
-
-                {/* Header Controls */}
-                <div className="p-6 border-b border-white/5 flex sm:flex-row gap-5 justify-between items-center bg-white/5">
-                    <div className="relative flex-1 w-full sm:max-w-md group">
-                        <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                            <SearchOutlined className="text-gray-400 group-focus-within:text-emerald-400 transition-colors" size={18} />
-                        </div>
-                        <input
-                            type="text"
-                            placeholder="Tìm kiếm theo tên, email hoặc ID..."
-                            className="w-full pl-11 pr-4 py-3 bg-[#0f131a]/50 text-gray-200 rounded-xl border border-white/5 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:bg-[#0f131a] transition-all placeholder-gray-500 shadow-inner"
-                        />
+        <div className="relative space-y-4">
+            <div className="flex justify-between items-center bg-[#1a202c]/40 p-4 rounded-2xl border border-white/5 backdrop-blur-md">
+                <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20 shadow-lg shadow-emerald-900/10">
+                        <AppstoreOutlined size={20} className="text-emerald-400" />
                     </div>
-
-                    {/*<div className="flex gap-3">
-                        <button className="flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-gray-400 hover:text-white hover:bg-white/5 rounded-xl transition-all">
-                            <SortAscendingOutlined size={16} />
-                            <span>Lọc trạng thái</span>
-                        </button>
-                    </div>*/}
+                    <div>
+                        <h3 className="text-xl font-bold text-white tracking-tight">Quản lý người dùng</h3>
+                    </div>
                 </div>
 
-                {/* Table */}
+                <div className="flex items-center gap-3 w-2/3 md:w-auto">
+                    {/* Neat Search */}
+                    <div className="relative group flex-1 md:w-72">
+                        <SearchOutlined size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-emerald-400 transition-colors" />
+                        <input
+                            type="text"
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            placeholder="Tìm tên người dùng..."
+                            className="w-full pl-11 pr-4 py-2.5 bg-[#0f131a]/60 text-gray-200 rounded-2xl border border-white/10 outline-none focus:ring-2 focus:ring-emerald-500/30 transition-all text-sm shadow-inner"
+                        />
+                    </div>
+                    <button className="p-2.5 text-gray-400 hover:text-white bg-white/5 rounded-xl border border-white/10 transition-all">
+                        <DownOutlined size={18} />
+                    </button>
+                </div>
+            </div>
+
+            <div className="bg-[#1a202c]/60 backdrop-blur-xl rounded-[32px] border border-white/5 shadow-2xl overflow-hidden">
                 <div className="overflow-x-auto">
                     <table className="w-full text-sm text-left">
                         <thead className="text-xs text-gray-400 uppercase bg-black/20">
@@ -86,7 +109,7 @@ const AdminUserTable = ({onEdit, users, loading} : AdminUserTableProps) => {
                         </tr>
                         </thead>
                         <tbody className="divide-y divide-white/5">
-                        {users.map((user) => (
+                        {filteredUsers.map((user) => (
                             <tr key={user.user_id} className="group hover:bg-white/[0.02] transition-colors">
                                 <td className="px-6 py-5">
                                     <div className="flex items-center gap-3">
@@ -143,10 +166,6 @@ const AdminUserTable = ({onEdit, users, loading} : AdminUserTableProps) => {
                         ))}
                         </tbody>
                     </table>
-                </div>
-
-                <div className="h-14 bg-black/10 border-t border-white/5 flex items-center justify-center">
-                    <span className="text-[11px] text-gray-600 font-bold uppercase tracking-widest">Tổng cộng: {users.length} người dùng</span>
                 </div>
             </div>
         </div>

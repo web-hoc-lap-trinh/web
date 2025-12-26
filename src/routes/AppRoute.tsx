@@ -23,6 +23,7 @@ import ProblemPage from "../features/admin/managements/ProblemManagement/Problem
 import TestCasePage from "../features/admin/managements/ProblemManagement/TestCasePage/TestCasePage.tsx";
 import ChallengePage from "../features/user/pages/ChallengePage/ChallengePage.tsx";
 import ProblemWorkspacePage from "../features/user/pages/PracticePage/ProblemWorkspacePage.tsx";
+import TagPage from "../features/admin/managements/ProblemManagement/TagPage/TagPage.tsx";
 
 export const appRoutes: RouteObject[] = [
     {path: "/", element: <Navigate to="/signin" replace/>},
@@ -52,9 +53,10 @@ export const appRoutes: RouteObject[] = [
                 children: [
                     {index: true, element: <Navigate to={"/admin/dashboard"} replace/>},
                     {path: "dashboard", element: <DashboardPage/>},
-                    {path: "lesson", element: <LessonPage/>},
                     {path: "category", element: <CategoryPage/>},
+                    {path: "lesson", element: <LessonPage/>},
                     {path: "question", element: <QuestionPage/>},
+                    {path: "tag", element: <TagPage/>},
                     {path: "problem", element: <ProblemPage />},
                     {path: "testcase", element: <TestCasePage/>},
                     {path: "user", element: <AdminUserPage/>}

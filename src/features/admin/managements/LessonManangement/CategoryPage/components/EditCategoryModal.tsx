@@ -6,13 +6,13 @@ import { Skeleton, message } from "antd";
 interface EditCategoryModalProps {
     isOpen: boolean;
     onClose: () => void;
-    categoryId: string | null;
+    categoryId: number;
 }
 
 const EditCategoryModal = ({ isOpen, onClose, categoryId }: EditCategoryModalProps) => {
     // 1. Gọi Service lấy chi tiết
-    const { data: category, isLoading, isFetching } = useGetCategoryQuery(categoryId as string, {
-        skip: !categoryId || !isOpen,
+    const { data: category, isLoading, isFetching } = useGetCategoryQuery(categoryId, {
+        skip: categoryId === 0
     });
 
     const [formData, setFormData] = useState({

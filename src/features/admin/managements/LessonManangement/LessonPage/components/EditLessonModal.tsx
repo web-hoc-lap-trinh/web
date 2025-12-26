@@ -9,14 +9,14 @@ import MDEditor from '@uiw/react-md-editor';
 interface EditLessonModalProps {
     isOpen: boolean;
     onClose: () => void;
-    lessonId: string | null;
+    lessonId: number;
 }
 
 const EditLessonModal = ({ isOpen, onClose, lessonId }: EditLessonModalProps) => {
     // 1. Fetch dữ liệu
     const { data: categories = [] } = useGetCategoriesQuery();
-    const { data: lesson, isLoading, isFetching } = useGetLessonQuery(lessonId as string, {
-        skip: !lessonId || !isOpen,
+    const { data: lesson, isLoading, isFetching } = useGetLessonQuery(lessonId, {
+        skip: lessonId === 0
     });
 
     const [updateLesson, { isLoading: isUpdating }] = useUpdateLessonMutation();
@@ -24,7 +24,7 @@ const EditLessonModal = ({ isOpen, onClose, lessonId }: EditLessonModalProps) =>
     // 2. State quản lý Form (Thêm trường content)
     const [formData, setFormData] = useState({
         title: "",
-        category_id: "",
+        category_id: 0,
         difficulty_level: "BEGINNER" as DifficultyLevel,
         description: "",
         content: "", // Chứa dữ liệu Markdown
@@ -35,7 +35,7 @@ const EditLessonModal = ({ isOpen, onClose, lessonId }: EditLessonModalProps) =>
         if (lesson && isOpen) {
             setFormData({
                 title: lesson.title,
-                category_id: lesson.category?.category_id || "",
+                category_id: lesson.category?.category_id || 0,
                 difficulty_level: lesson.difficulty_level,
                 description: lesson.description || "",
                 content: lesson.content || "", // Đổ nội dung markdown vào editor
@@ -98,7 +98,7 @@ const EditLessonModal = ({ isOpen, onClose, lessonId }: EditLessonModalProps) =>
                                     <label className="text-[10px] font-bold text-gray-500 uppercase tracking-widest ml-1">Chủ đề</label>
                                     <select
                                         value={formData.category_id}
-                                        onChange={(e) => setFormData({ ...formData, category_id: e.target.value })}
+                                        onChange={(e) => setFormData({ ...formData, category_id: Number(e.target.value) })}
                                         className="w-full px-4 py-3 bg-[#0f131a]/50 text-gray-200 rounded-xl border border-white/10 focus:ring-2 focus:ring-emerald-500/50 outline-none cursor-pointer"
                                     >
                                         <option value="">Chọn chủ đề</option>

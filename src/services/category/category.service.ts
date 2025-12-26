@@ -27,7 +27,7 @@ export const categoryApi = authApi.injectEndpoints({
                     : [{ type: "Category", id: "LIST" }],
         }),
 
-        getCategory: builder.query<ICategory, string>({
+        getCategory: builder.query<ICategory, number>({
             query: (categoryId) => `/categories/${categoryId}`,
             transformResponse: (response: IApiResponse<ICategory>) =>
                 response.result,
@@ -49,7 +49,7 @@ export const categoryApi = authApi.injectEndpoints({
 
         updateCategory: builder.mutation<
             ICategory,
-            { categoryId: string; data: UpdateCategoryPayload }
+            { categoryId: number; data: UpdateCategoryPayload }
         >({
             query: ({ categoryId, data }) => ({
                 url: `/categories/${categoryId}`,
@@ -64,7 +64,7 @@ export const categoryApi = authApi.injectEndpoints({
             ],
         }),
 
-        deleteCategory: builder.mutation<void, string>({
+        deleteCategory: builder.mutation<void, number>({
             query: (categoryId) => ({
                 url: `/categories/${categoryId}`,
                 method: "DELETE",
