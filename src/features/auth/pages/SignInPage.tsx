@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../../hooks/useAuth";
 import * as React from "react";
 import { Input, Button, Typography, Alert, message, Checkbox, ConfigProvider, theme } from "antd";
-import { UserOutlined, LockOutlined, EyeInvisibleOutlined, EyeTwoTone, CheckCircleFilled } from "@ant-design/icons";
+import { UserOutlined, LockOutlined, EyeInvisibleOutlined, EyeTwoTone, CheckCircleFilled, CodeOutlined } from "@ant-design/icons";
 
 const THEME_COLOR = "#34D399";
 const BG_INPUT = "rgba(255, 255, 255, 0.05)";
@@ -80,7 +80,7 @@ function SignInPage() {
                         <div className="space-y-4">
                             <div className="flex items-center gap-2 mb-2">
                                 <div className="w-8 h-8 rounded-lg bg-linear-to-tr from-emerald-400 to-emerald-600 flex items-center justify-center shadow-lg shadow-emerald-500/30">
-                                    <span className="font-bold text-white text-lg">C</span>
+                                    <CodeOutlined className="text-white font-bold text-lg" />
                                 </div>
                                 <span className="text-xl font-bold text-white tracking-wide">Codery</span>
                             </div>
