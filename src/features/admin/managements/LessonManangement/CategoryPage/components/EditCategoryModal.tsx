@@ -2,17 +2,18 @@ import { useState, useEffect } from "react";
 import { CheckCircleOutlined, CloseCircleOutlined, CloseOutlined } from "@ant-design/icons";
 import { useGetCategoryQuery, useUpdateCategoryMutation } from "../../../../../../services/category/category.service.ts";
 import { Skeleton, message } from "antd";
+import {createPortal} from "react-dom";
 
 interface EditCategoryModalProps {
     isOpen: boolean;
     onClose: () => void;
-    categoryId: string | null;
+    categoryId: number;
 }
 
 const EditCategoryModal = ({ isOpen, onClose, categoryId }: EditCategoryModalProps) => {
     // 1. Gọi Service lấy chi tiết
-    const { data: category, isLoading, isFetching } = useGetCategoryQuery(categoryId as string, {
-        skip: !categoryId || !isOpen,
+    const { data: category, isLoading, isFetching } = useGetCategoryQuery(categoryId, {
+        skip: categoryId === 0
     });
 
     const [formData, setFormData] = useState({
@@ -66,7 +67,7 @@ const EditCategoryModal = ({ isOpen, onClose, categoryId }: EditCategoryModalPro
 
     if (!isOpen) return null;
 
-    return (
+    return createPortal(
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
             <div className="absolute inset-0 bg-black/60 backdrop-blur-md" onClick={onClose} />
             <div className="relative w-full max-w-md bg-[#1a202c] rounded-3xl shadow-2xl border border-white/10 overflow-hidden transform transition-all">
@@ -148,7 +149,8 @@ const EditCategoryModal = ({ isOpen, onClose, categoryId }: EditCategoryModalPro
                     </button>
                 </div>
             </div>
-        </div>
+        </div>,
+        document.body
     );
 };
 

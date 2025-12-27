@@ -52,7 +52,7 @@ export const lessonApi = authApi.injectEndpoints({
           : [{ type: "Lesson", id: "ADMIN_LIST" }],
     }),
 
-    getLessonsByCategory: builder.query<ILesson[], string | number>({
+    getLessonsByCategory: builder.query<ILesson[], number>({
       query: (categoryId) => `/lessons/category/${categoryId}`,
       transformResponse: (response: IApiResponse<ILesson[]>) => response.result,
       providesTags: (result) =>
@@ -68,13 +68,21 @@ export const lessonApi = authApi.injectEndpoints({
     }),
 
     // 5. Get Lesson Detail
-    getLesson: builder.query<ILesson, string>({
+    getLesson: builder.query<ILesson, number>({
       query: (lessonId) => `/lessons/${lessonId}`,
       transformResponse: (response: IApiResponse<ILesson>) => response.result,
       providesTags: (_result, _error, lessonId) => [
         { type: "Lesson", id: lessonId },
       ],
     }),
+
+      getAdminLesson: builder.query<ILesson, number>({
+          query: (lessonId) => `/lessons/admin/${lessonId}`,
+          transformResponse: (response: IApiResponse<ILesson>) => response.result,
+          providesTags: (_result, _error, lessonId) => [
+              { type: "Lesson", id: lessonId },
+          ],
+      }),
 
     // 6. Create Lesson
     createLesson: builder.mutation<ILesson, CreateLessonPayload>({
@@ -93,7 +101,7 @@ export const lessonApi = authApi.injectEndpoints({
     // 7. Update Lesson
     updateLesson: builder.mutation<
       ILesson,
-      { lessonId: string; data: UpdateLessonPayload }
+      { lessonId: number; data: UpdateLessonPayload }
     >({
       query: ({ lessonId, data }) => ({
         url: `/lessons/${lessonId}`,
@@ -109,7 +117,7 @@ export const lessonApi = authApi.injectEndpoints({
     }),
 
     // 8. Delete Lesson
-    deleteLesson: builder.mutation<void, string>({
+    deleteLesson: builder.mutation<void, number>({
       query: (lessonId) => ({
         url: `/lessons/${lessonId}`,
         method: "DELETE",
@@ -130,6 +138,7 @@ export const {
   useGetAdminLessonsQuery,
   useGetLessonsByCategoryQuery,
   useGetLessonQuery,
+    useGetAdminLessonQuery,
   useCreateLessonMutation,
   useUpdateLessonMutation,
   useDeleteLessonMutation,

@@ -40,14 +40,14 @@ export interface RunCodeResponse {
 export interface ITryItYourselfConfig {
   try_it_yourself_id: string;
   lesson_id: string;
-  language: IPlaygroundLanguage; 
+  language_id: number;
   example_code: string; 
   created_at: string;
   updated_at: string;
 }
 
 export interface CreateTryItYourselfPayload {
-  language_id: number;
+  language_code: string;
   example_code: string;
 }
 

@@ -2,6 +2,7 @@ import { CheckCircleOutlined, CloseCircleOutlined, CloseOutlined } from "@ant-de
 import { useState } from "react";
 import { useCreateCategoryMutation } from "../../../../../../services/category/category.service.ts";
 import { message } from "antd";
+import {createPortal} from "react-dom";
 
 interface AddCategoryModalProps {
     isOpen: boolean;
@@ -49,7 +50,7 @@ const AddCategoryModal = ({ isOpen, onClose }: AddCategoryModalProps) => {
 
     if (!isOpen) return null;
 
-    return (
+    return createPortal(
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
             <div className="absolute inset-0 bg-black/60 backdrop-blur-md" onClick={handleClose} />
             <div className="relative w-full max-w-md bg-[#1a202c] rounded-3xl shadow-2xl border border-white/10 overflow-hidden animate-in zoom-in-95 duration-200">
@@ -133,7 +134,8 @@ const AddCategoryModal = ({ isOpen, onClose }: AddCategoryModalProps) => {
                     </button>
                 </div>
             </div>
-        </div>
+        </div>,
+        document.body
     );
 };
 

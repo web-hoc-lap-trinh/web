@@ -1,7 +1,8 @@
 import { authApi } from "../auth/auth.service";
 import type {
-  IDiscussion,
-  IReply,
+    IAdminReply,
+    IDiscussion,
+    IReply,
 } from "../../types/discussion.types";
 import type {
   DiscussionListResponse,
@@ -12,6 +13,7 @@ import type {
   CreateReplyPayload,
   VotePayload,
 } from "./discussion.types";
+import type {ICategory} from "../../types/category.types.ts";
 
 export const discussionApi = authApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -46,6 +48,23 @@ export const discussionApi = authApi.injectEndpoints({
             ]
           : [{ type: "Discussion", id: "LIST" }],
     }),
+
+      getAdminDiscussions: builder.query<IDiscussion[], void>({
+          query: () => "/admin/discussions",
+          transformResponse: (response: IApiResponse<{ data: IDiscussion[] }>) =>
+              response.result.data,
+
+          providesTags: (result) =>
+              result
+                  ? [
+                      ...result.map(({ discussion_id }) => ({
+                          type: "Discussion" as const,
+                          id: discussion_id,
+                      })),
+                      { type: "Discussion", id: "LIST" },
+                  ]
+                  : [{ type: "Discussion", id: "LIST" }],
+      }),
 
     getDiscussion: builder.query<IDiscussion, number | string>({
       query: (discussionId) => `/community/discussions/${discussionId}`,
@@ -87,6 +106,14 @@ export const discussionApi = authApi.injectEndpoints({
       invalidatesTags: [{ type: "Discussion", id: "LIST" }],
     }),
 
+      deleteAdminDiscussion: builder.mutation<void, number>({
+      query: (discussionId) => ({
+        url: `/admin/discussions/${discussionId}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: [{ type: "Discussion", id: "LIST" }],
+    }),
+
     getReplies: builder.query<ReplyListResponse, number | string>({
       query: (discussionId) => `/community/discussions/${discussionId}/replies`,
       transformResponse: (response: any) => {
@@ -110,6 +137,23 @@ export const discussionApi = authApi.injectEndpoints({
             ]
           : [{ type: "Reply", id: `LIST_${discussionId}` }],
     }),
+
+      getAdminReplies: builder.query<IAdminReply[], number>({
+          query: (id) => `/admin/discussions/${id}/replies`,
+          transformResponse: (response: IApiResponse<{ data: IAdminReply[] }>) =>
+              response.result.data,
+
+          providesTags: (result) =>
+              result
+                  ? [
+                      ...result.map(({ reply_id }) => ({
+                          type: "Reply" as const,
+                          id: reply_id,
+                      })),
+                      { type: "Reply", id: "LIST" },
+                  ]
+                  : [{ type: "Reply", id: "LIST" }],
+      }),
 
     createReply: builder.mutation<
       IReply,
@@ -151,20 +195,39 @@ export const discussionApi = authApi.injectEndpoints({
         return tags;
       },
     }),
+
+      markSolution: builder.mutation<
+          IDiscussion,
+          { discussionId: number }
+      >({
+          query: ({ discussionId }) => ({
+              url: `/admin/discussions/${discussionId}/mark-solution`,
+              method: "PATCH",
+          }),
+          transformResponse: (response: IApiResponse<IDiscussion>) => response.result,
+          invalidatesTags: (_res, _err, { discussionId }) => [
+              { type: "Reply", id: `LIST_${discussionId}` },
+              { type: "Discussion", id: discussionId },
+          ],
+      }),
   }),
   overrideExisting: false,
 });
 
 export const {
   useGetDiscussionsQuery,
+    useGetAdminDiscussionsQuery,
   useGetDiscussionQuery,
   useCreateDiscussionMutation,
   useUpdateDiscussionMutation,
   useDeleteDiscussionMutation,
+    useDeleteAdminDiscussionMutation,
 
   useGetRepliesQuery,
+    useGetAdminRepliesQuery,
   useCreateReplyMutation,
   useDeleteReplyMutation,
 
   useVoteMutation,
+    useMarkSolutionMutation,
 } = discussionApi;

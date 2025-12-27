@@ -1,17 +1,15 @@
-import {Typography} from "antd"
-
-const {Title} = Typography;
+import HeaderBar from "../../../../components/common/HeaderBar.tsx";
+import DashboardStats from "./components/DashboardStats.tsx";
+import {useGetDashboardStatsQuery} from "../../../../services/admin/admin.service.ts";
 
 const DashboardPage = () => {
+    const {data: dashboard, isLoading} = useGetDashboardStatsQuery()
+
     return (
-        <main className={"flex flex-col"}>
-            <div className={"flex pb-8"}>
-                <Title level={2} style={{color: 'white'}}>
-                    Tổng quan
-                </Title>
-            </div>
-            <div>Dashboard</div>
-        </main>
+        <div className="flex-1 overflow-auto px-10 pb-10 z-10">
+            <HeaderBar title={"Tổng quan"} buttonText={""} setOpen={() => {}} />
+            <DashboardStats data={dashboard} loading={isLoading} />
+        </div>
     )
 };
 

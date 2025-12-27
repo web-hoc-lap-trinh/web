@@ -1,30 +1,56 @@
 import { useState, useEffect } from "react";
 import { CloseOutlined, LoadingOutlined } from "@ant-design/icons";
 import { Skeleton, message } from "antd";
-import { useGetLessonQuery, useUpdateLessonMutation } from "../../../../../../services/lesson/lesson.service.ts";
+import {
+    useGetAdminLessonQuery,
+    useGetLessonQuery,
+    useUpdateLessonMutation
+} from "../../../../../../services/lesson/lesson.service.ts";
 import { useGetCategoriesQuery } from "../../../../../../services/category/category.service.ts";
 import type { DifficultyLevel } from "../../../../../../types/lesson.types.ts";
 import MDEditor from '@uiw/react-md-editor';
+import TabButton from "./TabButton.tsx";
+import TryItYourselfTab from "./TryItYourselfTab.tsx";
+import {
+    useGetLessonTryItYourselfQuery,
+    useGetProblemLanguagesQuery, useUpdateLessonTryItYourselfMutation
+} from "../../../../../../services/try-it-yourself/try-it-yourself.service.ts";
+import type {
+    CreateTryItYourselfPayload,
+    UpdateTryItYourselfPayload
+} from "../../../../../../services/try-it-yourself/try-it-yourself.types.ts";
+import type {UpdateLessonPayload} from "../../../../../../services/lesson/lesson.types.ts";
+import {createPortal} from "react-dom";
 
 interface EditLessonModalProps {
     isOpen: boolean;
     onClose: () => void;
-    lessonId: string | null;
+    lessonId: number;
 }
+
+type TabType = 'basic' | 'try-it';
 
 const EditLessonModal = ({ isOpen, onClose, lessonId }: EditLessonModalProps) => {
     // 1. Fetch dữ liệu
     const { data: categories = [] } = useGetCategoriesQuery();
-    const { data: lesson, isLoading, isFetching } = useGetLessonQuery(lessonId as string, {
-        skip: !lessonId || !isOpen,
+    const { data: languages = [] } = useGetProblemLanguagesQuery()
+    const { data: lesson, isLoading, isFetching } = useGetAdminLessonQuery(lessonId, {
+        skip: lessonId === 0
     });
+    const {data: TIY} = useGetLessonTryItYourselfQuery(lessonId, {
+        skip: lessonId === 0
+    })
+    const [activeTab, setActiveTab] = useState<TabType>('basic');
+    const [languageId, setLanguageId] = useState(0);
+    const [code, setCode] = useState('');
 
     const [updateLesson, { isLoading: isUpdating }] = useUpdateLessonMutation();
+    const [updateTIY] = useUpdateLessonTryItYourselfMutation();
 
     // 2. State quản lý Form (Thêm trường content)
     const [formData, setFormData] = useState({
         title: "",
-        category_id: "",
+        category_id: 0,
         difficulty_level: "BEGINNER" as DifficultyLevel,
         description: "",
         content: "", // Chứa dữ liệu Markdown
@@ -35,13 +61,17 @@ const EditLessonModal = ({ isOpen, onClose, lessonId }: EditLessonModalProps) =>
         if (lesson && isOpen) {
             setFormData({
                 title: lesson.title,
-                category_id: lesson.category?.category_id || "",
+                category_id: lesson.category?.category_id || 0,
                 difficulty_level: lesson.difficulty_level,
                 description: lesson.description || "",
                 content: lesson.content || "", // Đổ nội dung markdown vào editor
             });
         }
-    }, [lesson, isOpen]);
+        if(TIY) {
+            setLanguageId(TIY.language_id);
+            setCode(TIY.example_code);
+        }
+    }, [lesson, isOpen, TIY]);
 
     const handleSave = async () => {
         if (!lessonId) return;
@@ -50,6 +80,14 @@ const EditLessonModal = ({ isOpen, onClose, lessonId }: EditLessonModalProps) =>
                 lessonId,
                 data: formData
             }).unwrap();
+            const payload: UpdateTryItYourselfPayload = {
+                language_id: languageId,
+                example_code: code
+            }
+            await updateTIY({
+                lessonId,
+                data: payload
+            })
             message.success("Cập nhật bài học thành công!");
             onClose();
         } catch (error: any) {
@@ -59,7 +97,7 @@ const EditLessonModal = ({ isOpen, onClose, lessonId }: EditLessonModalProps) =>
 
     if (!isOpen) return null;
 
-    return (
+    return createPortal(
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6">
             <div className="absolute inset-0 bg-black/60 backdrop-blur-md transition-opacity" onClick={onClose} />
 
@@ -77,77 +115,99 @@ const EditLessonModal = ({ isOpen, onClose, lessonId }: EditLessonModalProps) =>
                     </button>
                 </div>
 
+                <div className="flex px-8 border-b border-white/5 bg-white/[0.01]">
+                    <TabButton
+                        active={activeTab === 'basic'}
+                        onClick={() => setActiveTab('basic')}
+                        label="Thông tin cơ bản"
+                    />
+                    <TabButton
+                        active={activeTab === 'try-it'}
+                        onClick={() => setActiveTab('try-it')}
+                        label="Try It Yourself"
+                    />
+                </div>
+
                 {/* Body */}
                 <div className="p-8 space-y-6 overflow-y-auto custom-scrollbar flex-1">
                     {isLoading || isFetching ? (
                         <Skeleton active paragraph={{ rows: 10 }} />
                     ) : (
-                        <>
-                            {/* Row 1: Title & Category */}
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div className="space-y-2">
-                                    <label className="text-[10px] font-bold text-gray-500 uppercase tracking-widest ml-1">Tiêu đề bài học</label>
-                                    <input
-                                        type="text"
-                                        value={formData.title}
-                                        onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                                        className="w-full px-4 py-3 bg-[#0f131a]/50 text-gray-200 rounded-xl border border-white/10 focus:ring-2 focus:ring-emerald-500/50 outline-none transition-all"
-                                    />
+                        activeTab == 'basic' ? (
+                            <>
+                                {/* Row 1: Title & Category */}
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div className="space-y-2">
+                                        <label className="text-[10px] font-bold text-gray-500 uppercase tracking-widest ml-1">Tiêu đề bài học</label>
+                                        <input
+                                            type="text"
+                                            value={formData.title}
+                                            onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                                            className="w-full px-4 py-3 bg-[#0f131a]/50 text-gray-200 rounded-xl border border-white/10 focus:ring-2 focus:ring-emerald-500/50 outline-none transition-all"
+                                        />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <label className="text-[10px] font-bold text-gray-500 uppercase tracking-widest ml-1">Chủ đề</label>
+                                        <select
+                                            value={formData.category_id}
+                                            onChange={(e) => setFormData({ ...formData, category_id: Number(e.target.value) })}
+                                            className="w-full px-4 py-3 bg-[#0f131a]/50 text-gray-200 rounded-xl border border-white/10 focus:ring-2 focus:ring-emerald-500/50 outline-none cursor-pointer"
+                                        >
+                                            <option value="">Chọn chủ đề</option>
+                                            {categories.map(cat => (
+                                                <option key={cat.category_id} value={cat.category_id}>{cat.name}</option>
+                                            ))}
+                                        </select>
+                                    </div>
                                 </div>
-                                <div className="space-y-2">
-                                    <label className="text-[10px] font-bold text-gray-500 uppercase tracking-widest ml-1">Chủ đề</label>
-                                    <select
-                                        value={formData.category_id}
-                                        onChange={(e) => setFormData({ ...formData, category_id: e.target.value })}
-                                        className="w-full px-4 py-3 bg-[#0f131a]/50 text-gray-200 rounded-xl border border-white/10 focus:ring-2 focus:ring-emerald-500/50 outline-none cursor-pointer"
-                                    >
-                                        <option value="">Chọn chủ đề</option>
-                                        {categories.map(cat => (
-                                            <option key={cat.category_id} value={cat.category_id}>{cat.name}</option>
-                                        ))}
-                                    </select>
-                                </div>
-                            </div>
 
-                            {/* Row 2: Level & Description */}
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div className="space-y-2">
-                                    <label className="text-[10px] font-bold text-gray-500 uppercase tracking-widest ml-1">Mức độ</label>
-                                    <select
-                                        value={formData.difficulty_level}
-                                        onChange={(e) => setFormData({ ...formData, difficulty_level: e.target.value as DifficultyLevel })}
-                                        className="w-full px-4 py-3 bg-[#0f131a]/50 text-gray-200 rounded-xl border border-white/10 focus:ring-2 focus:ring-emerald-500/50 outline-none"
-                                    >
-                                        <option value="BEGINNER">Cơ bản (Beginner)</option>
-                                        <option value="INTERMEDIATE">Trung bình (Intermediate)</option>
-                                        <option value="ADVANCED">Nâng cao (Advanced)</option>
-                                    </select>
+                                {/* Row 2: Level & Description */}
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div className="space-y-2">
+                                        <label className="text-[10px] font-bold text-gray-500 uppercase tracking-widest ml-1">Mức độ</label>
+                                        <select
+                                            value={formData.difficulty_level}
+                                            onChange={(e) => setFormData({ ...formData, difficulty_level: e.target.value as DifficultyLevel })}
+                                            className="w-full px-4 py-3 bg-[#0f131a]/50 text-gray-200 rounded-xl border border-white/10 focus:ring-2 focus:ring-emerald-500/50 outline-none"
+                                        >
+                                            <option value="BEGINNER">Cơ bản (Beginner)</option>
+                                            <option value="INTERMEDIATE">Trung bình (Intermediate)</option>
+                                            <option value="ADVANCED">Nâng cao (Advanced)</option>
+                                        </select>
+                                    </div>
+                                    <div className="space-y-2">
+                                        <label className="text-[10px] font-bold text-gray-500 uppercase tracking-widest ml-1">Mô tả ngắn</label>
+                                        <input
+                                            type="text"
+                                            value={formData.description}
+                                            onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                                            className="w-full px-4 py-3 bg-[#0f131a]/50 text-gray-200 rounded-xl border border-white/10 focus:ring-2 focus:ring-emerald-500/50 outline-none"
+                                        />
+                                    </div>
                                 </div>
-                                <div className="space-y-2">
-                                    <label className="text-[10px] font-bold text-gray-500 uppercase tracking-widest ml-1">Mô tả ngắn</label>
-                                    <input
-                                        type="text"
-                                        value={formData.description}
-                                        onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                                        className="w-full px-4 py-3 bg-[#0f131a]/50 text-gray-200 rounded-xl border border-white/10 focus:ring-2 focus:ring-emerald-500/50 outline-none"
-                                    />
-                                </div>
-                            </div>
 
-                            {/* UIW Markdown Editor Section */}
-                            <div className="space-y-2 flex flex-col min-h-[400px]">
-                                <label className="text-[10px] font-bold text-gray-500 uppercase tracking-widest ml-1">Nội dung bài học (Markdown)</label>
-                                <div data-color-mode="dark" className="mt-2 flex-1 rounded-xl overflow-hidden border border-white/10">
-                                    <MDEditor
-                                        value={formData.content}
-                                        onChange={(val) => setFormData(prev => ({ ...prev, content: val || "" }))}
-                                        height={450}
-                                        preview="live"
-                                        className="!bg-[#0f131a] !border-none"
-                                    />
+                                {/* UIW Markdown Editor Section */}
+                                <div className="space-y-2 flex flex-col min-h-[400px]">
+                                    <label className="text-[10px] font-bold text-gray-500 uppercase tracking-widest ml-1">Nội dung bài học (Markdown)</label>
+                                    <div data-color-mode="dark" className="mt-2 flex-1 rounded-xl overflow-hidden border border-white/10">
+                                        <MDEditor
+                                            value={formData.content}
+                                            onChange={(val) => setFormData(prev => ({ ...prev, content: val || "" }))}
+                                            height={450}
+                                            preview="live"
+                                            className="!bg-[#0f131a] !border-none"
+                                        />
+                                    </div>
                                 </div>
-                            </div>
-                        </>
+                            </>
+                        ) : (
+                            <TryItYourselfTab
+                                languages={languages}
+                                languageId={languageId}
+                                setLanguage={setLanguageId}
+                                code={code} setCode={setCode}
+                            />
+                        )
                     )}
                 </div>
 
@@ -165,7 +225,8 @@ const EditLessonModal = ({ isOpen, onClose, lessonId }: EditLessonModalProps) =>
                     </button>
                 </div>
             </div>
-        </div>
+        </div>,
+        document.body
     );
 };
 

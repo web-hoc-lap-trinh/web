@@ -5,10 +5,12 @@ import {
     CommentOutlined,
     FireOutlined,
     UserOutlined,
-    KeyOutlined
+    KeyOutlined, TagsOutlined, LogoutOutlined, CodeOutlined
 } from '@ant-design/icons';
 import {useEffect, useState} from "react";
 import {useNavigate, useLocation} from "react-router-dom";
+import {logout} from "../../stores/slices/authSlice.ts";
+import {useAuth} from "../../hooks/useAuth.ts";
 
 interface MenuItem {
     id: string;
@@ -21,7 +23,7 @@ interface MenuItem {
 const MENU_ITEMS: MenuItem[] = [
     {
         id: 'dashboard',
-        title: 'Dashboard',
+        title: 'Hệ thống',
         icon: <DashboardOutlined size={20}/>,
         subItems: [{id: 'dashboard', title: 'Tổng quan'}]
     },
@@ -31,8 +33,8 @@ const MENU_ITEMS: MenuItem[] = [
         icon: <FolderAddOutlined size={20}/>,
         isOpen: true,
         subItems: [
-            {id: 'lesson', title: 'Quản lý bài học'},
             {id: 'category', title: 'Quản lý chủ đề'},
+            {id: 'lesson', title: 'Quản lý bài học'},
             {id: 'question', title: 'Quản lý câu hỏi'}
         ]
     },
@@ -41,8 +43,18 @@ const MENU_ITEMS: MenuItem[] = [
         title: 'Quản lý Bài tập & Test Case',
         icon: <FileOutlined size={20}/>,
         subItems: [
+            {id: 'tag', title: 'Quản lý nhãn'},
             {id: 'problem', title: 'Quản lý bài tập'},
             {id: 'testcase', title: 'Quản lý test case'}
+        ]
+    },
+    {
+        id: 'community',
+        title: 'Quản lý cộng đồng',
+        icon: <CommentOutlined size={20}/>,
+        subItems: [
+            {id: 'discussion', title: 'Quản lý bài đăng'},
+            {id: 'reply', title: 'Quản lý phản hồi'}
         ]
     },
     {
@@ -55,15 +67,6 @@ const MENU_ITEMS: MenuItem[] = [
             // {id: 'progress', title: 'Theo dõi tiến độ học tập'}
         ]
     },
-    /*{
-        id: 'community',
-        title: 'Quản lý Cộng đồng',
-        icon: <CommentOutlined size={20}/>,
-        subItems: [
-            {id: 'comments', title: 'Bình luận & Giải thích'},
-            {id: 'reports', title: 'Báo cáo vi phạm'}
-        ]
-    },*/
     /*{
         id: 'gamification',
         title: 'Quản lý Gamification',
@@ -85,7 +88,8 @@ const MENU_ITEMS: MenuItem[] = [
     },*/
 ];
 
-const NavigationBar = () => {
+const SideBar = () => {
+    const { logout } = useAuth();
     const navigation = useNavigate();
     const location = useLocation();
     const [activeSubItem, setActiveSubItem] = useState<string>(() => {
@@ -105,13 +109,11 @@ const NavigationBar = () => {
             {/* Header Sidebar */}
             <div className="p-8 pb-4">
                 <div className="flex items-center gap-3 mb-1">
-                    <div
-                        className="w-8 h-8 rounded-lg bg-gradient-to-br from-emerald-400 to-cyan-500 flex items-center justify-center shadow-lg shadow-emerald-500/20">
-                        <span className="font-bold text-white text-lg">L</span>
+                    <div className="w-12 h-12 rounded-xl bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20 shadow-lg">
+                        <CodeOutlined size={40} className="text-emerald-400" />
                     </div>
                     <h2 className="text-xl font-bold text-white tracking-wide">Codery</h2>
                 </div>
-                <p className="text-xs text-gray-500 font-medium ml-11">Admin</p>
             </div>
 
             {/* Navigation List */}
@@ -161,15 +163,15 @@ const NavigationBar = () => {
             {/* Footer / User Info */}
             <div className="p-5 border-t border-white/5 bg-black/20">
                 <div
-                    className="flex items-center gap-3 p-3 rounded-xl cursor-pointer hover:bg-white/5 transition-colors border border-transparent hover:border-white/5 group">
-                    <div
-                        className="w-10 h-10 rounded-full bg-gradient-to-tr from-emerald-600 to-teal-400 p-[2px] shadow-lg">
-                        <div
-                            className="w-full h-full rounded-full bg-[#1a1f2e] flex items-center justify-center overflow-hidden">
-                            <span
-                                className="text-xs font-bold text-emerald-100 group-hover:scale-110 transition-transform">AD</span>
-                        </div>
-                    </div>
+                    className="flex items-center gap-3 p-3 rounded-xl">
+                    <button
+                        className="w-12 h-12 rounded-xl bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20 shadow-lg cursor-pointer"
+                        onClick={() => {
+                            logout();
+                            navigation("/signin");
+                        }}>
+                        <LogoutOutlined size={24} className="text-emerald-400" />
+                    </button>
                     <div className="flex-1 min-w-0">
                         <div
                             className="text-sm font-semibold text-gray-200 truncate group-hover:text-white transition-colors">Administrator
@@ -182,4 +184,4 @@ const NavigationBar = () => {
     );
 }
 
-export default NavigationBar;
+export default SideBar;

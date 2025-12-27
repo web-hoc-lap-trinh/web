@@ -93,6 +93,18 @@ export const problemApi = authApi.injectEndpoints({
                     : [{ type: "TestCase", id: `LESSON_${problemId}` }],
         }),
 
+        getProblemTestCase: builder.query<
+            ITestCase,
+            number
+        >({
+            query: (id) => `/testcases/${id}`,
+            transformResponse: (response: IApiResponse<ITestCase>) =>
+                response.result,
+            providesTags: (result, error, testcaseId) => [
+                { type: "TestCase", id: testcaseId },
+            ],
+        }),
+
 		createProblemTestCase: builder.mutation<ITestCase, { id: number; data: CreateTestCasePayload }>({
 			query: ({ id, data }) => ({ url: `/problems/${id}/testcases`, method: "POST", body: data }),
 			transformResponse: (response: IApiResponse<TestCaseResponse>) => response.result.testcase,
@@ -129,6 +141,7 @@ export const {
 	useGetDailyChallengeQuery,
 	useTriggerDailyChallengeMutation,
 	useGetProblemTestCasesQuery,
+    useGetProblemTestCaseQuery,
 	useCreateProblemTestCaseMutation,
 	useBulkCreateProblemTestCasesMutation,
 	useUpdateTestCaseMutation,

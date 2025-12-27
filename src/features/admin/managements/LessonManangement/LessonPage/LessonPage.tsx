@@ -1,16 +1,16 @@
 import HeaderBar from "../../../../../components/common/HeaderBar.tsx";
-import {useGetAdminLessonsQuery} from "../../../../../services/lesson/lesson.service.ts";
 import {useState} from "react";
 import LessonTable from "./components/LessonTable.tsx";
 import type {ILesson} from "../../../../../types/lesson.types.ts";
 import AddLessonModal from "./components/AddLessonModal.tsx";
 import EditLessonModal from "./components/EditLessonModal.tsx";
+import {useGetCategoriesQuery} from "../../../../../services/category/category.service.ts";
 
 const LessonPage = () => {
-    const {data: lessons = [], isLoading} = useGetAdminLessonsQuery();
+    const {data: categories = [], isLoading} = useGetCategoriesQuery()
     const [isLessonAddOpen, setIsLessonAddOpen] = useState(false);
     const [isLessonEditOpen, setIsLessonEditOpen] = useState(false);
-    const [selectedLessonId, setSelectedLessonId] = useState<string | null>(null);
+    const [selectedLessonId, setSelectedLessonId] = useState<number>(0);
 
     const handleEditLesson = (lesson: ILesson) => {
         setSelectedLessonId(lesson.lesson_id);
@@ -20,14 +20,14 @@ const LessonPage = () => {
     return (
         <div className="flex-1 overflow-auto px-10 pb-10 z-10">
             <HeaderBar title={"Quản lý bài học"} buttonText={"Thêm bài học"} setOpen={() => setIsLessonAddOpen(true)} />
-            <LessonTable onEdit={handleEditLesson} lessons={lessons} loading={isLoading} />
+            <LessonTable onEdit={handleEditLesson} categories={categories} loading={isLoading} />
 
             <AddLessonModal isOpen={isLessonAddOpen} onClose={() => setIsLessonAddOpen(false)} />
             <EditLessonModal
                 isOpen={isLessonEditOpen}
                 onClose={() => {
                     setIsLessonEditOpen(false);
-                    setSelectedLessonId(null);
+                    setSelectedLessonId(0);
                 }}
                 lessonId={selectedLessonId}
                 />

@@ -2,12 +2,12 @@ import type {IExerciseAdminDetail} from "../../../../../../types/exercise.types.
 import type {ILesson} from "../../../../../../types/lesson.types.ts";
 import {useEffect, useMemo, useState} from "react";
 import {
-    CheckCircleOutlined,
-    CodeOutlined, DeleteOutlined,
-    DownOutlined,
+    AppstoreOutlined,
+    DeleteOutlined,
     EditOutlined, ExclamationCircleFilled,
-    FileTextOutlined,
-    SearchOutlined
+    ReadOutlined,
+    SearchOutlined,
+    UnorderedListOutlined
 } from "@ant-design/icons";
 import {message, Modal, Skeleton} from "antd";
 import {
@@ -25,24 +25,19 @@ interface ExerciseTableProps {
 
 const QuestionTable = ({onEdit, lessons, loading}: ExerciseTableProps) => {
     const [selectedLessonId, setSelectedLessonId] = useState<number>(0);
-    const [searchQuery, setSearchQuery] = useState('');
-    const {data: exercises = [], isFetching} = useGetAdminLessonExercisesQuery(selectedLessonId, {
+    const [searchQueryExercise, setSearchQueryExercise] = useState('');
+    const [searchQueryLesson, setSearchQueryLesson] = useState('');
+    const {data: exercises = []} = useGetAdminLessonExercisesQuery(selectedLessonId, {
         skip: selectedLessonId === 0,
         refetchOnMountOrArgChange: true
     });
     const [deleteExercise, { isLoading: isDeleting }] = useDeleteExerciseMutation();
 
-    const handleDelete = (id: number | string, question: string) => {
+    const handleDelete = (id: number, name: string) => {
         confirm({
-            title: 'Xóa bài tập này?',
-            icon: <ExclamationCircleFilled className="text-red-500" />,
-            content: (
-                <div className="text-gray-400">
-                    Bạn có chắc chắn muốn xóa câu hỏi: <br />
-                    <span className="text-emerald-400 font-medium">"{question}"</span>? <br />
-                    Hành động này không thể hoàn tác.
-                </div>
-            ),
+            title: 'Xác nhận xóa câu hỏi?',
+            icon: <ExclamationCircleFilled />,
+            content: `Bạn có chắc chắn muốn xóa "${name}"? Hành động này không thể hoàn tác.`,
             okText: 'Xóa ngay',
             okType: 'danger',
             cancelText: 'Hủy',
@@ -50,9 +45,9 @@ const QuestionTable = ({onEdit, lessons, loading}: ExerciseTableProps) => {
             async onOk() {
                 try {
                     await deleteExercise(id).unwrap();
-                    message.success('Xóa bài tập thành công!');
+                    message.success('Đã xóa câu hỏi thành công');
                 } catch (error: any) {
-                    message.error(error?.data?.message || 'Lỗi khi xóa bài tập');
+                    message.error(error?.data?.message || 'Không thể xóa câu hỏi này');
                 }
             },
         });
@@ -61,11 +56,18 @@ const QuestionTable = ({onEdit, lessons, loading}: ExerciseTableProps) => {
     const filteredExercises = useMemo(() => {
         if (!exercises) return [];
         return exercises.filter(ex => {
-            const searchLower = searchQuery.toLowerCase();
-            return ex.question.toLowerCase().includes(searchLower) ||
-                ex.exercise_id.toString().includes(searchLower);
+            const searchLower = searchQueryExercise.toLowerCase();
+            return ex.question.toLowerCase().includes(searchLower)
         });
-    }, [searchQuery, exercises]);
+    }, [searchQueryExercise, exercises]);
+
+    const filteredLessons = useMemo(() => {
+        if (!lessons) return [];
+        return lessons.filter(res => {
+            const searchLower = searchQueryLesson.toLowerCase();
+            return res.title.toLowerCase().includes(searchLower)
+        });
+    }, [lessons, searchQueryLesson]);
 
     const getLessonName = (lessonId: string | number) => {
         if (!lessonId) return 'Tất cả bài học';
@@ -116,164 +118,155 @@ const QuestionTable = ({onEdit, lessons, loading}: ExerciseTableProps) => {
         );
     }
 
-
     return (
-        <div className="space-y-6">
-            {/* Selection & Filters Header */}
-            <div
-                className="bg-[#1a202c]/60 backdrop-blur-xl rounded-3xl border border-white/5 shadow-2xl p-6 flex lg:flex-row gap-6 items-center">
-
-                {/* Lesson Selector */}
-                <div className="w-1/3 lg:w-72 space-y-2">
-                    <label className="text-[10px] font-bold text-gray-500 uppercase tracking-widest ml-1">Chọn bài
-                        học</label>
-                    <div className="relative group">
-                        <select
-                            value={selectedLessonId}
-                            onChange={(e) => {
-                                console.log(selectedLessonId);
-                                setSelectedLessonId(Number(e.target.value))
-                            }}
-                            className="w-full pl-12 pr-10 py-3 bg-[#0f131a]/50 text-gray-200 rounded-xl border border-white/5 outline-none focus:ring-2 focus:ring-emerald-500/50 appearance-none cursor-pointer shadow-inner text-sm transition-all"
-                        >
-                            <option value="" disabled>T-- Chọn bài học để xem --</option>
-                            {lessons.map(lesson => (
-                                <option key={lesson.lesson_id} value={lesson.lesson_id}>{lesson.title}</option>
-                            ))}
-                        </select>
-                        <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-gray-500">
-                            <DownOutlined size={16} className="rotate-90"/>
-                        </div>
+        <div className="space-y-8">
+            {/* Lesson Cards Selector */}
+            <div className="space-y-4">
+                <div className="flex items-center justify-between px-1">
+                    <div className="flex items-center gap-2">
+                        <AppstoreOutlined size={18} className="text-emerald-400" />
+                        <h3 className="text-xs font-bold text-gray-400 uppercase tracking-[0.2em]">Chọn bài học cần quản lý</h3>
                     </div>
-                </div>
-
-                {/* Search Input */}
-                <div className="flex-1 w-full space-y-2">
-                    <label className="text-[10px] font-bold text-gray-500 uppercase tracking-widest ml-1">Tìm kiếm bài
-                        tập</label>
-                    <div className="relative group">
-                        <SearchOutlined size={18}
-                                        className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-emerald-400 transition-colors"/>
+                    <div className="relative group w-2/3 sm:w-80">
+                        <SearchOutlined size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-emerald-400 transition-colors" />
                         <input
                             type="text"
-                            value={searchQuery}
-                            onChange={(e) => {
-                                console.log(e.target.value);
-                                setSearchQuery(e.target.value)
-                            }}
-                            placeholder="Nhập tên bài tập hoặc ID..."
-                            className="w-full pl-12 pr-4 py-3 bg-[#0f131a]/50 text-gray-200 rounded-xl border border-white/5 outline-none focus:ring-2 focus:ring-emerald-500/50 transition-all placeholder-gray-600 shadow-inner text-sm"
+                            value={searchQueryLesson}
+                            onChange={(e) => setSearchQueryLesson(e.target.value)}
+                            placeholder="Tìm kiếm bài học"
+                            className="w-full pl-11 pr-4 py-2.5 bg-[#0f131a]/60 text-gray-200 rounded-2xl border border-white/10 outline-none focus:ring-2 focus:ring-emerald-500/30 transition-all placeholder-gray-600 shadow-inner text-sm"
                         />
                     </div>
                 </div>
 
-                {/* Filters Summary */}
-                <div className="hidden lg:flex flex-col justify-end items-end space-y-1">
-                    <span className="text-[10px] text-gray-500 font-bold uppercase tracking-widest">Kết quả lọc</span>
-                    <div className="flex gap-2">
-              <span
-                  className="bg-emerald-500/10 text-emerald-400 text-[11px] px-3 py-1 rounded-full border border-emerald-500/20 font-bold">
-                {filteredExercises.length} Bài tập
-              </span>
+                <div className="max-h-[290px] overflow-y-auto pr-2">
+                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+                        {filteredLessons.length > 0 ? (filteredLessons.map((lesson) => (
+                            <button
+                                key={lesson.lesson_id}
+                                onClick={() => setSelectedLessonId(lesson.lesson_id)}
+                                className={`group relative flex flex-col p-4 rounded-[24px] border transition-all duration-300 text-left overflow-hidden h-full ${
+                                    selectedLessonId === lesson.lesson_id
+                                        ? 'bg-emerald-500/10 border-emerald-500/50 shadow-[0_0_25px_rgba(16,185,129,0.15)] ring-1 ring-emerald-500/20'
+                                        : 'bg-[#0f131a]/40 border-white/5 hover:border-white/20 hover:bg-[#1a202c]/40'
+                                }`}
+                            >
+                                <div className={`w-10 h-10 rounded-xl mb-3 flex items-center justify-center transition-all duration-300 ${
+                                    selectedLessonId === lesson.lesson_id ? 'bg-emerald-500 text-white shadow-lg' : 'bg-white/5 text-gray-500'
+                                }`}>
+                                    <ReadOutlined size={20} />
+                                </div>
+                                <span className={`text-sm font-bold tracking-tight line-clamp-1 ${selectedLessonId === lesson.lesson_id ? 'text-emerald-400' : 'text-gray-300'}`}>
+                    {lesson.title}
+                  </span>
+                                <div className="flex items-center gap-2 mt-1">
+                                    <span className="text-[9px] text-gray-600 font-bold uppercase">{lesson.difficulty_level}</span>
+                                </div>
+                            </button>
+                        ))) : (
+                            <td className="px-8 py-8 text-center">
+                                <div className="flex flex-col items-center gap-3 opacity-20">
+                                    <UnorderedListOutlined size={40} className="text-gray-400" />
+                                    <p className="text-sm font-bold text-gray-300">Không có dữ liệu</p>
+                                </div>
+                            </td>
+                        )}
                     </div>
                 </div>
             </div>
 
-            {/* Exercises Table */}
-            <div
-                className="bg-[#1a202c]/60 backdrop-blur-xl rounded-3xl border border-white/5 shadow-2xl overflow-hidden">
-                {isFetching && (
-                    <div className="absolute inset-0 bg-black/10 backdrop-blur-[1px] z-10 flex items-center justify-center">
-                        <Skeleton active className="p-10" />
+            {/* Table Section with Integrated Search */}
+            <div className="space-y-4">
+                <div className="flex sm:flex-row justify-between items-end sm:items-center gap-4 px-2">
+                    <div className="flex items-center gap-2">
+                        <div className="w-2 h-6 bg-emerald-500 rounded-full" />
+                        <h4 className="text-lg font-bold text-white tracking-tight">Danh sách câu hỏi</h4>
+                        <span className="text-xs text-gray-500 font-medium ml-2">({filteredExercises.length} kết quả)</span>
                     </div>
-                )}
-                <div className="overflow-x-auto">
-                    <table className="w-full text-sm text-left">
-                        <thead className="text-xs text-gray-400 uppercase bg-black/20">
-                        <tr>
-                            <th className="px-6 py-5 font-semibold">Bài tập</th>
-                            <th className="px-6 py-5 font-semibold">Bài học</th>
-                            <th className="px-6 py-5 font-semibold text-center">Loại bài tập</th>
-                            <th className="px-6 py-5 font-semibold text-center">Ngày tạo</th>
-                            <th className="px-6 py-5 font-semibold text-right"></th>
-                        </tr>
-                        </thead>
-                        <tbody className="divide-y divide-white/5">
-                        {filteredExercises.length > 0 ? (
-                            filteredExercises.map((ex) => (
-                                <tr key={ex.exercise_id} className="group hover:bg-white/[0.02] transition-colors">
-                                    <td className="px-6 py-5">
-                                        <div className="flex flex-col">
-                                            <span
-                                                className="font-semibold text-gray-200 group-hover:text-emerald-300 transition-colors">{ex.question}</span>
-                                            <span
-                                                className="text-[10px] text-gray-500 font-mono mt-1 opacity-70 tracking-wider">{ex.exercise_id}</span>
-                                        </div>
-                                    </td>
-                                    <td className="px-6 py-5">
-                                        <div className="flex items-center gap-2">
-                                            <div className="w-1.5 h-1.5 rounded-full bg-emerald-500/50"/>
-                                            <span
-                                                className="text-xs text-gray-400 max-w-[200px] truncate">{getLessonName(ex.lesson_id)}</span>
-                                        </div>
-                                    </td>
-                                    <td className="px-6 py-5 text-center">
-                                        <div className="flex items-center justify-center">
-                        <span className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider border ${getTypeBadge(ex.exercise_type)}`}>
-                          {ex.exercise_type === 'MULTIPLE_CHOICE' ? <FileTextOutlined size={12} /> : <CheckCircleOutlined size={12} />}
-                            {ex.exercise_type}
+
+                    {/* Neat Compact Search Bar */}
+                    <div className="relative group w-2/3 sm:w-80">
+                        <SearchOutlined size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-emerald-400 transition-colors" />
+                        <input
+                            type="text"
+                            value={searchQueryExercise}
+                            onChange={(e) => setSearchQueryExercise(e.target.value)}
+                            placeholder="Tìm kiếm câu hỏi"
+                            className="w-full pl-11 pr-4 py-2.5 bg-[#0f131a]/60 text-gray-200 rounded-2xl border border-white/10 outline-none focus:ring-2 focus:ring-emerald-500/30 transition-all placeholder-gray-600 shadow-inner text-sm"
+                        />
+                    </div>
+                </div>
+
+                <div className="bg-[#1a202c]/60 backdrop-blur-xl rounded-[32px] border border-white/5 shadow-2xl overflow-hidden">
+                    <div className="overflow-x-auto">
+                        <table className="w-full text-sm text-left">
+                            <thead className="text-[11px] text-gray-500 uppercase font-bold bg-black/20 tracking-wider">
+                            <tr>
+                                <th className="px-8 py-5">Nội dung câu hỏi</th>
+                                <th className="px-8 py-5">Bài học</th>
+                                <th className="px-8 py-5 text-center">Phân loại</th>
+                                <th className="px-8 py-5 text-center">Cập nhật</th>
+                                <th className="px-8 py-5 text-right">Thao tác</th>
+                            </tr>
+                            </thead>
+                            <tbody className="divide-y divide-white/5">
+                            {filteredExercises.length > 0 ? (
+                                filteredExercises.map((ex) => (
+                                    <tr key={ex.exercise_id} className="group hover:bg-white/[0.03] transition-colors duration-300">
+                                        <td className="px-8 py-5">
+                                            <div className="flex flex-col gap-1">
+                          <span className="font-bold text-gray-200 group-hover:text-emerald-300 transition-colors">
+                            {ex.question}
+                          </span>
+                                            </div>
+                                        </td>
+                                        <td className="px-8 py-5">
+                        <span className="text-xs font-semibold text-gray-400 truncate max-w-[150px] block">
+                          {getLessonName(ex.lesson_id)}
                         </span>
-                                        </div>
-                                    </td>
-                                    <td className="px-6 py-5 text-center">
-                      <span className="text-gray-500 text-xs font-medium">
-                        {formatDateTime(ex.created_at)}
-                      </span>
-                                    </td>
-                                    <td className="px-6 py-5 text-right">
-                                        <div
-                                            className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                                            <button
-                                                onClick={() => onEdit(ex)}
-                                                className="p-2 text-gray-400 hover:text-emerald-400 hover:bg-emerald-400/10 rounded-lg transition-all transform hover:scale-110"
-                                            >
-                                                <EditOutlined size={18}/>
-                                            </button>
-                                            <button
-                                                className="p-2 text-gray-400 hover:text-red-400 hover:bg-red-400/10 rounded-lg transition-all transform hover:scale-110"
-                                                onClick={() => handleDelete(ex.exercise_id, ex.question)}
-                                                disabled={isDeleting}
-                                            >
-                                                <DeleteOutlined size={18}/>
-                                            </button>
+                                        </td>
+                                        <td className="px-8 py-5 text-center">
+                        <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider border ${getTypeBadge(ex.exercise_type)}`}>
+                          {ex.exercise_type}
+                        </span>
+                                        </td>
+                                        <td className="px-8 py-5 text-center">
+                        <span className="text-gray-500 text-[10px] font-bold">
+                          {formatDateTime(ex.created_at)}
+                        </span>
+                                        </td>
+                                        <td className="px-8 py-5 text-right">
+                                            <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-all duration-300">
+                                                <button
+                                                    onClick={() => onEdit(ex)}
+                                                    className="p-2 text-gray-400 hover:text-emerald-400 hover:bg-emerald-400/10 rounded-lg transition-all"
+                                                >
+                                                    <EditOutlined size={16} />
+                                                </button>
+                                                <button
+                                                    className="p-2 text-gray-400 hover:text-red-400 hover:bg-red-400/10 rounded-lg transition-all"
+                                                    onClick={() => handleDelete(ex.exercise_id, ex.question)}
+                                                    disabled={isDeleting}
+                                                >
+                                                    <DeleteOutlined size={16} />
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                ))
+                            ) : (
+                                <tr>
+                                    <td colSpan={5} className="px-8 py-24 text-center">
+                                        <div className="flex flex-col items-center gap-3 opacity-20">
+                                            <UnorderedListOutlined size={40} className="text-gray-400" />
+                                            <p className="text-sm font-bold text-gray-300">Không có dữ liệu</p>
                                         </div>
                                     </td>
                                 </tr>
-                            ))
-                        ) : (
-                            <tr>
-                                <td colSpan={5} className="px-6 py-20 text-center">
-                                    <div className="flex flex-col items-center gap-3 opacity-30">
-                                        <CodeOutlined size={48} className="text-gray-400"/>
-                                        <p className="text-sm font-medium tracking-wide">Không tìm thấy bài tập nào cho
-                                            bài học này</p>
-                                    </div>
-                                </td>
-                            </tr>
-                        )}
-                        </tbody>
-                    </table>
-                </div>
-
-                <div className="h-14 bg-black/10 border-t border-white/5 flex items-center justify-center">
-    <span className="text-[11px] text-gray-600 font-bold uppercase tracking-widest">
-        {/* Kiểm tra nếu selectedLessonId trống hoặc bằng "all" */}
-        {(!selectedLessonId)
-            ? 'Tất cả bài học'
-            : getLessonName(selectedLessonId)}
-        {" - "}
-        {filteredExercises.length} bài tập
-    </span>
+                            )}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
