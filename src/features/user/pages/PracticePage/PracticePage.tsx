@@ -41,8 +41,8 @@ const PracticePage = () => {
             theme={{
                 algorithm: theme.darkAlgorithm,
                 token: {
-                    colorPrimary: "#10b981", 
-                    colorBgContainer: "#0a1916", 
+                    colorPrimary: "#10b981",
+                    colorBgContainer: "#0a1916",
                     colorBorder: "rgba(255, 255, 255, 0.1)",
                 },
             }}
@@ -58,7 +58,7 @@ const PracticePage = () => {
                         <h1 className="text-3xl md:text-5xl font-extrabold text-white mb-4 tracking-tight">
                             Thử thách thuật toán
                         </h1>
-                        <p className="text-gray-300 max-w-2xl text-lg leading-relaxed">
+                        <p className="text-gray-300 max-w-xl text-lg leading-relaxed">
                             Hơn {total > 0 ? total : "..."} bài tập từ cơ bản đến nâng cao.
                             Chinh phục các thử thách để nâng cao tư duy lập trình của bạn ngay hôm nay.
                         </p>

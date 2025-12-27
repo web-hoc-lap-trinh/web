@@ -33,7 +33,7 @@ const baseQueryWithAutoLogout: typeof rawBaseQuery = async (args, api, extraOpti
 export const authApi = createApi({
   reducerPath: "authApi",
   baseQuery: baseQueryWithAutoLogout,
-  tagTypes: ["User", "Category", "Course", "Lesson", "TryItYourself", "Language", "ExerciseSession", "Exercise", "AdminExercise", "Discussion", "Reply", "Problem", "TestCase", "Tag", "Submission", "AiConversation", "AdminUser", "DashboardStats"],
+  tagTypes: ["User", "Category", "Course", "Lesson", "TryItYourself", "Language", "ExerciseSession", "Exercise", "AdminExercise", "Discussion", "Reply", "Problem", "TestCase", "Tag", "Submission", "AiConversation", "AdminUser", "DashboardStats", "DailyActivity"],
   endpoints: (builder) => ({
     
     login: builder.mutation<AuthResponse, LoginPayload>({

@@ -69,7 +69,7 @@ const ProblemWorkspacePage = () => {
     },
     {
       key: 'ai_chat',
-      label: <span className="flex items-center gap-2 text-emerald-400"><RobotOutlined /> AI Assistant</span>,
+      label: <span className="flex items-center gap-2"><RobotOutlined /> AI Assistant</span>,
       children: (
         <div className="h-full overflow-hidden">
             <AiChatPanel problemId={problem.problem_id} />

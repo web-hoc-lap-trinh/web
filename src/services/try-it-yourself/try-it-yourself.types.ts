@@ -44,6 +44,7 @@ export interface ITryItYourselfConfig {
   example_code: string; 
   created_at: string;
   updated_at: string;
+  language?: IPlaygroundLanguage;
 }
 
 export interface CreateTryItYourselfPayload {
