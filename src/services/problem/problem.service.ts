@@ -58,6 +58,23 @@ export const problemApi = authApi.injectEndpoints({
 			invalidatesTags: [{ type: "Problem", id: "LIST" } as ProblemTag],
 		}),
 
+		getDailyChallenge: builder.query<IProblem[], void>({
+			query: () => "/problems/daily-challenge",
+			transformResponse: (response: IApiResponse<IProblem[]>) => response.result,
+			providesTags: [{ type: "Problem", id: "DAILY" } as ProblemTag],
+		}),
+
+		triggerDailyChallenge: builder.mutation<any, void>({
+			query: () => ({
+				url: "/problems/daily-challenge",
+				method: "POST",
+			}),
+			invalidatesTags: [
+				{ type: "Problem", id: "DAILY" } as ProblemTag,
+				{ type: "Problem", id: "LIST" } as ProblemTag
+			],
+		}),
+
 		/*getProblemTestCases: builder.query<PaginatedResponse<ITestCase>, { id: number; page?: number; limit?: number } | number>({
 			query: (arg) => {
 				if (typeof arg === "number") return { url: `/problems/${arg}/testcases` };
