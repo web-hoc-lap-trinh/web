@@ -7,10 +7,10 @@ const HeroSection = () => {
                 <FireOutlined />
                 Lộ trình học lập trình từng bước
             </div>
-            <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-3">
+            <h1 className="text-3xl md:text-5xl lg:text-5xl font-extrabold text-white mb-3">
                 Khám phá các khóa học phù hợp với bạn
             </h1>
-            <p className="text-gray-400 max-w-2xl text-sm md:text-base">
+            <p className="text-gray-400 max-w-2xl text-lg md:text-base">
                 Chọn lộ trình theo ngôn ngữ hoặc chủ đề bạn quan tâm. Mỗi khóa học được thiết kế với bài giảng, bài tập coding và dự án nhỏ giúp bạn học tới đâu vững tới đó.
             </p>
         </section>
