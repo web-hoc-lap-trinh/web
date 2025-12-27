@@ -2,7 +2,7 @@ export type UserRole = "ADMIN" | "STUDENT";
 export type UserStatus = "ACTIVE" | "INACTIVE";
 
 export interface IUser {
-  user_id: string
+  user_id: number
   email: string
   full_name: string
   avatar_url: string
@@ -16,4 +16,8 @@ export interface IUser {
   is_verified: boolean
   created_at: string
   updated_at: string
+}
+
+export interface IUpdateUserStatus {
+    status: string
 }

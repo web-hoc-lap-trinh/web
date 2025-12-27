@@ -15,7 +15,7 @@ import {
     useGetAdminLessonExercisesQuery
 } from "../../../../../../services/exercise/exercise.service.ts";
 
-const { confirm } = Modal;
+const {confirm} = Modal;
 
 interface ExerciseTableProps {
     onEdit: (exercise: IExerciseAdminDetail) => void;
@@ -31,12 +31,12 @@ const QuestionTable = ({onEdit, lessons, loading}: ExerciseTableProps) => {
         skip: selectedLessonId === 0,
         refetchOnMountOrArgChange: true
     });
-    const [deleteExercise, { isLoading: isDeleting }] = useDeleteExerciseMutation();
+    const [deleteExercise, {isLoading: isDeleting}] = useDeleteExerciseMutation();
 
     const handleDelete = (id: number, name: string) => {
         confirm({
             title: 'Xác nhận xóa câu hỏi?',
-            icon: <ExclamationCircleFilled />,
+            icon: <ExclamationCircleFilled/>,
             content: `Bạn có chắc chắn muốn xóa "${name}"? Hành động này không thể hoàn tác.`,
             okText: 'Xóa ngay',
             okType: 'danger',
@@ -124,11 +124,13 @@ const QuestionTable = ({onEdit, lessons, loading}: ExerciseTableProps) => {
             <div className="space-y-4">
                 <div className="flex items-center justify-between px-1">
                     <div className="flex items-center gap-2">
-                        <AppstoreOutlined size={18} className="text-emerald-400" />
-                        <h3 className="text-xs font-bold text-gray-400 uppercase tracking-[0.2em]">Chọn bài học cần quản lý</h3>
+                        <AppstoreOutlined size={18} className="text-emerald-400"/>
+                        <h3 className="text-xs font-bold text-gray-400 uppercase tracking-[0.2em]">Chọn bài học cần quản
+                            lý</h3>
                     </div>
                     <div className="relative group w-2/3 sm:w-80">
-                        <SearchOutlined size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-emerald-400 transition-colors" />
+                        <SearchOutlined size={16}
+                                        className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-emerald-400 transition-colors"/>
                         <input
                             type="text"
                             value={searchQueryLesson}
@@ -151,22 +153,25 @@ const QuestionTable = ({onEdit, lessons, loading}: ExerciseTableProps) => {
                                         : 'bg-[#0f131a]/40 border-white/5 hover:border-white/20 hover:bg-[#1a202c]/40'
                                 }`}
                             >
-                                <div className={`w-10 h-10 rounded-xl mb-3 flex items-center justify-center transition-all duration-300 ${
-                                    selectedLessonId === lesson.lesson_id ? 'bg-emerald-500 text-white shadow-lg' : 'bg-white/5 text-gray-500'
-                                }`}>
-                                    <ReadOutlined size={20} />
+                                <div
+                                    className={`w-10 h-10 rounded-xl mb-3 flex items-center justify-center transition-all duration-300 ${
+                                        selectedLessonId === lesson.lesson_id ? 'bg-emerald-500 text-white shadow-lg' : 'bg-white/5 text-gray-500'
+                                    }`}>
+                                    <ReadOutlined size={20}/>
                                 </div>
-                                <span className={`text-sm font-bold tracking-tight line-clamp-1 ${selectedLessonId === lesson.lesson_id ? 'text-emerald-400' : 'text-gray-300'}`}>
+                                <span
+                                    className={`text-sm font-bold tracking-tight line-clamp-1 ${selectedLessonId === lesson.lesson_id ? 'text-emerald-400' : 'text-gray-300'}`}>
                     {lesson.title}
                   </span>
                                 <div className="flex items-center gap-2 mt-1">
-                                    <span className="text-[9px] text-gray-600 font-bold uppercase">{lesson.difficulty_level}</span>
+                                    <span
+                                        className="text-[9px] text-gray-600 font-bold uppercase">{lesson.difficulty_level}</span>
                                 </div>
                             </button>
                         ))) : (
                             <td className="px-8 py-8 text-center">
                                 <div className="flex flex-col items-center gap-3 opacity-20">
-                                    <UnorderedListOutlined size={40} className="text-gray-400" />
+                                    <UnorderedListOutlined size={40} className="text-gray-400"/>
                                     <p className="text-sm font-bold text-gray-300">Không có dữ liệu</p>
                                 </div>
                             </td>
@@ -179,14 +184,16 @@ const QuestionTable = ({onEdit, lessons, loading}: ExerciseTableProps) => {
             <div className="space-y-4">
                 <div className="flex sm:flex-row justify-between items-end sm:items-center gap-4 px-2">
                     <div className="flex items-center gap-2">
-                        <div className="w-2 h-6 bg-emerald-500 rounded-full" />
+                        <div className="w-2 h-6 bg-emerald-500 rounded-full"/>
                         <h4 className="text-lg font-bold text-white tracking-tight">Danh sách câu hỏi</h4>
-                        <span className="text-xs text-gray-500 font-medium ml-2">({filteredExercises.length} kết quả)</span>
+                        <span
+                            className="text-xs text-gray-500 font-medium ml-2">({filteredExercises.length} kết quả)</span>
                     </div>
 
                     {/* Neat Compact Search Bar */}
                     <div className="relative group w-2/3 sm:w-80">
-                        <SearchOutlined size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-emerald-400 transition-colors" />
+                        <SearchOutlined size={16}
+                                        className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-emerald-400 transition-colors"/>
                         <input
                             type="text"
                             value={searchQueryExercise}
@@ -197,7 +204,8 @@ const QuestionTable = ({onEdit, lessons, loading}: ExerciseTableProps) => {
                     </div>
                 </div>
 
-                <div className="bg-[#1a202c]/60 backdrop-blur-xl rounded-[32px] border border-white/5 shadow-2xl overflow-hidden">
+                <div
+                    className="bg-[#1a202c]/60 backdrop-blur-xl rounded-[32px] border border-white/5 shadow-2xl overflow-hidden">
                     <div className="overflow-x-auto">
                         <table className="w-full text-sm text-left">
                             <thead className="text-[11px] text-gray-500 uppercase font-bold bg-black/20 tracking-wider">
@@ -212,7 +220,8 @@ const QuestionTable = ({onEdit, lessons, loading}: ExerciseTableProps) => {
                             <tbody className="divide-y divide-white/5">
                             {filteredExercises.length > 0 ? (
                                 filteredExercises.map((ex) => (
-                                    <tr key={ex.exercise_id} className="group hover:bg-white/[0.03] transition-colors duration-300">
+                                    <tr key={ex.exercise_id}
+                                        className="group hover:bg-white/[0.03] transition-colors duration-300">
                                         <td className="px-8 py-5">
                                             <div className="flex flex-col gap-1">
                           <span className="font-bold text-gray-200 group-hover:text-emerald-300 transition-colors">
@@ -226,7 +235,8 @@ const QuestionTable = ({onEdit, lessons, loading}: ExerciseTableProps) => {
                         </span>
                                         </td>
                                         <td className="px-8 py-5 text-center">
-                        <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider border ${getTypeBadge(ex.exercise_type)}`}>
+                        <span
+                            className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider border ${getTypeBadge(ex.exercise_type)}`}>
                           {ex.exercise_type}
                         </span>
                                         </td>
@@ -236,19 +246,20 @@ const QuestionTable = ({onEdit, lessons, loading}: ExerciseTableProps) => {
                         </span>
                                         </td>
                                         <td className="px-8 py-5 text-right">
-                                            <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-all duration-300">
+                                            <div
+                                                className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-all duration-300">
                                                 <button
                                                     onClick={() => onEdit(ex)}
                                                     className="p-2 text-gray-400 hover:text-emerald-400 hover:bg-emerald-400/10 rounded-lg transition-all"
                                                 >
-                                                    <EditOutlined size={16} />
+                                                    <EditOutlined size={16}/>
                                                 </button>
                                                 <button
                                                     className="p-2 text-gray-400 hover:text-red-400 hover:bg-red-400/10 rounded-lg transition-all"
                                                     onClick={() => handleDelete(ex.exercise_id, ex.question)}
                                                     disabled={isDeleting}
                                                 >
-                                                    <DeleteOutlined size={16} />
+                                                    <DeleteOutlined size={16}/>
                                                 </button>
                                             </div>
                                         </td>
@@ -258,7 +269,7 @@ const QuestionTable = ({onEdit, lessons, loading}: ExerciseTableProps) => {
                                 <tr>
                                     <td colSpan={5} className="px-8 py-24 text-center">
                                         <div className="flex flex-col items-center gap-3 opacity-20">
-                                            <UnorderedListOutlined size={40} className="text-gray-400" />
+                                            <UnorderedListOutlined size={40} className="text-gray-400"/>
                                             <p className="text-sm font-bold text-gray-300">Không có dữ liệu</p>
                                         </div>
                                     </td>

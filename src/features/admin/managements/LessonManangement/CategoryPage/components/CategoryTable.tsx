@@ -1,7 +1,8 @@
 import type {ICategory} from "../../../../../../types/category.types.ts";
 import {
-    AppstoreOutlined, DeleteOutlined,
-    DownOutlined, EditOutlined, ExclamationCircleFilled, FileImageOutlined, SearchOutlined
+    AppstoreOutlined, ClockCircleOutlined, DeleteOutlined,
+    DownOutlined, EditOutlined, ExclamationCircleFilled,
+    EyeInvisibleOutlined, EyeOutlined, FileImageOutlined, SearchOutlined
 } from "@ant-design/icons";
 import {message, Modal, Skeleton} from "antd";
 import {useDeleteCategoryMutation} from "../../../../../../services/category/category.service.ts";
@@ -22,6 +23,17 @@ const CategoryTable = ({ onEdit, categories, loading }: CategoryTableProps) => {
     const filteredCategories = categories.filter(cat =>
         cat.name.toLowerCase().includes(searchQuery.toLowerCase())
     );
+
+    const formatDateTime = (isoString: string) => {
+        const date = new Date(isoString);
+        return date.toLocaleString('vi-VN', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+        });
+    };
 
     const handleDelete = (id: number, name: string) => {
         confirm({
@@ -98,6 +110,8 @@ const CategoryTable = ({ onEdit, categories, loading }: CategoryTableProps) => {
                         <tr>
                             <th className="px-8 py-5 text-center">STT</th>
                             <th className="px-8 py-5">Chủ đề</th>
+                            <th className="px-8 py-5 text-center">Trạng thái</th>
+                            <th className="px-8 py-5 text-center">Ngày tạo</th>
                             <th className="px-8 py-5 text-center"></th>
                         </tr>
                         </thead>
@@ -119,6 +133,29 @@ const CategoryTable = ({ onEdit, categories, loading }: CategoryTableProps) => {
                                         <div className="font-bold text-gray-200 group-hover:text-emerald-300 transition-colors text-base tracking-tight">
                                             {cat.name}
                                         </div>
+                                    </div>
+                                </td>
+                                <td className="px-8 py-5 text-center">
+                                    <div className="flex items-center justify-center">
+                                        {cat.is_active ? (
+                                            <div className="flex items-center gap-1.5 text-emerald-400 bg-emerald-400/10 px-2 py-1 rounded-lg border border-emerald-400/20">
+                                                <EyeOutlined size={14} />
+                                                <span className="text-[10px] font-bold uppercase">Active</span>
+                                            </div>
+                                        ) : (
+                                            <div className="flex items-center gap-1.5 text-gray-500 bg-gray-500/10 px-2 py-1 rounded-lg border border-gray-500/20">
+                                                <EyeInvisibleOutlined size={14} />
+                                                <span className="text-[10px] font-bold uppercase">Inactive</span>
+                                            </div>
+                                        )}
+                                    </div>
+                                </td>
+                                <td className="px-8 py-5 text-center">
+                                    <div className="flex flex-col items-center">
+                               <span className="text-gray-400 text-xs flex items-center gap-1">
+                                 <ClockCircleOutlined size={12} />
+                                   {formatDateTime(cat.created_at)}
+                               </span>
                                     </div>
                                 </td>
                                 <td className="px-8 py-5 text-center">

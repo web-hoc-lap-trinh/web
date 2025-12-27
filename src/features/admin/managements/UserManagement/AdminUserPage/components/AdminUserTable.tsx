@@ -1,14 +1,15 @@
 import type {IUser} from "../../../../../../types/user.types.ts";
-import {Skeleton} from "antd";
+import {message, Skeleton} from "antd";
 import {
     AppstoreOutlined,
     DeleteOutlined,
     DownOutlined,
-    EditOutlined,
+    EditOutlined, FireFilled,
     SearchOutlined,
-    SortAscendingOutlined
+    SortAscendingOutlined, TrophyOutlined
 } from "@ant-design/icons";
 import {useMemo, useState} from "react";
+import {useUpdateUserStatusMutation} from "../../../../../../services/admin/admin.service.ts";
 
 interface AdminUserTableProps {
     onEdit: (user: IUser) => void;
@@ -16,8 +17,14 @@ interface AdminUserTableProps {
     loading: boolean;
 }
 
+interface UpdateProps {
+    id: number;
+    userStatus: string;
+}
+
 const AdminUserTable = ({onEdit, users, loading} : AdminUserTableProps) => {
     const [searchQuery, setSearchQuery] = useState("");
+    const [updateStatus, {isLoading: isUpdating}] = useUpdateUserStatusMutation();
 
     const filteredUsers = useMemo(() => {
         if(!users) return [];
@@ -46,6 +53,18 @@ const AdminUserTable = ({onEdit, users, loading} : AdminUserTableProps) => {
                 return 'bg-blue-500/10 text-blue-400 border-blue-500/20';
             default:
                 return 'bg-gray-500/10 text-gray-400 border-gray-500/20';
+        }
+    };
+
+    const handleUpdate = async ({id, userStatus}: UpdateProps) => {
+        try {
+            await updateStatus({
+                id,
+                status: userStatus === 'ACTIVE' ? 'INACTIVE' : 'ACTIVE'
+            });
+            message.success("Đã thay đổi trạng thái!");
+        } catch (error) {
+            message.error("Không thể thay đổi trạng thái. Vui lòng thử lại.");
         }
     };
 
@@ -103,6 +122,7 @@ const AdminUserTable = ({onEdit, users, loading} : AdminUserTableProps) => {
                             <th className="px-6 py-5 font-semibold">User ID</th>
                             {/*<th className="px-6 py-5 font-semibold text-center">Vai trò</th>*/}
                             <th className="px-6 py-5 font-semibold text-center">Trạng thái</th>
+                            <th className="px-6 py-5 font-semibold text-center">Chuỗi</th>
                             <th className="px-6 py-5 font-semibold text-center">Hoạt động cuối</th>
                             <th className="px-6 py-5 font-semibold text-center">Ngày tạo</th>
                             <th className="px-6 py-5 font-semibold text-right">Tác vụ</th>
@@ -141,6 +161,12 @@ const AdminUserTable = ({onEdit, users, loading} : AdminUserTableProps) => {
                       {user.status}
                     </span>
                                 </td>
+                                <td className="px-6 py-5 text-center">
+                                    <div className="flex items-center justify-center gap-1.5 text-orange-400 font-bold">
+                                        <FireFilled size={14} />
+                                        {user.current_streak}
+                                    </div>
+                                </td>
                                 <td className="px-6 py-5 text-center text-gray-400 text-xs">
                                     {formatDateTime(user.last_active)}
                                 </td>
@@ -150,7 +176,7 @@ const AdminUserTable = ({onEdit, users, loading} : AdminUserTableProps) => {
                                 <td className="px-6 py-5 text-right">
                                     <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                                         <button
-                                            onClick={() => onEdit(user)}
+                                            onClick={() => handleUpdate({ id: user.user_id, userStatus: user.status })}
                                             className="p-2 text-gray-400 hover:text-emerald-400 hover:bg-emerald-400/10 rounded-lg transition-all transform hover:scale-110"
                                         >
                                             <EditOutlined size={18} />

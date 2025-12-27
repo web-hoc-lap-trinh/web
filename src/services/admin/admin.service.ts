@@ -6,6 +6,7 @@ import type {
     ISubmissionStatsParams,
     IUserGrowth
 } from "../../types/dashboard.types.ts";
+import type {IDiscussion} from "../../types/discussion.types.ts";
 
 export const adminApi = authApi.injectEndpoints({
     endpoints: (builder) => ({
@@ -25,6 +26,23 @@ export const adminApi = authApi.injectEndpoints({
                     ]
                     : [{type: "AdminUser", id: "LIST"}],
         }),
+
+        updateUserStatus: builder.mutation<
+            IUser,
+            { id: number, status: string }
+        >({
+            query: ({ id, status }) => ({
+                url: `/admin/users/${id}/status`,
+                method: "PATCH",
+                body: {status}
+            }),
+            transformResponse: (response: IApiResponse<IUser>) => response.result,
+            invalidatesTags: (_res, _err, { id }) => [
+                { type: "AdminUser", id: `LIST_${id}` },
+                { type: "AdminUser", id: id },
+            ],
+        }),
+
         getDashboardStats: builder.query<IDashboardStats, void>({
             query: () => `/admin/stats`,
             transformResponse: (response: IApiResponse<IDashboardStats>) =>
@@ -82,6 +100,7 @@ export const adminApi = authApi.injectEndpoints({
 
 export const {
     useGetAdminUsersQuery,
+    useUpdateUserStatusMutation,
     useGetDashboardStatsQuery,
     useGetUserGrowthQuery,
     useGetCategoryDistributionQuery,
