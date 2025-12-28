@@ -37,9 +37,9 @@ const CategoryDistributionChart = ({ data, loading, onDateChange }: Props) => {
                         <Pie
                             data={data}
                             cx="50%"
-                            cy="50%"
-                            innerRadius={60}
-                            outerRadius={80}
+                            cy="40%"
+                            innerRadius={"60%"}
+                            outerRadius={"80%"}
                             paddingAngle={5}
                             dataKey="lesson_count"
                             nameKey="category_name"
@@ -52,7 +52,15 @@ const CategoryDistributionChart = ({ data, loading, onDateChange }: Props) => {
                             contentStyle={{ backgroundColor: '#0f172a', border: 'none', borderRadius: '8px', color: '#fff' }}
                             itemStyle={{ color: '#fff' }}
                         />
-                        <Legend verticalAlign="bottom" height={36}/>
+                        <Legend
+                            layout={"horizontal"}
+                            align={"center"}
+                            verticalAlign="bottom"
+                            wrapperStyle={{
+                                maxHeight: '100px',
+                                overflowY: 'auto',
+                            }}
+                        />
                     </PieChart>
                 </ResponsiveContainer>
             </div>
