@@ -20,10 +20,10 @@ interface Props {
 }
 
 const SubmissionStatusChart = ({ data, loading, onDateChange }: Props) => {
-    if (loading) return <Skeleton active className="bg-[#1e293b]/50 p-6 rounded-[24px] h-[400px]" />;
+    if (loading) return <Skeleton active className="bg-[#1e293b]/50 p-6 rounded-2xl h-[400px]" />;
 
     return (
-        <div className="bg-[#1e293b]/50 backdrop-blur-xl border border-white/5 p-6 rounded-[24px] h-full">
+        <div className="bg-[#1e293b]/50 backdrop-blur-xl border border-white/5 p-6 rounded-2xl h-full">
             <div className="flex flex-col mb-6 gap-4">
                 <div>
                     <h3 className="text-white text-lg font-semibold">Trạng thái chấm bài</h3>

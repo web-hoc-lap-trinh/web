@@ -1,5 +1,4 @@
 import {
-    useCreateProblemTestCaseMutation,
     useGetProblemTestCaseQuery, useUpdateTestCaseMutation
 } from "../../../../../../services/problem/problem.service.ts";
 import React, {useEffect, useRef, useState} from "react";
@@ -8,7 +7,6 @@ import {
     CloseOutlined,
     CodeOutlined,
     CodeSandboxOutlined,
-    DownOutlined,
     InfoCircleOutlined, StarFilled
 } from "@ant-design/icons";
 import type {IProblem} from "../../../../../../types/problem.types.ts";
@@ -33,7 +31,7 @@ const EditTestCaseModal = ({isOpen, onClose, problems, testCaseId}: EditTestCase
         is_sample: false,
         score: 10
     });
-    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const [, setIsDropdownOpen] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -84,15 +82,13 @@ const EditTestCaseModal = ({isOpen, onClose, problems, testCaseId}: EditTestCase
         }
     };
 
-    const selectedExTitle = problems.find(e => e.problem_id === formData.problemId)?.title || 'Chọn bài tập';
-
     return createPortal(
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
             <div className="absolute inset-0 bg-black/80 backdrop-blur-md transition-opacity animate-in fade-in" onClick={onClose} />
-            <div className="relative w-full max-w-xl bg-[#111827] rounded-[32px] shadow-2xl border border-white/10 overflow-hidden transform transition-all animate-in zoom-in-95 duration-200 flex flex-col max-h-[92vh]">
+            <div className="relative w-full max-w-xl bg-[#111827] rounded-3xl shadow-2xl border border-white/10 overflow-hidden transform transition-all animate-in zoom-in-95 duration-200 flex flex-col max-h-[92vh]">
 
                 {/* Header */}
-                <div className="px-8 py-7 border-b border-white/5 flex justify-between items-center bg-white/[0.02] shrink-0">
+                <div className="px-8 py-7 border-b border-white/5 flex justify-between items-center bg-white/2 shrink-0">
                     <div className="flex items-center gap-4">
                         <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20">
                             <CodeOutlined className="text-emerald-400" size={24} />
@@ -236,7 +232,7 @@ const EditTestCaseModal = ({isOpen, onClose, problems, testCaseId}: EditTestCase
                     </button>
                     <button
                         onClick={handleSubmit}
-                        className="px-12 py-3 rounded-2xl text-sm font-bold text-white bg-gradient-to-r from-emerald-600 to-teal-600 shadow-xl shadow-emerald-900/40 hover:-translate-y-0.5 transition-all active:scale-95"
+                        className="px-12 py-3 rounded-2xl text-sm font-bold text-white bg-linear-to-r from-emerald-600 to-teal-600 shadow-xl shadow-emerald-900/40 hover:-translate-y-0.5 transition-all active:scale-95"
                     >
                         Lưu Test Case
                     </button>

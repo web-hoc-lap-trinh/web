@@ -7,9 +7,9 @@ import TagTable from "./components/TagTable.tsx";
 const TagPage = () => {
     const { data, isLoading} = useGetTagsQuery()
     const tags = data?.items || [];
-    const [isTagAddOpen, setIsTagAddOpen] = useState<boolean>(false)
-    const [isTagEditOpen, setIsTagEditOpen] = useState<boolean>(false)
-    const [selectedTagId, setSelectedTagId] = useState<number>(0)
+    const [, setIsTagAddOpen] = useState<boolean>(false)
+    const [, setIsTagEditOpen] = useState<boolean>(false)
+    const [, setSelectedTagId] = useState<number>(0)
 
     const handleEditTag = (tag: ITag) => {
         setSelectedTagId(tag.tag_id)

@@ -113,7 +113,7 @@ const AddProblemModal = ({isOpen, onClose, tags}: AddProblemModalProps) => {
             <div className="relative w-full max-w-4xl sm:w-[90vw] lg:max-w-4xl bg-[#111827] rounded-3xl shadow-2xl border border-white/10 overflow-hidden transform transition-all animate-in zoom-in-95 duration-200 flex flex-col max-h-[92vh]">
 
                 {/* Header */}
-                <div className="px-5 py-4 sm:px-8 sm:py-6 border-b border-white/5 flex justify-between items-center bg-white/[0.02] shrink-0">
+                <div className="px-5 py-4 sm:px-8 sm:py-6 border-b border-white/5 flex justify-between items-center bg-white/2 shrink-0">
                     <div className="flex items-center gap-4">
                         <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20">
                             <CodeOutlined className="text-emerald-400" size={24} />
@@ -151,7 +151,7 @@ const AddProblemModal = ({isOpen, onClose, tags}: AddProblemModalProps) => {
                                 />
                             </div>
 
-                            <div className="space-y-3 md:col-span-2 bg-black/20 p-5 rounded-[24px] border border-white/5">
+                            <div className="space-y-3 md:col-span-2 bg-black/20 p-5 rounded-2xl border border-white/5">
                                 <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1 flex items-center gap-2">
                                     <TagsOutlined size={14} className="text-emerald-400" /> Gắn nhãn bài tập (Chọn nhiều)
                                 </label>
@@ -164,9 +164,9 @@ const AddProblemModal = ({isOpen, onClose, tags}: AddProblemModalProps) => {
                                                 type="button"
                                                 onClick={() => handleLabelToggle(tag.tag_id)}
                                                 style={{
-                                                    backgroundColor: isSelected ? `${tag.color}25` : 'transparent',
-                                                    color: isSelected ? tag.color : '#6b7280',
-                                                    borderColor: isSelected ? tag.color : '#374151'
+                                                    backgroundColor: isSelected && tag.color ? `${tag.color}25` : 'transparent',
+                                                    color: isSelected ? (tag.color ?? '#6b7280') : '#6b7280',
+                                                    borderColor: isSelected ? (tag.color ?? '#374151') : '#374151'
                                                 }}
                                                 className={`flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs font-bold border transition-all hover:scale-105 active:scale-95`}
                                             >
@@ -188,7 +188,7 @@ const AddProblemModal = ({isOpen, onClose, tags}: AddProblemModalProps) => {
                                         onChange={handleDescriptionChange}
                                         height={window.innerWidth < 640 ? 200 : 300}
                                         preview="live"
-                                        className="!bg-[#0f131a]/50 !border-white/10 !rounded-xl overflow-hidden"
+                                        className="bg-[#0f131a]/50! border-white/10! rounded-xl! overflow-hidden"
                                     />
                                 </div>
                                 <p className="text-[10px] text-gray-500 mt-1 italic">* Hỗ trợ định dạng Markdown, bảng và chèn code.</p>
@@ -411,7 +411,7 @@ const AddProblemModal = ({isOpen, onClose, tags}: AddProblemModalProps) => {
                     </button>
                     <button
                         onClick={handleSubmit}
-                        className="px-10 py-2.5 rounded-xl text-sm font-semibold text-white bg-gradient-to-r from-emerald-600 to-teal-600 shadow-lg shadow-emerald-900/40 hover:-translate-y-0.5 transition-all"
+                        className="px-10 py-2.5 rounded-xl text-sm font-semibold text-white bg-linear-to-r from-emerald-600 to-teal-600 shadow-lg shadow-emerald-900/40 hover:-translate-y-0.5 transition-all"
                     >
                         Tạo bài tập
                     </button>

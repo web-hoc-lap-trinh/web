@@ -1,4 +1,4 @@
-import { CheckCircleOutlined, CloseCircleOutlined, CloseOutlined, UploadOutlined, PictureOutlined } from "@ant-design/icons";
+import { CloseOutlined, UploadOutlined, PictureOutlined } from "@ant-design/icons";
 import { useState, useRef } from "react";
 import { useCreateCategoryMutation } from "../../../../../../services/category/category.service.ts";
 import { message } from "antd";
@@ -60,7 +60,7 @@ const AddCategoryModal = ({ isOpen, onClose }: AddCategoryModalProps) => {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
             <div className="absolute inset-0 bg-black/60 backdrop-blur-md" onClick={handleClose} />
 
-            <div className="relative w-full max-w-md bg-[#1a202c] rounded-[32px] shadow-2xl border border-white/10 overflow-hidden animate-in zoom-in-95 duration-200">
+            <div className="relative w-full max-w-md bg-[#1a202c] rounded-3xl shadow-2xl border border-white/10 overflow-hidden animate-in zoom-in-95 duration-200">
 
                 {/* Header */}
                 <div className="px-8 py-6 flex justify-between items-center border-b border-white/5">
@@ -99,7 +99,7 @@ const AddCategoryModal = ({ isOpen, onClose }: AddCategoryModalProps) => {
                     {/* Form Fields */}
                     <div className="space-y-5">
                         <div className="space-y-2">
-                            <label className="text-[11px] font-bold text-gray-500 uppercase tracking-[0.1em] ml-1">Tên chủ đề</label>
+                            <label className="text-[11px] font-bold text-gray-500 uppercase tracking-widest ml-1">Tên chủ đề</label>
                             <input
                                 type="text"
                                 placeholder="Ví dụ: Công nghệ, Đời sống..."
@@ -110,7 +110,7 @@ const AddCategoryModal = ({ isOpen, onClose }: AddCategoryModalProps) => {
                         </div>
 
                         <div className="space-y-2">
-                            <label className="text-[11px] font-bold text-gray-500 uppercase tracking-[0.1em] ml-1">Trạng thái hoạt động</label>
+                            <label className="text-[11px] font-bold text-gray-500 uppercase tracking-widest ml-1">Trạng thái hoạt động</label>
                             <div
                                 onClick={() => setFormData({...formData, is_active: !formData.is_active})}
                                 className="flex items-center justify-between px-5 py-4 bg-[#0f131a]/50 rounded-2xl border border-white/5 cursor-pointer hover:bg-[#161b22] transition-all"
@@ -129,7 +129,7 @@ const AddCategoryModal = ({ isOpen, onClose }: AddCategoryModalProps) => {
                 </div>
 
                 {/* Footer */}
-                <div className="px-8 py-6 bg-white/[0.02] border-t border-white/5 flex gap-3">
+                <div className="px-8 py-6 bg-white/2 border-t border-white/5 flex gap-3">
                     <button
                         onClick={handleClose}
                         className="flex-1 py-3.5 rounded-2xl text-sm font-bold text-gray-400 hover:bg-white/5 transition-all"
@@ -139,7 +139,7 @@ const AddCategoryModal = ({ isOpen, onClose }: AddCategoryModalProps) => {
                     <button
                         onClick={handleSubmit}
                         disabled={isLoading}
-                        className="flex-[2] py-3.5 rounded-2xl text-sm font-bold text-white bg-gradient-to-r from-emerald-600 to-teal-600 shadow-xl shadow-emerald-900/20 hover:opacity-90 active:scale-[0.98] transition-all disabled:opacity-50"
+                        className="flex-2 py-3.5 rounded-2xl text-sm font-bold text-white bg-linear-to-r from-emerald-600 to-teal-600 shadow-xl shadow-emerald-900/20 hover:opacity-90 active:scale-[0.98] transition-all disabled:opacity-50"
                     >
                         {isLoading ? "Đang xử lý..." : "Xác nhận tạo"}
                     </button>

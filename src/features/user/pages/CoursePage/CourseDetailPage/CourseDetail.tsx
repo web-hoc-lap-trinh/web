@@ -5,6 +5,7 @@ import {
 } from "@ant-design/icons";
 import { Button, Tag, Empty } from "antd";
 import { useNavigate, useParams } from "react-router-dom";
+import { skipToken } from "@reduxjs/toolkit/query";
 import { useGetLessonsByCategoryQuery } from "../../../../../services/lesson/lesson.service";
 import { useMemo } from "react";
 import LessonItem from "./components/LessonItem";
@@ -14,9 +15,9 @@ const CourseDetail = () => {
   const { categoryId } = useParams();
   const navigate = useNavigate();
 
+  const parsedCategoryId = Number(categoryId);
   const { data: lessons = [], isLoading } = useGetLessonsByCategoryQuery(
-    categoryId || "", 
-    { skip: !categoryId }
+    Number.isFinite(parsedCategoryId) ? parsedCategoryId : skipToken
   );
 
   const categoryInfo = lessons.length > 0 ? lessons[0].category : null;

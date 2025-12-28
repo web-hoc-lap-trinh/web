@@ -15,7 +15,7 @@ interface Props {
 const UserGrowthChart = ({ data, loading, days, setDays }: Props) => {
     if (loading) {
         return (
-            <div className="bg-[#1e293b]/50 p-6 rounded-[24px] h-[450px] flex items-center justify-center">
+            <div className="bg-[#1e293b]/50 p-6 rounded-2xl h-[450px] flex items-center justify-center">
                 <Skeleton active paragraph={{ rows: 8 }} />
             </div>
         );
@@ -27,7 +27,7 @@ const UserGrowthChart = ({ data, loading, days, setDays }: Props) => {
     }));
 
     return (
-        <div className="bg-[#1e293b]/50 backdrop-blur-xl border border-white/5 p-6 rounded-[24px]">
+        <div className="bg-[#1e293b]/50 backdrop-blur-xl border border-white/5 p-6 rounded-2xl">
             {/* Header của biểu đồ */}
             <div className="flex sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
                 <div>

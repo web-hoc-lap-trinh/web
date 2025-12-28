@@ -4,7 +4,6 @@ import type {
     CreateCategoryPayload,
     UpdateCategoryPayload,
     CategoryResponse,
-    CategoriesResponse,
 } from "./category.types";
 import type { ICategory } from "../../types/category.types";
 

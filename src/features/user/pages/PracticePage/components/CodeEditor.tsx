@@ -187,7 +187,7 @@ const TryItYourselfRunner = ({
               size="small"
               variant="borderless"
               className="w-32 [&_.ant-select-selection-item]:text-gray-300! [&_.ant-select-arrow]:text-gray-500! text-xs"
-              popupClassName="bg-[#1f1f1f] [&_.ant-select-item]:!text-gray-300 [&_.ant-select-item-option-selected]:!bg-emerald-500/20"
+              popupClassName="bg-[#1f1f1f] [&_.ant-select-item]:!text-gray-300 [&_.ant-select-item-option-selected]:bg-emerald-500!/20"
             />
           )}
         </div>
@@ -270,7 +270,7 @@ const TryItYourselfRunner = ({
                   { key: "output", label: "Output" },
                 ]}
                 size="small"
-                className="custom-console-tabs ml-2 [&_.ant-tabs-nav]:mb-0 [&_.ant-tabs-tab]:text-gray-500 [&_.ant-tabs-tab-active_.ant-tabs-tab-btn]:!text-emerald-400 [&_.ant-tabs-ink-bar]:bg-emerald-500"
+                className="custom-console-tabs ml-2 [&_.ant-tabs-nav]:mb-0 [&_.ant-tabs-tab]:text-gray-500 [&_.ant-tabs-tab-active_.ant-tabs-tab-btn]:text-emerald-400! [&_.ant-tabs-ink-bar]:bg-emerald-500"
               />
               <Button
                 type="text"

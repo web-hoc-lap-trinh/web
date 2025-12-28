@@ -10,8 +10,7 @@ import type {
 	BulkCreateTestCasesPayload,
 	PaginatedResponse,
 } from "../../types/problem.types";
-import type { IApiResponse, ProblemsResponse, ProblemResponse, TestCasesResponse, TestCaseResponse } from "./problem.types";
-import type {IExerciseAdminDetail} from "../../types/exercise.types.ts";
+import type { IApiResponse, ProblemResponse, TestCaseResponse } from "./problem.types";
 
 type ProblemTag = { type: "Problem"; id?: number | string };
 type TestCaseTag = { type: "TestCase"; id?: number | string };
@@ -37,7 +36,7 @@ export const problemApi = authApi.injectEndpoints({
 			transformResponse: (response: IApiResponse<IProblem>) => {
 				return response.result;
 			},
-			providesTags: (result, error, id) => [{ type: "Problem", id }],
+			providesTags: (_, __, id) => [{ type: "Problem", id }],
 		}),
 
 		createProblem: builder.mutation<IProblem, CreateProblemPayload>({
@@ -98,7 +97,7 @@ export const problemApi = authApi.injectEndpoints({
             query: (problemId) => `/problems/${problemId}/testcases`,
             transformResponse: (response: IApiResponse<ITestCase[]>) =>
                 response.result,
-            providesTags: (result, error, problemId) =>
+            providesTags: (result, _, problemId) =>
                 result
                     ? [
                         ...result.map(({ test_case_id }) => ({
@@ -117,7 +116,7 @@ export const problemApi = authApi.injectEndpoints({
             query: (id) => `/testcases/${id}`,
             transformResponse: (response: IApiResponse<ITestCase>) =>
                 response.result,
-            providesTags: (result, error, testcaseId) => [
+            providesTags: (_, __, testcaseId) => [
                 { type: "TestCase", id: testcaseId },
             ],
         }),

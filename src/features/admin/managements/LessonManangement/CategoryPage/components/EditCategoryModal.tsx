@@ -1,8 +1,7 @@
-import { CheckCircleOutlined, CloseCircleOutlined, CloseOutlined, UploadOutlined, PictureOutlined } from "@ant-design/icons";
+import { CloseOutlined, UploadOutlined, PictureOutlined } from "@ant-design/icons";
 import { useState, useEffect, useRef } from "react";
 import {
     useGetAdminCategoryQuery,
-    useGetCategoryQuery,
     useUpdateCategoryMutation
 } from "../../../../../../services/category/category.service.ts";
 import { Skeleton, message } from "antd";
@@ -63,8 +62,6 @@ const EditCategoryModal = ({ isOpen, onClose, categoryId }: EditCategoryModalPro
                 categoryId,
                 data: {
                     name: formData.name,
-                    is_active: formData.is_active,
-                    // Nếu icon_file có giá trị thì gửi file, nếu không backend giữ nguyên ảnh cũ
                     ...(formData.icon_file && { icon_file: formData.icon_file }),
                     order_index: category?.order_index || 1
                 }
@@ -83,10 +80,10 @@ const EditCategoryModal = ({ isOpen, onClose, categoryId }: EditCategoryModalPro
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
             <div className="absolute inset-0 bg-black/60 backdrop-blur-md" onClick={onClose} />
 
-            <div className="relative w-full max-w-md bg-[#1a202c] rounded-[32px] shadow-2xl border border-white/10 overflow-hidden animate-in zoom-in-95 duration-200">
+            <div className="relative w-full max-w-md bg-[#1a202c] rounded-3xl shadow-2xl border border-white/10 overflow-hidden animate-in zoom-in-95 duration-200">
 
                 {/* Header */}
-                <div className="px-8 py-6 border-b border-white/5 flex justify-between items-center bg-white/[0.02]">
+                <div className="px-8 py-6 border-b border-white/5 flex justify-between items-center bg-white/2">
                     <div>
                         <h3 className="text-xl font-bold text-white tracking-tight">Sửa chủ đề</h3>
                         <p className="text-[10px] text-emerald-500 font-mono mt-1 uppercase tracking-wider">ID: #{categoryId}</p>
@@ -123,7 +120,7 @@ const EditCategoryModal = ({ isOpen, onClose, categoryId }: EditCategoryModalPro
                             <div className="space-y-5">
                                 {/* Tên chủ đề */}
                                 <div className="space-y-2">
-                                    <label className="text-[11px] font-bold text-gray-500 uppercase tracking-[0.1em] ml-1">Tên chủ đề</label>
+                                    <label className="text-[11px] font-bold text-gray-500 uppercase tracking-widest ml-1">Tên chủ đề</label>
                                     <input
                                         type="text"
                                         value={formData.name}
@@ -134,7 +131,7 @@ const EditCategoryModal = ({ isOpen, onClose, categoryId }: EditCategoryModalPro
 
                                 {/* Trạng thái Switch */}
                                 <div className="space-y-2">
-                                    <label className="text-[11px] font-bold text-gray-500 uppercase tracking-[0.1em] ml-1">Trạng thái hoạt động</label>
+                                    <label className="text-[11px] font-bold text-gray-500 uppercase tracking-widest ml-1">Trạng thái hoạt động</label>
                                     <div
                                         onClick={() => setFormData({...formData, is_active: !formData.is_active})}
                                         className="flex items-center justify-between px-5 py-4 bg-[#0f131a]/50 rounded-2xl border border-white/5 cursor-pointer hover:bg-[#161b22] transition-all"
@@ -153,14 +150,14 @@ const EditCategoryModal = ({ isOpen, onClose, categoryId }: EditCategoryModalPro
                 </div>
 
                 {/* Footer */}
-                <div className="px-8 py-6 bg-white/[0.02] border-t border-white/5 flex gap-3">
+                <div className="px-8 py-6 bg-white/2 border-t border-white/5 flex gap-3">
                     <button onClick={onClose} className="flex-1 py-3.5 rounded-2xl text-sm font-bold text-gray-400 hover:bg-white/5 transition-all">
                         Hủy
                     </button>
                     <button
                         onClick={handleSave}
                         disabled={isUpdating || isLoading}
-                        className="flex-[2] py-3.5 rounded-2xl text-sm font-bold text-white bg-gradient-to-r from-emerald-600 to-teal-600 shadow-xl shadow-emerald-900/20 hover:opacity-90 active:scale-[0.98] transition-all disabled:opacity-50"
+                        className="flex-2 py-3.5 rounded-2xl text-sm font-bold text-white bg-linear-to-r from-emerald-600 to-teal-600 shadow-xl shadow-emerald-900/20 hover:opacity-90 active:scale-[0.98] transition-all disabled:opacity-50"
                     >
                         {isUpdating ? "Đang lưu..." : "Lưu thay đổi"}
                     </button>

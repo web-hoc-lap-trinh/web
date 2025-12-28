@@ -1,4 +1,4 @@
-import { ArrowLeftOutlined, EyeOutlined, MessageOutlined } from "@ant-design/icons";
+import { ArrowLeftOutlined, MessageOutlined } from "@ant-design/icons";
 import { Avatar, Button, Input, Skeleton, Tag, Form, Empty } from "antd";
 import { useGetDiscussionQuery, useGetRepliesQuery, useCreateReplyMutation } from "../../../../../../services/discussion/discussion.service";
 import ReplyItem, { buildReplyTree } from "./ReplyItem";
@@ -79,7 +79,7 @@ const DiscussionDetailView = ({ discussionId, onBack }: DiscussionDetailViewProp
             /> */}
             <div className="flex items-center gap-4 text-gray-500 text-sm">
                 {/* <span className="flex items-center gap-1"><EyeOutlined /> {discussion.view_count}</span> */}
-                <span className="flex items-center gap-1"><MessageOutlined /> {discussion.total_replies}</span>
+                <span className="flex items-center gap-1"><MessageOutlined /> {discussion.reply_count}</span>
             </div>
         </div>
 

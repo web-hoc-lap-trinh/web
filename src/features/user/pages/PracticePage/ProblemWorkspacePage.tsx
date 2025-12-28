@@ -9,7 +9,6 @@ import {
   HistoryOutlined,
   BulbOutlined,
   RobotOutlined,
-  HomeOutlined,
   CodeOutlined // Import icon Code
 } from "@ant-design/icons";
 import { useGetProblemQuery } from "../../../../services/problem/problem.service";

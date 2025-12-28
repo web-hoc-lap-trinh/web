@@ -89,7 +89,7 @@ const LessonContentTabs = ({ lesson }: LessonContentTabsProps) => {
         </span>
       ),
       children: (
-        <LessonExercisesTab lessonId={lesson.lesson_id} />
+        <LessonExercisesTab lessonId={lesson.lesson_id.toString()} />
       )
     },
   ];

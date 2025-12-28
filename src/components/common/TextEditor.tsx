@@ -16,7 +16,7 @@ const TextEditor = ({value, onChange}: TextEditorProps) => {
                     onChange={(val) => onChange(val || "")}
                     height={400}
                     preview="live"
-                    className="!bg-[#0f131a] !border-none"
+                    className="bg-[#0f131a]! border-none!"
                 />
             </div>
         </div>

@@ -6,11 +6,11 @@ import AdminUserTable from "./components/AdminUserTable.tsx";
 
 const AdminUserPage = () => {
     const {data: users = [], isLoading} = useGetAdminUsersQuery();
-    const [isAdminUserEditOpen, setIsAdminUserEditOpen] = useState(false);
-    const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
+    const [, setIsAdminUserEditOpen] = useState(false);
+    const [, setSelectedUserId] = useState<string | null>(null);
 
     const handleEditAdminUser = (user: IUser) => {
-        setSelectedUserId(user.user_id)
+        setSelectedUserId(String(user.user_id))
         setIsAdminUserEditOpen(true);
     }
 

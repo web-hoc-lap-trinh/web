@@ -1,5 +1,5 @@
 import { Avatar, Tag } from "antd";
-import { EyeOutlined, CommentOutlined, CaretUpOutlined, UserOutlined } from "@ant-design/icons";
+import { CommentOutlined, UserOutlined } from "@ant-design/icons";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import type { IDiscussion } from "../../../../../types/discussion.types";
@@ -27,7 +27,7 @@ const DiscussionListItem = ({ discussion, onClick }: DiscussionListItemProps) =>
       onClick={onClick}
       className="group flex gap-3 p-4 hover:bg-white/5 cursor-pointer transition-colors"
     >
-      <div className="flex-shrink-0 pt-1">
+      <div className="shrink-0 pt-1">
         <Avatar 
             src={discussion.user.avatar_url} 
             icon={<UserOutlined />} 
@@ -58,12 +58,12 @@ const DiscussionListItem = ({ discussion, onClick }: DiscussionListItemProps) =>
         </div>
       </div>
 
-      <div className="flex flex-col items-end gap-1 text-xs text-gray-500 min-w-[40px]">
+      <div className="flex flex-col items-end gap-1 text-xs text-gray-500 min-w-10">
          {/* <div className="flex items-center gap-1">
             <EyeOutlined /> {discussion.view_count}
          </div> */}
          <div className="flex items-center gap-1">
-            <CommentOutlined /> {discussion.total_replies}
+            <CommentOutlined /> {discussion.reply_count}
          </div>
       </div>
     </div>

@@ -4,7 +4,6 @@ import { message } from "antd";
 import { useCreateLessonMutation } from "../../../../../../services/lesson/lesson.service.ts";
 import { useGetCategoriesQuery } from "../../../../../../services/category/category.service.ts";
 import type { DifficultyLevel } from "../../../../../../types/lesson.types.ts";
-import MDEditor from '@uiw/react-md-editor';
 import {createPortal} from "react-dom";
 import type {CreateTryItYourselfPayload} from "../../../../../../services/try-it-yourself/try-it-yourself.types.ts";
 import {
@@ -69,7 +68,7 @@ const AddLessonModal = ({ isOpen, onClose }: AddLessonModalProps) => {
             <div className="relative w-full max-w-5xl max-h-[95vh] bg-[#1a202c] rounded-3xl shadow-2xl border border-white/10 overflow-hidden flex flex-col animate-in zoom-in-95">
 
                 {/* Header */}
-                <div className="px-8 py-5 border-b border-white/5 flex justify-between items-center bg-white/[0.02]">
+                <div className="px-8 py-5 border-b border-white/5 flex justify-between items-center bg-white/2">
                     <h3 className="text-xl font-bold text-white tracking-tight">Soạn thảo bài học mới</h3>
                     <button onClick={handleClose} className="p-2 text-gray-400 hover:text-white transition-colors">
                         <CloseOutlined size={20} />
@@ -141,7 +140,7 @@ const AddLessonModal = ({ isOpen, onClose }: AddLessonModalProps) => {
                     <button
                         onClick={handleSubmit}
                         disabled={isCreating}
-                        className="px-8 py-2.5 rounded-xl text-sm font-semibold text-white bg-gradient-to-r from-emerald-600 to-teal-600 shadow-lg hover:-translate-y-0.5 transition-all disabled:opacity-50"
+                        className="px-8 py-2.5 rounded-xl text-sm font-semibold text-white bg-linear-to-r from-emerald-600 to-teal-600 shadow-lg hover:-translate-y-0.5 transition-all disabled:opacity-50"
                     >
                         {isCreating ? <LoadingOutlined className="mr-2" /> : "Lưu bài học"}
                     </button>

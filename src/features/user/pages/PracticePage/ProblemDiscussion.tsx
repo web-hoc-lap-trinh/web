@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { Button, Pagination, Empty, Skeleton, ConfigProvider, Tabs } from "antd";
-import { PlusOutlined, QuestionCircleFilled, BulbFilled, BugFilled } from "@ant-design/icons";
+import { Button, Pagination, Empty, Skeleton, ConfigProvider } from "antd";
+import { PlusOutlined } from "@ant-design/icons";
 import { useGetDiscussionsQuery } from "../../../../services/discussion/discussion.service";
 import DiscussionListItem from "./components/DiscussionListItem";
 import CreateDiscussionModal from "./components/CreateDiscussionModal";
@@ -9,7 +9,7 @@ import type { DiscussionType } from "../../../../types/discussion.types";
 
 const ProblemDiscussion = ({ problemId }: { problemId: number }) => {
   const [page, setPage] = useState(1);
-  const [filterType, setFilterType] = useState<DiscussionType | undefined>(undefined);
+  const [filterType] = useState<DiscussionType | undefined>(undefined);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedDiscussionId, setSelectedDiscussionId] = useState<number | null>(null);
 
@@ -34,14 +34,6 @@ const ProblemDiscussion = ({ problemId }: { problemId: number }) => {
         />
     );
   }
-
-  // Cấu hình Tabs giống LeetCode
-  const tabItems = [
-    { key: 'ALL', label: <span className="flex items-center gap-2">Tất cả</span> },
-    { key: 'SOLUTION', label: <span className="flex items-center gap-2"><BulbFilled className="text-yellow-500"/> Solutions</span> },
-    { key: 'QUESTION', label: <span className="flex items-center gap-2"><QuestionCircleFilled className="text-blue-400"/> Questions</span> },
-    { key: 'BUG_REPORT', label: <span className="flex items-center gap-2"><BugFilled className="text-red-400"/> Bugs</span> },
-  ];
 
   return (
     <div className="h-full flex flex-col">

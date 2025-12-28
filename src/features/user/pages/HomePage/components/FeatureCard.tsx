@@ -16,7 +16,7 @@ const FeatureCard: React.FC<FeatureCardProps> = ({ icon, title, description, tag
             <div className="w-12 h-12 rounded-lg bg-emerald-900/30 flex items-center justify-center text-2xl text-emerald-400 mb-4 group-hover:scale-110 transition-transform">
                 {icon}
             </div>
-            <Typography.Title level={4} className="!text-white !mb-2 group-hover:!text-emerald-300 transition-colors">
+            <Typography.Title level={4} className="text-white! mb-2! group-hover:text-emerald-300! transition-colors">
                 {title}
             </Typography.Title>
             <p className="text-gray-400 text-sm leading-relaxed">

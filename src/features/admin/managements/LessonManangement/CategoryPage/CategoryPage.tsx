@@ -1,5 +1,5 @@
 import {useState} from "react";
-import {useGetAdminCategoriesQuery, useGetCategoriesQuery} from "../../../../../services/category/category.service.ts";
+import {useGetAdminCategoriesQuery} from "../../../../../services/category/category.service.ts";
 import CategoryTable from "./components/CategoryTable.tsx";
 import AddCategoryModal from "./components/AddCategoryModal.tsx";
 import EditCategoryModal from "./components/EditCategoryModal.tsx";
