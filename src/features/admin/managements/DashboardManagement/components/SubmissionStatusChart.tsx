@@ -31,6 +31,7 @@ const SubmissionStatusChart = ({ data, loading, onDateChange }: Props) => {
                 </div>
 
                 <RangePicker
+                    size={"small"}
                     className="bg-white/5 border-none"
                     onChange={onDateChange}
                 />
@@ -42,9 +43,9 @@ const SubmissionStatusChart = ({ data, loading, onDateChange }: Props) => {
                         <Pie
                             data={data}
                             cx="50%"
-                            cy="50%"
-                            innerRadius={70}
-                            outerRadius={90}
+                            cy="40%"
+                            innerRadius={"60%"}
+                            outerRadius={"80%"}
                             paddingAngle={5}
                             dataKey="count"
                             nameKey="status"
@@ -62,7 +63,13 @@ const SubmissionStatusChart = ({ data, loading, onDateChange }: Props) => {
                             itemStyle={{ fontSize: '12px' }}
                         />
                         <Legend
+                            layout={"horizontal"}
+                            align={"center"}
                             verticalAlign="bottom"
+                            wrapperStyle={{
+                                maxHeight: '100px',
+                                overflowY: 'auto',
+                            }}
                             formatter={(value) => <span className="text-gray-400 text-xs">{value}</span>}
                         />
                     </PieChart>
