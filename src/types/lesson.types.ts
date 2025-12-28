@@ -4,6 +4,7 @@ export type DifficultyLevel = "BEGINNER" | "INTERMEDIATE" | "ADVANCED";
 
 export interface ILesson {
   lesson_id: number;
+  category_id: number;
   title: string;
   description: string;
   content: string;

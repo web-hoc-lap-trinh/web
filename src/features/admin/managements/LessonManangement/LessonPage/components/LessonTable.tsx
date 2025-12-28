@@ -5,14 +5,14 @@ import {
     EditOutlined,
     ExclamationCircleFilled, ReadOutlined,
     SearchOutlined,
-    UnorderedListOutlined
+    UnorderedListOutlined, UploadOutlined
 } from "@ant-design/icons";
 import {message, Modal, Skeleton} from "antd";
 import {
     useDeleteLessonMutation, useGetAdminLessonsQuery,
-    useGetLessonsByCategoryQuery
+    useGetLessonsByCategoryQuery, useUploadLessonMediaMutation
 } from "../../../../../../services/lesson/lesson.service.ts";
-import {useEffect, useMemo, useState} from "react";
+import {useEffect, useMemo, useRef, useState} from "react";
 import type {ICategory} from "../../../../../../types/category.types.ts";
 
 const {confirm} = Modal;
@@ -24,11 +24,14 @@ interface LessonTableProps {
 }
 
 const LessonTable = ({onEdit, categories, loading}: LessonTableProps) => {
-    const [deleteLesson, {isLoading: isDeleting}] = useDeleteLessonMutation();
     const [selectedCategoryId, setSelectedCategoryId] = useState<number>(0);
     const [searchQueryCategory, setSearchQueryCategory] = useState('');
     const [searchQueryLesson, setSearchQueryLesson] = useState('');
+    const [uploadMedia, { isLoading: isUploadingMedia }] = useUploadLessonMediaMutation();
+    const fileInputRef = useRef<HTMLInputElement>(null);
+    const [activeLessonId, setActiveLessonId] = useState<number | null>(null);
     const {data: lessons = []} = useGetAdminLessonsQuery()
+    const [deleteLesson, {isLoading: isDeleting}] = useDeleteLessonMutation();
 
     const filteredCategories = useMemo(() => {
         if (!categories) return [];
@@ -41,16 +44,45 @@ const LessonTable = ({onEdit, categories, loading}: LessonTableProps) => {
     const filteredLessons = useMemo(() => {
         if (!lessons) return [];
         return lessons.filter(res => {
-            const searchLower = searchQueryLesson.toLowerCase();
-            return res.title.toLowerCase().includes(searchLower)
+            const matchesSearch = res.title.toLowerCase().includes(searchQueryLesson.toLowerCase());
+            const matchesCategory = selectedCategoryId === 0 || res.category_id === selectedCategoryId;
+            return matchesSearch && matchesCategory;
         });
-    }, [lessons, searchQueryLesson]);
+    }, [lessons, searchQueryLesson, selectedCategoryId]);
 
-    useEffect(() => {
+    /*useEffect(() => {
         if (categories.length > 0 && !selectedCategoryId) {
             setSelectedCategoryId(categories[0].category_id);
         }
-    }, [categories]);
+    }, [categories]);*/
+
+    const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file || !activeLessonId) return;
+
+        const hide = message.loading("Đang tải tệp lên...", 0);
+        try {
+            // Gọi mutation (giả sử backend của bạn cần LessonID hoặc chỉ cần upload lấy URL)
+            const imageUrl = await uploadMedia(file).unwrap();
+
+            message.success("Tải lên thành công!");
+            console.log("Link ảnh mới:", imageUrl);
+
+            // Lưu ý: Sau khi upload thành công, bạn có thể cần gọi thêm một API
+            // để cập nhật lesson_id đó với imageUrl này nếu backend chưa tự động làm.
+        } catch (error: any) {
+            message.error(error?.data?.message || "Lỗi khi tải tệp lên");
+        } finally {
+            hide();
+            setActiveLessonId(null);
+            if (fileInputRef.current) fileInputRef.current.value = ''; // Reset input
+        }
+    };
+
+    const triggerUpload = (lessonId: number) => {
+        setActiveLessonId(lessonId);
+        fileInputRef.current?.click();
+    };
 
     const handleDelete = (id: number, name: string) => {
         confirm({
@@ -135,6 +167,24 @@ const LessonTable = ({onEdit, categories, loading}: LessonTableProps) => {
 
                 <div className="max-h-[290px] overflow-y-auto pr-2">
                     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+                        <button
+                            key={0}
+                            onClick={() => setSelectedCategoryId(0)}
+                            className={`group relative flex flex-col p-4 rounded-[24px] border transition-all duration-300 text-left overflow-hidden h-full ${
+                                selectedCategoryId === 0
+                                    ? 'bg-emerald-500/10 border-emerald-500/50 shadow-[0_0_25px_rgba(16,185,129,0.15)] ring-1 ring-emerald-500/20'
+                                    : 'bg-[#0f131a]/40 border-white/5 hover:border-white/20 hover:bg-[#1a202c]/40'
+                            }`}
+                        >
+                            <div className={`w-10 h-10 rounded-xl mb-3 flex items-center justify-center transition-all duration-300 ${
+                                selectedCategoryId === 0 ? 'bg-emerald-500 text-white shadow-lg' : 'bg-white/5 text-gray-500'
+                            }`}>
+                                <ReadOutlined size={20} />
+                            </div>
+                            <span className={`text-sm font-bold tracking-tight line-clamp-1 ${selectedCategoryId === 0 ? 'text-emerald-400' : 'text-gray-300'}`}>
+                                    All
+                                </span>
+                        </button>
                         {filteredCategories.length > 0 ? (filteredCategories.map((category) => (
                             <button
                                 key={category.category_id}
@@ -153,6 +203,10 @@ const LessonTable = ({onEdit, categories, loading}: LessonTableProps) => {
                                 <span className={`text-sm font-bold tracking-tight line-clamp-1 ${selectedCategoryId === category.category_id ? 'text-emerald-400' : 'text-gray-300'}`}>
                                     {category.name}
                                 </span>
+                                <div className="flex items-center gap-2 mt-1">
+                                    <span
+                                        className="text-[9px] text-gray-600 font-bold uppercase">{category.is_active ? "ACTIVE" : "INACTIVE"}</span>
+                                </div>
                             </button>
                         ))) : (
                             <td className="px-8 py-8 text-center">
@@ -202,72 +256,99 @@ const LessonTable = ({onEdit, categories, loading}: LessonTableProps) => {
                             </tr>
                             </thead>
                             <tbody className="divide-y divide-white/5">
-                            {filteredLessons.map((lesson) => {
-                                return (
-                                    <tr key={lesson.lesson_id}
-                                        className="group hover:bg-white/[0.02] transition-colors duration-200">
-                                        {/*<td className="px-6 py-5">
-                        <span
-                            className="font-mono text-xs text-emerald-400/80 bg-emerald-400/10 px-2 py-1 rounded border border-emerald-400/20">
-                          {lesson.lesson_id}
-                        </span>
-                                        </td>*/}
-                                        <td className="px-6 py-5">
-                                            <div
-                                                className="font-semibold text-gray-200 group-hover:text-emerald-300 transition-colors">
-                                                {lesson.title}
-                                            </div>
-                                        </td>
-                                        <td className="px-6 py-5 text-center">
-                        <span
-                            className={`inline-flex items-center px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wide border ${getLevelBadge(lesson.difficulty_level)}`}>
-                          {lesson.difficulty_level}
-                        </span>
-                                        </td>
-                                        <td className="px-6 py-5 text-center">
-                        <span className="text-gray-500 text-[10px] font-bold">
-                          {formatDateTime(lesson.updated_at)}
-                        </span>
-                                        </td>
-                                        <td className="px-6 py-5">
-                                            <div className="flex items-center gap-2">
-                                                <span className={`w-2 h-2 rounded-full shadow-[0_0_8px] ${
-                                                    lesson.is_published ? 'bg-emerald-500 shadow-emerald-500/50' : 'bg-gray-500 shadow-gray-500/50'
-                                                }`}/>
-                                                <span className={`text-sm font-medium ${
-                                                    lesson.is_published ? 'text-emerald-100' : 'text-gray-500'
-                                                }`}>
-                                                    {/* Chỉnh sửa hiển thị text trạng thái */}
-                                                    {lesson.is_published ? 'Đã xuất bản' : 'Bản nháp'}
-                                                </span>
-                                            </div>
-                                        </td>
-                                        <td className="px-6 py-5 text-center">
-                                            <div
-                                                className="p-2.5 flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                                                <button
-                                                    onClick={() => onEdit(lesson)}
-                                                    className="p-2 text-gray-400 hover:text-emerald-400 hover:bg-emerald-400/10 rounded-lg transition-all transform hover:scale-110"
-                                                >
-                                                    <EditOutlined size={18}/>
-                                                </button>
-                                                <button
-                                                    className="p-2 text-gray-400 hover:text-red-400 hover:bg-red-400/10 rounded-lg transition-all transform hover:scale-110"
-                                                    onClick={() => handleDelete(lesson.lesson_id, lesson.title)}
-                                                    disabled={isDeleting}
-                                                >
-                                                    <DeleteOutlined size={18}/>
-                                                </button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                )
-                            })}
+                            {filteredLessons.length > 0 ? (
+                                    filteredLessons.map((lesson) => {
+                                    return (
+                                        <tr key={lesson.lesson_id}
+                                            className="group hover:bg-white/[0.02] transition-colors duration-200">
+                                            {/*<td className="px-6 py-5">
+                            <span
+                                className="font-mono text-xs text-emerald-400/80 bg-emerald-400/10 px-2 py-1 rounded border border-emerald-400/20">
+                              {lesson.lesson_id}
+                            </span>
+                                            </td>*/}
+                                            <td className="px-6 py-5">
+                                                <div
+                                                    className="font-semibold text-gray-200 group-hover:text-emerald-300 transition-colors">
+                                                    {lesson.title}
+                                                </div>
+                                            </td>
+                                            <td className="px-6 py-5 text-center">
+                            <span
+                                className={`inline-flex items-center px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wide border ${getLevelBadge(lesson.difficulty_level)}`}>
+                              {lesson.difficulty_level}
+                            </span>
+                                            </td>
+                                            <td className="px-6 py-5 text-center">
+                            <span className="text-gray-500 text-[10px] font-bold">
+                              {formatDateTime(lesson.updated_at)}
+                            </span>
+                                            </td>
+                                            <td className="px-6 py-5">
+                                                <div className="flex items-center gap-2">
+                                                    <span className={`w-2 h-2 rounded-full shadow-[0_0_8px] ${
+                                                        lesson.is_published ? 'bg-emerald-500 shadow-emerald-500/50' : 'bg-gray-500 shadow-gray-500/50'
+                                                    }`}/>
+                                                    <span className={`text-sm font-medium ${
+                                                        lesson.is_published ? 'text-emerald-100' : 'text-gray-500'
+                                                    }`}>
+                                                        {/* Chỉnh sửa hiển thị text trạng thái */}
+                                                        {lesson.is_published ? 'Đã xuất bản' : 'Bản nháp'}
+                                                    </span>
+                                                </div>
+                                            </td>
+                                            <td className="px-6 py-5 text-center">
+                                                <div
+                                                    className="p-2.5 flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                    <button
+                                                        onClick={() => triggerUpload(lesson.lesson_id) } // Thay đổi ở đây
+                                                        disabled={isUploadingMedia}
+                                                        className={`p-2 rounded-lg transition-all transform hover:scale-110 ${
+                                                            isUploadingMedia ? 'text-gray-600' : 'text-gray-400 hover:text-yellow-400 hover:bg-yellow-400/10'
+                                                        }`}
+                                                    >
+                                                        <UploadOutlined size={18}/>
+                                                    </button>
+                                                    <button
+                                                        onClick={() => onEdit(lesson)}
+                                                        className="p-2 text-gray-400 hover:text-emerald-400 hover:bg-emerald-400/10 rounded-lg transition-all transform hover:scale-110"
+                                                    >
+                                                        <EditOutlined size={18}/>
+                                                    </button>
+                                                    <button
+                                                        className="p-2 text-gray-400 hover:text-red-400 hover:bg-red-400/10 rounded-lg transition-all transform hover:scale-110"
+                                                        onClick={() => handleDelete(lesson.lesson_id, lesson.title)}
+                                                        disabled={isDeleting}
+                                                    >
+                                                        <DeleteOutlined size={18}/>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    )
+                                })
+                                ) : (
+                                <tr>
+                                    <td colSpan={5} className="px-8 py-24 text-center">
+                                        <div className="flex flex-col items-center gap-3 opacity-20">
+                                            <UnorderedListOutlined size={40} className="text-gray-400" />
+                                            <p className="text-sm font-bold text-gray-300">Không có dữ liệu</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                            )}
                             </tbody>
                         </table>
                     </div>
                 </div>
             </div>
+            <input
+                type="file"
+                ref={fileInputRef}
+                className="hidden"
+                accept="image/*,video/*" // Tùy chỉnh loại tệp bạn muốn
+                onChange={handleFileChange}
+            />
         </div>
     )
 }

@@ -51,19 +51,19 @@ const DashboardStats = ({ data, loading }: DashboardProps) => {
     ];
 
     return (
-        <div className="p-6 min-h-screen">
+        <div className="p-4">
             {/*<div className="mb-8">
                 <h2 className="text-2xl font-bold text-white">Tổng quan hệ thống</h2>
                 <p className="text-gray-400 text-sm">Dữ liệu thống kê thời gian thực</p>
             </div>*/}
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
                 {stats.map((item, index) => (
                     <div
                         key={index}
                         className="bg-[#1e293b]/50 backdrop-blur-xl border border-white/5 p-5 rounded-[24px] hover:border-emerald-500/30 transition-all group"
                     >
-                        <div className={`w-12 h-12 ${item.bg} ${item.color} rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
+                        <div className={`w-12 h-10 ${item.bg} ${item.color} rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
                             {item.icon}
                         </div>
                         <div className="flex flex-col">

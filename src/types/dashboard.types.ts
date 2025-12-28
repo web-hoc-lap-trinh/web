@@ -10,3 +10,36 @@ export interface IDashboardStats {
     acceptance_rate: number,
     current_highest_streak: number,
 }
+
+export interface IUserGrowth {
+    date: string;
+    new_users: number;
+    total_users: number;
+}
+
+export interface ICategoryDistribution {
+    category_id: number;
+    category_name: string;
+    lesson_count: number;
+    view_count: number;
+    percentage: number;
+}
+
+export interface ISubmissionStats {
+    status: string;
+    count: number;
+    percentage: number;
+}
+
+export interface ISubmissionStatsParams {
+    startDate?: string;
+    endDate?: string;
+    year?: number;
+    month?: number;
+}
+
+export interface IProblemDifficulty {
+    difficulty: string;
+    count: number;
+    percentage: number;
+}

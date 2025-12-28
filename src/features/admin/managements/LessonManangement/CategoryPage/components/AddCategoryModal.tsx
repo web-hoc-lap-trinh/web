@@ -1,8 +1,8 @@
-import { CheckCircleOutlined, CloseCircleOutlined, CloseOutlined } from "@ant-design/icons";
-import { useState } from "react";
+import { CheckCircleOutlined, CloseCircleOutlined, CloseOutlined, UploadOutlined, PictureOutlined } from "@ant-design/icons";
+import { useState, useRef } from "react";
 import { useCreateCategoryMutation } from "../../../../../../services/category/category.service.ts";
 import { message } from "antd";
-import {createPortal} from "react-dom";
+import { createPortal } from "react-dom";
 
 interface AddCategoryModalProps {
     isOpen: boolean;
@@ -10,40 +10,46 @@ interface AddCategoryModalProps {
 }
 
 const AddCategoryModal = ({ isOpen, onClose }: AddCategoryModalProps) => {
-    // 1. Khởi tạo mutation
     const [createCategory, { isLoading }] = useCreateCategoryMutation();
+    const fileInputRef = useRef<HTMLInputElement>(null);
 
-    // 2. Khởi tạo State mặc định cho form
     const [formData, setFormData] = useState({
         name: "",
-        order_index: 1,
         is_active: true,
-        icon_url: ""
+        icon_file: null as File | null
     });
+    const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
-    // Hàm reset form sau khi đóng hoặc tạo thành công
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (file) {
+            if (file.size > 2 * 1024 * 1024) return message.error("Ảnh không được quá 2MB");
+            setFormData({ ...formData, icon_file: file });
+            setPreviewUrl(URL.createObjectURL(file));
+        }
+    };
+
     const handleClose = () => {
-        setFormData({ name: "", order_index: 1, is_active: true, icon_url: "" });
+        setFormData({ name: "", is_active: true, icon_file: null });
+        setPreviewUrl(null);
         onClose();
     };
 
-    // 3. Hàm xử lý gửi dữ liệu
     const handleSubmit = async () => {
-        if (!formData.name.trim()) {
-            return message.warning("Vui lòng nhập tên chủ đề");
-        }
+        if (!formData.name.trim()) return message.warning("Vui lòng nhập tên chủ đề");
+        if (!formData.icon_file) return message.warning("Vui lòng tải lên icon chủ đề");
 
         try {
-            // Lưu ý: Đảm bảo order_index là kiểu number
             await createCategory({
-                ...formData,
-                order_index: Number(formData.order_index)
+                name: formData.name,
+                icon_file: formData.icon_file,
+                // Giả sử backend cần order_index mặc định hoặc bạn bỏ qua nếu DB tự tăng
+                order_index: 1
             }).unwrap();
 
             message.success("Thêm chủ đề mới thành công!");
             handleClose();
         } catch (error: any) {
-            console.error("Create error:", error);
             message.error(error?.data?.message || "Không thể tạo chủ đề");
         }
     };
@@ -53,84 +59,89 @@ const AddCategoryModal = ({ isOpen, onClose }: AddCategoryModalProps) => {
     return createPortal(
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
             <div className="absolute inset-0 bg-black/60 backdrop-blur-md" onClick={handleClose} />
-            <div className="relative w-full max-w-md bg-[#1a202c] rounded-3xl shadow-2xl border border-white/10 overflow-hidden animate-in zoom-in-95 duration-200">
+
+            <div className="relative w-full max-w-md bg-[#1a202c] rounded-[32px] shadow-2xl border border-white/10 overflow-hidden animate-in zoom-in-95 duration-200">
 
                 {/* Header */}
-                <div className="px-8 py-6 border-b border-white/5 flex justify-between items-center bg-white/[0.02]">
-                    <h3 className="text-xl font-bold text-white tracking-wide">Thêm chủ đề mới</h3>
-                    <button onClick={handleClose} className="p-2 text-gray-400 hover:text-white transition-colors">
-                        <CloseOutlined size={20} />
+                <div className="px-8 py-6 flex justify-between items-center border-b border-white/5">
+                    <div>
+                        <h3 className="text-xl font-bold text-white tracking-tight">Tạo chủ đề</h3>
+                        <p className="text-xs text-gray-500 mt-1">Thêm danh mục mới vào hệ thống</p>
+                    </div>
+                    <button onClick={handleClose} className="p-2 hover:bg-white/5 rounded-full text-gray-400 transition-colors">
+                        <CloseOutlined />
                     </button>
                 </div>
 
-                <div className="p-8 space-y-6">
-                    {/* Tên chủ đề */}
-                    <div className="space-y-2">
-                        <label className="text-xs font-semibold text-gray-400 uppercase tracking-widest ml-1">Tên chủ đề</label>
-                        <input
-                            type="text"
-                            placeholder="Nhập tên chủ đề..."
-                            value={formData.name}
-                            onChange={(e) => setFormData({...formData, name: e.target.value})}
-                            className="w-full px-4 py-3 bg-[#0f131a]/50 text-gray-200 rounded-xl border border-white/10 focus:ring-2 focus:ring-emerald-500/50 transition-all outline-none"
-                        />
+                <div className="p-8 space-y-8">
+                    {/* Phần Upload Ảnh - Đưa lên đầu làm điểm nhấn */}
+                    <div className="flex flex-col items-center justify-center">
+                        <div
+                            onClick={() => fileInputRef.current?.click()}
+                            className="relative w-28 h-28 rounded-3xl border-2 border-dashed border-white/10 bg-[#0f131a]/50 flex items-center justify-center cursor-pointer hover:border-emerald-500/50 hover:bg-emerald-500/5 transition-all group overflow-hidden"
+                        >
+                            {previewUrl ? (
+                                <img src={previewUrl} alt="Preview" className="w-full h-full object-cover" />
+                            ) : (
+                                <div className="text-center space-y-2">
+                                    <PictureOutlined className="text-2xl text-gray-500 group-hover:text-emerald-400" />
+                                    <p className="text-[10px] text-gray-500 font-medium">TẢI ICON</p>
+                                </div>
+                            )}
+                            {/* Overlay khi hover */}
+                            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
+                                <UploadOutlined className="text-white text-xl" />
+                            </div>
+                        </div>
+                        <input type="file" ref={fileInputRef} onChange={handleFileChange} className="hidden" accept="image/*" />
                     </div>
 
-                    <div className="grid grid-cols-2 gap-4">
-                        {/* Thứ tự */}
+                    {/* Form Fields */}
+                    <div className="space-y-5">
                         <div className="space-y-2">
-                            <label className="text-xs font-semibold text-gray-400 uppercase tracking-widest ml-1">Thứ tự hiển thị</label>
+                            <label className="text-[11px] font-bold text-gray-500 uppercase tracking-[0.1em] ml-1">Tên chủ đề</label>
                             <input
-                                type="number"
-                                value={formData.order_index}
-                                onChange={(e) => setFormData({...formData, order_index: parseInt(e.target.value) || 0})}
-                                className="w-full px-4 py-3 bg-[#0f131a]/50 text-gray-200 rounded-xl border border-white/10 outline-none focus:ring-2 focus:ring-emerald-500/50 transition-all"
+                                type="text"
+                                placeholder="Ví dụ: Công nghệ, Đời sống..."
+                                value={formData.name}
+                                onChange={(e) => setFormData({...formData, name: e.target.value})}
+                                className="w-full px-5 py-3.5 bg-[#0f131a]/50 text-white rounded-2xl border border-white/5 focus:border-emerald-500/50 focus:ring-4 focus:ring-emerald-500/10 transition-all outline-none"
                             />
                         </div>
-                        {/* Trạng thái */}
-                        <div className="space-y-2">
-                            <label className="text-xs font-semibold text-gray-400 uppercase tracking-widest ml-1">Trạng thái</label>
-                            <button
-                                onClick={() => setFormData({...formData, is_active: !formData.is_active})}
-                                className={`w-full flex items-center justify-center gap-2 py-3 rounded-xl border font-semibold transition-all ${
-                                    formData.is_active
-                                        ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
-                                        : 'bg-red-500/10 text-red-400 border-red-500/20'
-                                }`}
-                            >
-                                {formData.is_active ? <CheckCircleOutlined /> : <CloseCircleOutlined />}
-                                <span>{formData.is_active ? 'Hoạt động' : 'Tạm dừng'}</span>
-                            </button>
-                        </div>
-                    </div>
 
-                    {/* Icon URL */}
-                    <div className="space-y-2">
-                        <label className="text-xs font-semibold text-gray-400 uppercase tracking-widest ml-1">Icon URL (SVG/PNG)</label>
-                        <input
-                            type="text"
-                            placeholder="https://..."
-                            value={formData.icon_url}
-                            onChange={(e) => setFormData({...formData, icon_url: e.target.value})}
-                            className="w-full px-4 py-3 bg-[#0f131a]/50 text-gray-200 rounded-xl border border-white/10 outline-none focus:ring-2 focus:ring-emerald-500/50 transition-all"
-                        />
+                        <div className="space-y-2">
+                            <label className="text-[11px] font-bold text-gray-500 uppercase tracking-[0.1em] ml-1">Trạng thái hoạt động</label>
+                            <div
+                                onClick={() => setFormData({...formData, is_active: !formData.is_active})}
+                                className="flex items-center justify-between px-5 py-4 bg-[#0f131a]/50 rounded-2xl border border-white/5 cursor-pointer hover:bg-[#161b22] transition-all"
+                            >
+                                <span className={`text-sm font-semibold ${formData.is_active ? 'text-emerald-400' : 'text-gray-500'}`}>
+                                    {formData.is_active ? 'Đang kích hoạt' : 'Đang tạm dừng'}
+                                </span>
+
+                                {/* Switch UI */}
+                                <div className={`relative w-12 h-6 rounded-full transition-colors duration-300 ${formData.is_active ? 'bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.4)]' : 'bg-gray-700'}`}>
+                                    <div className={`absolute top-1 left-1 bg-white w-4 h-4 rounded-full transition-transform duration-300 ${formData.is_active ? 'translate-x-6' : 'translate-x-0'}`} />
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
                 {/* Footer */}
-                <div className="px-8 py-6 border-t border-white/5 bg-black/20 flex justify-end gap-3">
+                <div className="px-8 py-6 bg-white/[0.02] border-t border-white/5 flex gap-3">
                     <button
                         onClick={handleClose}
-                        className="px-6 py-2.5 rounded-xl text-sm font-semibold text-gray-400 hover:bg-white/5 transition-all"
+                        className="flex-1 py-3.5 rounded-2xl text-sm font-bold text-gray-400 hover:bg-white/5 transition-all"
                     >
-                        Hủy
+                        Hủy bỏ
                     </button>
                     <button
                         onClick={handleSubmit}
                         disabled={isLoading}
-                        className="px-6 py-2.5 rounded-xl text-sm font-semibold text-white bg-gradient-to-r from-emerald-600 to-teal-600 shadow-lg shadow-emerald-900/40 hover:-translate-y-0.5 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="flex-[2] py-3.5 rounded-2xl text-sm font-bold text-white bg-gradient-to-r from-emerald-600 to-teal-600 shadow-xl shadow-emerald-900/20 hover:opacity-90 active:scale-[0.98] transition-all disabled:opacity-50"
                     >
-                        {isLoading ? "Đang xử lý..." : "Tạo chủ đề"}
+                        {isLoading ? "Đang xử lý..." : "Xác nhận tạo"}
                     </button>
                 </div>
             </div>

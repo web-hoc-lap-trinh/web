@@ -776,3 +776,42 @@
         scrollbar-width: none;  
     }
 }
+
+/* 1. Đổi màu viền khi hover vào ô Select */
+.ant-select:not(.ant-select-disabled):not(.ant-select-customize-input):hover .ant-select-selector {
+    border-color: #10b981 !important; /* emerald-500 */
+}
+
+/* 2. Đổi màu viền và đổ bóng khi Select đang được focus (đang mở) */
+.ant-select-focused:not(.ant-select-disabled).ant-select:not(.ant-select-customize-input) .ant-select-selector {
+    border-color: #059669 !important; /* emerald-600 */
+    box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2) !important;
+}
+
+/* 3. Nếu bạn muốn đổi cả màu text/icon bên trong khi hover (tùy chọn) */
+.ant-select:hover .ant-select-arrow {
+    color: #10b981 !important;
+}
+
+/* Thêm vào file index.css hoặc App.css */
+
+/* Màu nền khi hover vào option */
+.ant-select-item-option-active {
+    background-color: rgba(16, 185, 129, 0.1) !important; /* emerald-500/10 */
+}
+
+/* Màu chữ khi option được chọn */
+.ant-select-item-option-selected {
+    background-color: rgba(16, 185, 129, 0.2) !important;
+    color: #10b981 !important; /* emerald-500 */
+}
+
+/* Màu icon mũi tên */
+.ant-select-suffix {
+    color: rgba(255, 255, 255, 0.3) !important;
+}
+
+/* Fix màu chữ placeholder cho select dark mode */
+.ant-select-selection-placeholder {
+    color: #4b5563 !important; /* gray-600 */
+}

@@ -1,5 +1,5 @@
 import {useState} from "react";
-import {useGetCategoriesQuery} from "../../../../../services/category/category.service.ts";
+import {useGetAdminCategoriesQuery, useGetCategoriesQuery} from "../../../../../services/category/category.service.ts";
 import CategoryTable from "./components/CategoryTable.tsx";
 import AddCategoryModal from "./components/AddCategoryModal.tsx";
 import EditCategoryModal from "./components/EditCategoryModal.tsx";
@@ -7,7 +7,7 @@ import type {ICategory} from "../../../../../types/category.types.ts";
 import HeaderBar from "../../../../../components/common/HeaderBar.tsx";
 
 const CategoryPage = () => {
-    const { data: categories = [], isLoading } = useGetCategoriesQuery();
+    const { data: categories = [], isLoading } = useGetAdminCategoriesQuery();
     const [isCategoryAddOpen, setCategoryAddOpen] = useState(false);
     const [isCategoryEditOpen, setCategoryEditOpen] = useState(false);
     const [selectedCategoryId, setSelectedCategoryId] = useState<number>(0);

@@ -27,8 +27,34 @@ export const categoryApi = authApi.injectEndpoints({
                     : [{ type: "Category", id: "LIST" }],
         }),
 
+        getAdminCategories: builder.query<ICategory[], void>({
+            query: () => "/categories/admin",
+            transformResponse: (response: IApiResponse<ICategory[]>) =>
+                response.result,
+
+            providesTags: (result) =>
+                result
+                    ? [
+                        ...result.map(({ category_id }) => ({
+                            type: "Category" as const,
+                            id: category_id,
+                        })),
+                        { type: "Category", id: "LIST" },
+                    ]
+                    : [{ type: "Category", id: "LIST" }],
+        }),
+
         getCategory: builder.query<ICategory, number>({
             query: (categoryId) => `/categories/${categoryId}`,
+            transformResponse: (response: IApiResponse<ICategory>) =>
+                response.result,
+            providesTags: (_result, _error, categoryId) => [
+                { type: "Category", id: categoryId },
+            ],
+        }),
+
+        getAdminCategory: builder.query<ICategory, number>({
+            query: (categoryId) => `/categories/admin/${categoryId}`,
             transformResponse: (response: IApiResponse<ICategory>) =>
                 response.result,
             providesTags: (_result, _error, categoryId) => [
@@ -80,7 +106,9 @@ export const categoryApi = authApi.injectEndpoints({
 
 export const {
     useGetCategoriesQuery,
+    useGetAdminCategoriesQuery,
     useGetCategoryQuery,
+    useGetAdminCategoryQuery,
     useCreateCategoryMutation,
     useUpdateCategoryMutation,
     useDeleteCategoryMutation,
