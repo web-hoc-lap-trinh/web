@@ -48,7 +48,7 @@ const AdminUserTable = ({users, loading} : AdminUserTableProps) => {
         try {
             await updateStatus({
                 id,
-                status: userStatus === 'ACTIVE' ? 'INACTIVE' : 'ACTIVE'
+                status: userStatus === 'ACTIVE' ? 'BLOCKED' : 'ACTIVE'
             });
             message.success("Đã thay đổi trạng thái!");
         } catch (error) {

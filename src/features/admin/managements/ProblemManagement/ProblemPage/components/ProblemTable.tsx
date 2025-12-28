@@ -57,7 +57,7 @@ const ProblemTable = ({onEdit, tags, loading}: ProblemTableProps) => {
         if (tags.length > 0 && !selectedTagId) {
             setSelectedTagId(tags[0].tag_id);
         }
-    }, [tags]);
+    }, [selectedTagId, tags]);
 
     const formatDateTime = (isoString: string) => {
         const date = new Date(isoString);
@@ -154,6 +154,10 @@ const ProblemTable = ({onEdit, tags, loading}: ProblemTableProps) => {
                                 <span className={`text-sm font-bold tracking-tight line-clamp-1 ${selectedTagId === tag.tag_id ? 'text-emerald-400' : 'text-gray-300'}`}>
                                     {tag.name}
                                 </span>
+                                <div className="flex items-center gap-2 mt-1">
+                                    <span
+                                        className="text-[10px] text-white font-bold uppercase">{tag.is_active ? "ACTIVE" : "INACTIVE"}</span>
+                                </div>
                             </button>
                         ))) : (
                             <td className="px-8 py-8 text-center">
@@ -203,7 +207,7 @@ const ProblemTable = ({onEdit, tags, loading}: ProblemTableProps) => {
                                 </tr>
                                 </thead>
                                 <tbody className="divide-y divide-white/5">
-                                {filteredProblems.map((ex) => (
+                                {filteredProblems.length > 0 ? (filteredProblems.map((ex) => (
                                     <tr key={ex.problem_id} className="group hover:bg-white/2 transition-colors">
                                         <td className="px-6 py-5">
                                             <div className="flex flex-col">
@@ -263,7 +267,16 @@ const ProblemTable = ({onEdit, tags, loading}: ProblemTableProps) => {
                                             </div>
                                         </td>
                                     </tr>
-                                ))}
+                                ))) : (
+                                    <tr>
+                                        <td colSpan={5} className="px-8 py-24 text-center">
+                                            <div className="flex flex-col items-center gap-3 opacity-20">
+                                                <UnorderedListOutlined size={40} className="text-gray-400" />
+                                                <p className="text-sm font-bold text-gray-300">Không có dữ liệu</p>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                )}
                                 </tbody>
                             </table>
                         </div>

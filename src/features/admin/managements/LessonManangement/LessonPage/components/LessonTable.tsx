@@ -3,34 +3,32 @@ import {
     AppstoreOutlined,
     DeleteOutlined,
     EditOutlined,
-    ExclamationCircleFilled, ReadOutlined,
+    ExclamationCircleOutlined, ReadOutlined,
     SearchOutlined,
     UnorderedListOutlined, UploadOutlined
 } from "@ant-design/icons";
 import {message, Modal, Skeleton} from "antd";
 import {
-    useDeleteLessonMutation, useGetAdminLessonsQuery,
-    useUploadLessonMediaMutation
+    useDeleteLessonMutation, useUploadLessonMediaMutation
 } from "../../../../../../services/lesson/lesson.service.ts";
-import {useMemo, useRef, useState} from "react";
+import React, {useEffect, useMemo, useRef, useState} from "react";
 import type {ICategory} from "../../../../../../types/category.types.ts";
 
-const {confirm} = Modal;
 
 interface LessonTableProps {
     onEdit: (lesson: ILesson) => void;
     categories: ICategory[];
+    lessons: ILesson[];
     loading: boolean;
 }
 
-const LessonTable = ({onEdit, categories, loading}: LessonTableProps) => {
+const LessonTable = ({onEdit, categories, lessons, loading}: LessonTableProps) => {
     const [selectedCategoryId, setSelectedCategoryId] = useState<number>(0);
     const [searchQueryCategory, setSearchQueryCategory] = useState('');
     const [searchQueryLesson, setSearchQueryLesson] = useState('');
     const [uploadMedia, { isLoading: isUploadingMedia }] = useUploadLessonMediaMutation();
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [activeLessonId, setActiveLessonId] = useState<number | null>(null);
-    const {data: lessons = []} = useGetAdminLessonsQuery()
     const [deleteLesson, {isLoading: isDeleting}] = useDeleteLessonMutation();
 
     const filteredCategories = useMemo(() => {
@@ -50,11 +48,11 @@ const LessonTable = ({onEdit, categories, loading}: LessonTableProps) => {
         });
     }, [lessons, searchQueryLesson, selectedCategoryId]);
 
-    /*useEffect(() => {
+    useEffect(() => {
         if (categories.length > 0 && !selectedCategoryId) {
             setSelectedCategoryId(categories[0].category_id);
         }
-    }, [categories]);*/
+    }, [categories, selectedCategoryId]);
 
     const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
@@ -85,20 +83,28 @@ const LessonTable = ({onEdit, categories, loading}: LessonTableProps) => {
     };
 
     const handleDelete = (id: number, name: string) => {
-        confirm({
-            title: 'Xác nhận xóa bài học?',
-            icon: <ExclamationCircleFilled />,
-            content: `Bạn có chắc chắn muốn xóa "${name}"? Hành động này không thể hoàn tác.`,
+        Modal.confirm({
+            title: <span className="text-white">Xác nhận xóa nhãn</span>,
+            icon: <ExclamationCircleOutlined className="text-red-500" />,
+            content: (
+                <div className="text-gray-400">
+                    Bạn có chắc chắn muốn xóa nhãn <span className="text-emerald-400 font-bold">{name}</span>?
+                    Hành động này không thể hoàn tác.
+                </div>
+            ),
             okText: 'Xóa ngay',
             okType: 'danger',
             cancelText: 'Hủy',
             centered: true,
+            // Custom style để khớp với Dark Theme của bạn
+            className: "dark-confirm-modal",
             async onOk() {
                 try {
                     await deleteLesson(id).unwrap();
-                    message.success('Đã xóa bài học thành công');
-                } catch (error: any) {
-                    message.error(error?.data?.message || 'Không thể xóa bài học này');
+                    message.success('Đã xóa nhãn thành công');
+                } catch (error) {
+                    message.error('Không thể xóa nhãn này');
+                    console.log(error)
                 }
             },
         });
@@ -151,7 +157,7 @@ const LessonTable = ({onEdit, categories, loading}: LessonTableProps) => {
                 <div className="flex items-center justify-between px-1">
                     <div className="flex items-center gap-2">
                         <AppstoreOutlined size={18} className="text-emerald-400" />
-                        <h3 className="text-xs font-bold text-gray-400 uppercase tracking-[0.2em]">Chọn chủ đề cần quản lý</h3>
+                        <h3 className="text-xs font-bold text-gray-400 uppercase tracking-[0.2em]">Chọn chủ đề</h3>
                     </div>
                     <div className="relative group w-2/3 sm:w-80">
                         <SearchOutlined size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-emerald-400 transition-colors" />
@@ -167,24 +173,6 @@ const LessonTable = ({onEdit, categories, loading}: LessonTableProps) => {
 
                 <div className="max-h-[290px] overflow-y-auto pr-2">
                     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-                        <button
-                            key={0}
-                            onClick={() => setSelectedCategoryId(0)}
-                            className={`group relative flex flex-col p-4 rounded-2xl border transition-all duration-300 text-left overflow-hidden h-full ${
-                                selectedCategoryId === 0
-                                    ? 'bg-emerald-500/10 border-emerald-500/50 shadow-[0_0_25px_rgba(16,185,129,0.15)] ring-1 ring-emerald-500/20'
-                                    : 'bg-[#0f131a]/40 border-white/5 hover:border-white/20 hover:bg-[#1a202c]/40'
-                            }`}
-                        >
-                            <div className={`w-10 h-10 rounded-xl mb-3 flex items-center justify-center transition-all duration-300 ${
-                                selectedCategoryId === 0 ? 'bg-emerald-500 text-white shadow-lg' : 'bg-white/5 text-gray-500'
-                            }`}>
-                                <ReadOutlined size={20} />
-                            </div>
-                            <span className={`text-sm font-bold tracking-tight line-clamp-1 ${selectedCategoryId === 0 ? 'text-emerald-400' : 'text-gray-300'}`}>
-                                    All
-                                </span>
-                        </button>
                         {filteredCategories.length > 0 ? (filteredCategories.map((category) => (
                             <button
                                 key={category.category_id}
@@ -200,12 +188,12 @@ const LessonTable = ({onEdit, categories, loading}: LessonTableProps) => {
                                 }`}>
                                     <ReadOutlined size={20} />
                                 </div>
-                                <span className={`text-sm font-bold tracking-tight line-clamp-1 ${selectedCategoryId === category.category_id ? 'text-emerald-400' : 'text-gray-300'}`}>
+                                <span className={`text-xs font-bold tracking-tight line-clamp-1 ${selectedCategoryId === category.category_id ? 'text-emerald-400' : 'text-gray-300'}`}>
                                     {category.name}
                                 </span>
                                 <div className="flex items-center gap-2 mt-1">
                                     <span
-                                        className="text-[9px] text-gray-600 font-bold uppercase">{category.is_active ? "ACTIVE" : "INACTIVE"}</span>
+                                        className="text-[10px] text-white font-bold uppercase">{category.is_active ? "ACTIVE" : "INACTIVE"}</span>
                                 </div>
                             </button>
                         ))) : (

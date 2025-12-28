@@ -71,7 +71,7 @@ const ReplyTable = ({discussions, loading}: ReplyTableProps) => {
                 <div className="flex items-center justify-between px-1">
                     <div className="flex items-center gap-2">
                         <MessageOutlined size={18} className="text-emerald-400" />
-                        <h3 className="text-xs font-bold text-gray-400 uppercase tracking-[0.2em]">Chọn bài đăng cần quản lý</h3>
+                        <h3 className="text-xs font-bold text-gray-400 uppercase tracking-[0.2em]">Chọn bài đăng</h3>
                     </div>
                     <div className="relative group w-2/3 sm:w-80">
                         <SearchOutlined size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-emerald-400 transition-colors" />
@@ -106,7 +106,7 @@ const ReplyTable = ({discussions, loading}: ReplyTableProps) => {
                     {dis.title}
                   </span>
                                 <div className="flex items-center gap-2 mt-1">
-                                    <span className="text-[9px] text-gray-600 font-bold uppercase">{dis.discussion_type}</span>
+                                    <span className="text-[10px] text-white font-bold uppercase">{dis.discussion_type}</span>
                                 </div>
                             </button>
                         ))) : (

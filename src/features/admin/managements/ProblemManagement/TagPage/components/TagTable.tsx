@@ -1,27 +1,39 @@
 import type {ITag} from "../../../../../../types/tag.types.ts";
-import {useState} from "react";
 import {
     CalendarOutlined,
     CheckCircleOutlined,
     CloseCircleOutlined, DeleteOutlined,
-    EditOutlined,
+    EditOutlined, ExclamationCircleOutlined,
     SearchOutlined,
-    TagsOutlined
+    TagsOutlined, UnorderedListOutlined
 } from "@ant-design/icons";
-import {Skeleton} from "antd";
+import {Skeleton, Modal, message, Pagination} from "antd";
+import {useDeleteTagMutation} from "../../../../../../services/tag/tag.service.ts";
 
 interface TagTableProps {
     onEdit: (tag: ITag) => void;
     tags: ITag[];
     loading: boolean;
+    total: number;
+    currentPage: number;
+    pageSize: number;
+    onPageChange: (page: number, pageSize: number) => void;
+    searchQuery: string;
+    onSearchChange: (value: string) => void;
 }
 
-const TagTable = ({onEdit, tags, loading}: TagTableProps) => {
-    const [searchQuery, setSearchQuery] = useState('');
-
-    const filteredTags = tags.filter(tag =>
-        tag.name.toLowerCase().includes(searchQuery.toLowerCase())
-    )
+const TagTable = ({
+    onEdit,
+    tags,
+    loading,
+    total,
+    currentPage,
+    pageSize,
+    onPageChange,
+    searchQuery,
+    onSearchChange
+}: TagTableProps) => {
+    const [deleteTag, { isLoading: isDeleting }] = useDeleteTagMutation();
 
     const formatDateTime = (isoString: string) => {
         const date = new Date(isoString);
@@ -31,6 +43,34 @@ const TagTable = ({onEdit, tags, loading}: TagTableProps) => {
             year: 'numeric',
             hour: '2-digit',
             minute: '2-digit',
+        });
+    };
+
+    const handleDeleteTag = (id: number, name: string) => {
+        Modal.confirm({
+            title: <span className="text-white">Xác nhận xóa nhãn</span>,
+            icon: <ExclamationCircleOutlined className="text-red-500" />,
+            content: (
+                <div className="text-gray-400">
+                    Bạn có chắc chắn muốn xóa nhãn <span className="text-emerald-400 font-bold">{name}</span>?
+                    Hành động này không thể hoàn tác.
+                </div>
+            ),
+            okText: 'Xóa ngay',
+            okType: 'danger',
+            cancelText: 'Hủy',
+            centered: true,
+            // Custom style để khớp với Dark Theme của bạn
+            className: "dark-confirm-modal",
+            async onOk() {
+                try {
+                    await deleteTag(id).unwrap();
+                    message.success('Đã xóa nhãn thành công');
+                } catch (error) {
+                    message.error('Không thể xóa nhãn này');
+                    console.log(error)
+                }
+            },
         });
     };
 
@@ -58,7 +98,7 @@ const TagTable = ({onEdit, tags, loading}: TagTableProps) => {
                         <TagsOutlined size={24} className="text-emerald-400" />
                     </div>
                     <div>
-                        <h3 className="text-xl font-bold text-white tracking-tight">Quản lý nhãn bài tập</h3>
+                        <h3 className="text-xl font-bold text-white tracking-tight">Danh sách nhãn bài tập</h3>
                         <p className="text-xs text-gray-500 font-medium">Phân loại và tổ chức kho bài tập thực hành</p>
                     </div>
                 </div>
@@ -68,10 +108,11 @@ const TagTable = ({onEdit, tags, loading}: TagTableProps) => {
                     <input
                         type="text"
                         value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
+                        onChange={(e) => onSearchChange(e.target.value)}
                         placeholder="Tìm kiếm nhãn theo tên hoặc mã..."
                         className="w-full pl-12 pr-4 py-3 bg-black/40 text-gray-200 rounded-xl border border-white/10 outline-none focus:ring-2 focus:ring-emerald-500/30 transition-all text-sm shadow-inner"
                     />
+                    {loading && <span className="absolute right-4 top-1/2 -translate-y-1/2 text-[10px] text-emerald-400">Đang tìm...</span>}
                 </div>
             </div>
 
@@ -91,7 +132,7 @@ const TagTable = ({onEdit, tags, loading}: TagTableProps) => {
                         </tr>
                         </thead>
                         <tbody className="divide-y divide-white/5">
-                        {filteredTags.map((tag) => (
+                        {tags.length > 0 ? (tags.map((tag) => (
                             <tr key={tag.tag_id} className="group hover:bg-white/3 transition-colors duration-300">
                                 <td className="px-8 py-6">
                                     <div className="flex flex-col">
@@ -153,6 +194,8 @@ const TagTable = ({onEdit, tags, loading}: TagTableProps) => {
                                         </button>
                                         <button
                                             className="p-2.5 bg-red-400/5 text-gray-400 hover:text-red-400 hover:bg-red-400/10 rounded-xl border border-transparent hover:border-red-500/20 transition-all"
+                                            onClick={() => handleDeleteTag(tag.tag_id, tag.name)}
+                                            disabled={isDeleting}
                                             title="Xóa nhãn"
                                         >
                                             <DeleteOutlined size={18} />
@@ -160,9 +203,32 @@ const TagTable = ({onEdit, tags, loading}: TagTableProps) => {
                                     </div>
                                 </td>
                             </tr>
-                        ))}
+                        ))) : (
+                            <tr>
+                                <td colSpan={5} className="px-8 py-24 text-center">
+                                    <div className="flex flex-col items-center gap-3 opacity-20">
+                                        <UnorderedListOutlined size={40} className="text-gray-400" />
+                                        <p className="text-sm font-bold text-gray-300">Không có dữ liệu</p>
+                                    </div>
+                                </td>
+                            </tr>
+                        )}
                         </tbody>
                     </table>
+                </div>
+
+                <div className="px-8 py-5 border-t border-white/5 bg-black/20 flex items-center justify-between">
+                    <div className="text-xs text-gray-500 font-medium">
+                        Hiển thị <span className="text-emerald-400">{tags.length}</span> trên <span className="text-emerald-400">{total}</span> nhãn
+                    </div>
+                    <Pagination
+                        current={currentPage}
+                        pageSize={pageSize}
+                        total={total}
+                        onChange={onPageChange}
+                        showSizeChanger={false} // Tắt nếu bạn muốn fix cứng limit
+                        className="dark-pagination" // CSS custom bên dưới
+                    />
                 </div>
             </div>
         </div>

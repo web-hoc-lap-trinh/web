@@ -59,8 +59,8 @@ const SubmissionStatusChart = ({ data, loading, onDateChange }: Props) => {
                             ))}
                         </Pie>
                         <Tooltip
-                            contentStyle={{ backgroundColor: '#0f172a', border: 'none', borderRadius: '12px' }}
-                            itemStyle={{ fontSize: '12px' }}
+                            contentStyle={{ backgroundColor: '#0f172a', border: 'none', borderRadius: '8px', color: '#fff' }}
+                            itemStyle={{ fontSize: '12px', color: '#fff' }}
                         />
                         <Legend
                             layout={"horizontal"}

@@ -56,7 +56,7 @@ const DiscussionTable = ({discussions, loading}: DiscussionTableProps) => {
             await markSolution({ discussionId }).unwrap();
             message.success("Đã đánh dấu bài viết có lời giải!");
         } catch (error) {
-            message.error("Không thể đánh dấu lời giải. Vui lòng thử lại.");
+            message.error(`Không thể đánh dấu lời giải. Vui lòng thử lại. [${error}]`);
         }
     };
 
@@ -121,9 +121,6 @@ const DiscussionTable = ({discussions, loading}: DiscussionTableProps) => {
                             className="w-full pl-11 pr-4 py-2.5 bg-[#0f131a]/60 text-gray-200 rounded-2xl border border-white/10 outline-none focus:ring-2 focus:ring-emerald-500/30 transition-all text-sm shadow-inner"
                         />
                     </div>
-                    <button className="p-2.5 text-gray-400 hover:text-white bg-white/5 rounded-xl border border-white/10 transition-all">
-                        <DownOutlined size={18} />
-                    </button>
                 </div>
             </div>
 

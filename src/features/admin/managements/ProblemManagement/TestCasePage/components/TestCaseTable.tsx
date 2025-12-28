@@ -142,7 +142,7 @@ const TestCaseTable = ({onEdit, problems, loading}: TestCaseTableProps) => {
                     {problem.title}
                   </span>
                                 <div className="flex items-center gap-2 mt-1">
-                                    <span className="text-[9px] text-gray-600 font-bold uppercase">{problem.difficulty}</span>
+                                    <span className="text-[10px] text-white font-bold uppercase">{problem.difficulty}</span>
                                 </div>
                             </button>
                         ))) : (
