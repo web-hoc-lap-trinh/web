@@ -6,7 +6,6 @@ import {
     DownOutlined,
     EditOutlined, FireFilled,
     SearchOutlined,
-    SortAscendingOutlined, TrophyOutlined
 } from "@ant-design/icons";
 import {useMemo, useState} from "react";
 import {useUpdateUserStatusMutation} from "../../../../../../services/admin/admin.service.ts";
@@ -22,9 +21,9 @@ interface UpdateProps {
     userStatus: string;
 }
 
-const AdminUserTable = ({onEdit, users, loading} : AdminUserTableProps) => {
+const AdminUserTable = ({users, loading} : AdminUserTableProps) => {
     const [searchQuery, setSearchQuery] = useState("");
-    const [updateStatus, {isLoading: isUpdating}] = useUpdateUserStatusMutation();
+    const [updateStatus] = useUpdateUserStatusMutation();
 
     const filteredUsers = useMemo(() => {
         if(!users) return [];
@@ -43,17 +42,6 @@ const AdminUserTable = ({onEdit, users, loading} : AdminUserTableProps) => {
             hour: '2-digit',
             minute: '2-digit',
         });
-    };
-
-    const getRoleBadge = (role: IUser['role']) => {
-        switch (role) {
-            case 'ADMIN':
-                return 'bg-purple-500/10 text-purple-400 border-purple-500/20';
-            case 'STUDENT':
-                return 'bg-blue-500/10 text-blue-400 border-blue-500/20';
-            default:
-                return 'bg-gray-500/10 text-gray-400 border-gray-500/20';
-        }
     };
 
     const handleUpdate = async ({id, userStatus}: UpdateProps) => {
@@ -113,7 +101,7 @@ const AdminUserTable = ({onEdit, users, loading} : AdminUserTableProps) => {
                 </div>
             </div>
 
-            <div className="bg-[#1a202c]/60 backdrop-blur-xl rounded-[32px] border border-white/5 shadow-2xl overflow-hidden">
+            <div className="bg-[#1a202c]/60 backdrop-blur-xl rounded-3xl border border-white/5 shadow-2xl overflow-hidden">
                 <div className="overflow-x-auto">
                     <table className="w-full text-sm text-left">
                         <thead className="text-xs text-gray-400 uppercase bg-black/20">
@@ -130,7 +118,7 @@ const AdminUserTable = ({onEdit, users, loading} : AdminUserTableProps) => {
                         </thead>
                         <tbody className="divide-y divide-white/5">
                         {filteredUsers.map((user) => (
-                            <tr key={user.user_id} className="group hover:bg-white/[0.02] transition-colors">
+                            <tr key={user.user_id} className="group hover:bg-white/2 transition-colors">
                                 <td className="px-6 py-5">
                                     <div className="flex items-center gap-3">
                                         <div className="w-10 h-10 rounded-full border border-white/10 overflow-hidden bg-[#0f131a] shadow-lg">

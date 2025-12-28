@@ -147,7 +147,7 @@ const QuestionTable = ({onEdit, lessons, loading}: ExerciseTableProps) => {
                             <button
                                 key={lesson.lesson_id}
                                 onClick={() => setSelectedLessonId(lesson.lesson_id)}
-                                className={`group relative flex flex-col p-4 rounded-[24px] border transition-all duration-300 text-left overflow-hidden h-full ${
+                                className={`group relative flex flex-col p-4 rounded-2xl border transition-all duration-300 text-left overflow-hidden h-full ${
                                     selectedLessonId === lesson.lesson_id
                                         ? 'bg-emerald-500/10 border-emerald-500/50 shadow-[0_0_25px_rgba(16,185,129,0.15)] ring-1 ring-emerald-500/20'
                                         : 'bg-[#0f131a]/40 border-white/5 hover:border-white/20 hover:bg-[#1a202c]/40'
@@ -205,7 +205,7 @@ const QuestionTable = ({onEdit, lessons, loading}: ExerciseTableProps) => {
                 </div>
 
                 <div
-                    className="bg-[#1a202c]/60 backdrop-blur-xl rounded-[32px] border border-white/5 shadow-2xl overflow-hidden">
+                    className="bg-[#1a202c]/60 backdrop-blur-xl rounded-3xl border border-white/5 shadow-2xl overflow-hidden">
                     <div className="overflow-x-auto">
                         <table className="w-full text-sm text-left">
                             <thead className="text-[11px] text-gray-500 uppercase font-bold bg-black/20 tracking-wider">
@@ -221,7 +221,7 @@ const QuestionTable = ({onEdit, lessons, loading}: ExerciseTableProps) => {
                             {filteredExercises.length > 0 ? (
                                 filteredExercises.map((ex) => (
                                     <tr key={ex.exercise_id}
-                                        className="group hover:bg-white/[0.03] transition-colors duration-300">
+                                        className="group hover:bg-white/3 transition-colors duration-300">
                                         <td className="px-8 py-5">
                                             <div className="flex flex-col gap-1">
                           <span className="font-bold text-gray-200 group-hover:text-emerald-300 transition-colors">

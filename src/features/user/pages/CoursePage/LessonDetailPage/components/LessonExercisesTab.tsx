@@ -1,5 +1,5 @@
 import { PlayCircleFilled, FileTextOutlined } from "@ant-design/icons";
-import { Button, Empty } from "antd";
+import { Button } from "antd";
 import { useState } from "react";
 import { useGetLessonExercisesQuery } from "../../../../../../services/exercise/exercise.service";
 import ExerciseRunner from "./ExerciseRunner";
@@ -29,8 +29,8 @@ const LessonExercisesTab = ({ lessonId }: LessonExercisesTabProps) => {
 
   return (
     <div className="bg-[#051311] border border-white/10 rounded-2xl overflow-hidden shadow-xl shadow-black/20 relative min-h-[500px] flex flex-col items-center justify-center text-center p-6">
-      <div className="absolute inset-0 bg-gradient-to-br from-emerald-900/10 via-transparent to-transparent pointer-events-none"></div>
-      <div className="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-[#051311] to-transparent pointer-events-none"></div>
+      <div className="absolute inset-0 bg-linear-to-br from-emerald-900/10 via-transparent to-transparent pointer-events-none"></div>
+      <div className="absolute bottom-0 left-0 w-full h-1/2 bg-linear-to-t from-[#051311] to-transparent pointer-events-none"></div>
 
       <div className="relative z-10 max-w-md w-full">
         <div className="w-20 h-20 bg-emerald-500/20 rounded-2xl flex items-center justify-center text-emerald-400 text-4xl mb-6 mx-auto shadow-lg shadow-emerald-500/10 border border-emerald-500/20">
@@ -52,7 +52,7 @@ const LessonExercisesTab = ({ lessonId }: LessonExercisesTabProps) => {
                 size="large"
                 icon={<PlayCircleFilled />}
                 onClick={() => setIsStarted(true)}
-                className="w-full !bg-emerald-500 hover:!bg-emerald-400 border-none font-bold h-12 text-base shadow-xl shadow-emerald-500/20"
+                className="w-full bg-emerald-500! hover:bg-emerald-400! border-none font-bold h-12 text-base shadow-xl shadow-emerald-500/20"
             >
                 Bắt đầu làm bài
             </Button>

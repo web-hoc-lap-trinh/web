@@ -1,5 +1,3 @@
-import type { UserRole } from "./user.types";
-
 export interface IAiMessage {
   id: number;
   conversation_id: number;

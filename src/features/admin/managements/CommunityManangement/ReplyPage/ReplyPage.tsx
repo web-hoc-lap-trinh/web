@@ -1,6 +1,5 @@
 import {
     useGetAdminDiscussionsQuery,
-    useGetAdminRepliesQuery
 } from "../../../../../services/discussion/discussion.service.ts";
 import HeaderBar from "../../../../../components/common/HeaderBar.tsx";
 import ReplyTable from "./components/ReplyTable.tsx";

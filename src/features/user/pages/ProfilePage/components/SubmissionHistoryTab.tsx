@@ -68,7 +68,7 @@ export default function SubmissionHistoryTab({ submissions }: { submissions: Sub
 	return (
 		<div className="bg-white/5 border border-white/10 rounded-2xl p-6 overflow-hidden animate-fade-in">
 			<div className="flex justify-between items-center mb-6">
-				<Typography.Title level={4} className="!text-white !m-0 flex items-center gap-2">
+				<Typography.Title level={4} className="text-white! m-0! flex items-center gap-2">
 					<HistoryOutlined className="text-emerald-400" /> Lịch sử nộp bài
 				</Typography.Title>
 				<div className="text-gray-400 text-sm">

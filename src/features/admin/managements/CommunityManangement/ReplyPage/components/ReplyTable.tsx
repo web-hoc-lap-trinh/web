@@ -1,18 +1,17 @@
-import type {IAdminReply, IDiscussion} from "../../../../../../types/discussion.types.ts";
+import type {IDiscussion} from "../../../../../../types/discussion.types.ts";
 import {useEffect, useMemo, useState} from "react";
 import {Skeleton} from "antd";
 import {
-    AppstoreOutlined,
     CalendarOutlined,
     DislikeOutlined,
-    DownOutlined,
-    FileTextOutlined, InfoCircleOutlined,
-    LikeOutlined, MessageOutlined, ReadOutlined,
-    SearchOutlined, UnorderedListOutlined,
+    FileTextOutlined, 
+    InfoCircleOutlined,
+    LikeOutlined, 
+    MessageOutlined,
+    SearchOutlined, 
+    UnorderedListOutlined,
     UserOutlined,
-    WechatOutlined
 } from "@ant-design/icons";
-import {useGetAdminLessonExercisesQuery} from "../../../../../../services/exercise/exercise.service.ts";
 import {useGetAdminRepliesQuery} from "../../../../../../services/discussion/discussion.service.ts";
 
 interface ReplyTableProps {
@@ -92,7 +91,7 @@ const ReplyTable = ({discussions, loading}: ReplyTableProps) => {
                             <button
                                 key={dis.discussion_id}
                                 onClick={() => setSelectedDiscussionId(dis.discussion_id)}
-                                className={`group relative flex flex-col p-4 rounded-[24px] border transition-all duration-300 text-left overflow-hidden h-full ${
+                                className={`group relative flex flex-col p-4 rounded-3xl border transition-all duration-300 text-left overflow-hidden h-full ${
                                     selectedDiscussionId === dis.discussion_id
                                         ? 'bg-emerald-500/10 border-emerald-500/50 shadow-[0_0_25px_rgba(16,185,129,0.15)] ring-1 ring-emerald-500/20'
                                         : 'bg-[#0f131a]/40 border-white/5 hover:border-white/20 hover:bg-[#1a202c]/40'
@@ -145,7 +144,7 @@ const ReplyTable = ({discussions, loading}: ReplyTableProps) => {
                 </div>
 
                     {/* Table Container */}
-                <div className="bg-[#1a202c]/60 backdrop-blur-xl rounded-[32px] border border-white/5 shadow-2xl overflow-hidden">
+                <div className="bg-[#1a202c]/60 backdrop-blur-xl rounded-4xl border border-white/5 shadow-2xl overflow-hidden">
                     <div className="overflow-x-auto">
                         <table className="w-full text-sm text-left">
                             <thead className="text-[11px] text-gray-500 uppercase font-bold bg-black/20 tracking-wider">
@@ -159,7 +158,7 @@ const ReplyTable = ({discussions, loading}: ReplyTableProps) => {
                             <tbody className="divide-y divide-white/5">
                             {filteredReplies.length > 0 ? (
                                 filteredReplies.map((fb) => (
-                                    <tr key={fb.reply_id} className="group hover:bg-white/[0.03] transition-colors duration-300">
+                                    <tr key={fb.reply_id} className="group hover:bg-white/3 transition-colors duration-300">
                                         <td className="px-8 py-6">
                                             <div className="flex flex-col gap-1 max-w-lg">
                                                 <div className="p-3 bg-black/20 rounded-xl border border-white/5 group-hover:border-cyan-500/20 transition-all">

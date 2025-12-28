@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Typography, Progress } from "antd";
+import { Progress } from "antd";
 import { FireFilled, ClockCircleOutlined, TrophyOutlined } from "@ant-design/icons";
 import dayjs from "dayjs";
 import "dayjs/locale/vi";

@@ -1,6 +1,5 @@
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import { Skeleton, DatePicker } from "antd";
-import dayjs from 'dayjs';
 
 const { RangePicker } = DatePicker;
 
@@ -14,10 +13,10 @@ interface Props {
 }
 
 const CategoryDistributionChart = ({ data, loading, onDateChange }: Props) => {
-    if (loading) return <Skeleton active className="bg-[#1e293b]/50 p-6 rounded-[24px] h-[400px]" />;
+    if (loading) return <Skeleton active className="bg-[#1e293b]/50 p-6 rounded-3xl h-[400px]" />;
 
     return (
-        <div className="bg-[#1e293b]/50 backdrop-blur-xl border border-white/5 p-6 rounded-[24px] h-full">
+        <div className="bg-[#1e293b]/50 backdrop-blur-xl border border-white/5 p-6 rounded-3xl h-full">
             <div className="flex flex-col mb-6 gap-4">
                 <div>
                     <h3 className="text-white text-lg font-semibold">Phân bố bài học</h3>

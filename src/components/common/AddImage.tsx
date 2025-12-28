@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { PlusOutlined } from '@ant-design/icons';
-import { Image, Upload } from 'antd';
+import { Upload } from 'antd';
 import type { GetProp, UploadFile, UploadProps } from 'antd';
 
 type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
@@ -14,10 +14,8 @@ const getBase64 = (file: FileType): Promise<string> =>
     });
 
 const AddImage = () => {
-    const [previewOpen, setPreviewOpen] = useState(false);
-    const [previewImage, setPreviewImage] = useState('');
+    const [, setPreviewImage] = useState('');
     const [uploadStatus, setUploadStatus] = useState(false);
-    const [fileList, setFileList] = useState<UploadFile[]>();
 
     const handlePreview = async (file: UploadFile) => {
         if (!file.url && !file.preview) {
@@ -25,7 +23,6 @@ const AddImage = () => {
         }
 
         setPreviewImage(file.url || (file.preview as string));
-        setPreviewOpen(true);
     };
 
     const handleRemove = () => setUploadStatus(false);
@@ -43,7 +40,6 @@ const AddImage = () => {
         <>
             <Upload
                 listType="picture-circle"
-                fileList={fileList}
                 onChange={() => setUploadStatus(true)}
                 onPreview={handlePreview}
                 onRemove={handleRemove}

@@ -18,7 +18,7 @@ export const exerciseApi = authApi.injectEndpoints({
             query: (lessonId) => `/exercises/lesson/${lessonId}`,
             transformResponse: (response: IApiResponse<IExercisePreview[]>) =>
                 response.result,
-            providesTags: (result, error, lessonId) =>
+            providesTags: (result, __, lessonId) =>
                 result
                     ? [
                         ...result.map(({ exercise_id }) => ({
@@ -44,7 +44,7 @@ export const exerciseApi = authApi.injectEndpoints({
             query: (exerciseId) => `/exercises/${exerciseId}`,
             transformResponse: (response: IApiResponse<ExerciseSessionResponse>) =>
                 response.result,
-            providesTags: (result, error, exerciseId) => [
+            providesTags: (_, __, exerciseId) => [
                 { type: "Exercise", id: exerciseId },
                 "ExerciseSession",
             ],
@@ -70,7 +70,7 @@ export const exerciseApi = authApi.injectEndpoints({
             query: (lessonId) => `/exercises/admin/lesson/${lessonId}`,
             transformResponse: (response: IApiResponse<IExerciseAdminDetail[]>) =>
                 response.result,
-            providesTags: (result, error, lessonId) =>
+            providesTags: (result, __, lessonId) =>
                 result
                     ? [
                         ...result.map(({ exercise_id }) => ({
@@ -89,7 +89,7 @@ export const exerciseApi = authApi.injectEndpoints({
             query: (exerciseId) => `/exercises/admin/${exerciseId}`,
             transformResponse: (response: IApiResponse<IExerciseAdminDetail>) =>
                 response.result,
-            providesTags: (result, error, exerciseId) => [
+            providesTags: (_, __, exerciseId) => [
                 { type: "AdminExercise", id: exerciseId },
             ],
         }),
@@ -105,7 +105,7 @@ export const exerciseApi = authApi.injectEndpoints({
             }),
             transformResponse: (response: IApiResponse<IExerciseAdminDetail>) =>
                 response.result,
-            invalidatesTags: (result, error, arg) => [
+            invalidatesTags: (_, __, arg) => [
                 { type: "Exercise", id: `LESSON_${arg.lesson_id}` },
                 { type: "AdminExercise", id: `LESSON_${arg.lesson_id}` },
                 "ExerciseSession",
@@ -123,7 +123,7 @@ export const exerciseApi = authApi.injectEndpoints({
             }),
             transformResponse: (response: IApiResponse<IExerciseAdminDetail>) =>
                 response.result,
-            invalidatesTags: (result, error, { exerciseId }) => [
+            invalidatesTags: (_, __, { exerciseId }) => [
                 { type: "Exercise", id: exerciseId },
                 { type: "AdminExercise", id: exerciseId },
             ],
@@ -146,7 +146,7 @@ export const exerciseApi = authApi.injectEndpoints({
                 method: "PUT",
                 body: data,
             }),
-            invalidatesTags: (result, error, { lessonId }) => [
+            invalidatesTags: (_, __, { lessonId }) => [
                 { type: "Exercise", id: `LESSON_${lessonId}` },
                 { type: "AdminExercise", id: `LESSON_${lessonId}` },
                 "ExerciseSession",

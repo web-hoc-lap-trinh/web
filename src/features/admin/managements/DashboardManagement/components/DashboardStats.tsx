@@ -61,7 +61,7 @@ const DashboardStats = ({ data, loading }: DashboardProps) => {
                 {stats.map((item, index) => (
                     <div
                         key={index}
-                        className="bg-[#1e293b]/50 backdrop-blur-xl border border-white/5 p-5 rounded-[24px] hover:border-emerald-500/30 transition-all group"
+                        className="bg-[#1e293b]/50 backdrop-blur-xl border border-white/5 p-5 rounded-3xl hover:border-emerald-500/30 transition-all group"
                     >
                         <div className={`w-12 h-10 ${item.bg} ${item.color} rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
                             {item.icon}

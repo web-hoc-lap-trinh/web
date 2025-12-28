@@ -10,9 +10,9 @@ import {
 import {message, Modal, Skeleton} from "antd";
 import {
     useDeleteLessonMutation, useGetAdminLessonsQuery,
-    useGetLessonsByCategoryQuery, useUploadLessonMediaMutation
+    useUploadLessonMediaMutation
 } from "../../../../../../services/lesson/lesson.service.ts";
-import {useEffect, useMemo, useRef, useState} from "react";
+import {useMemo, useRef, useState} from "react";
 import type {ICategory} from "../../../../../../types/category.types.ts";
 
 const {confirm} = Modal;
@@ -170,7 +170,7 @@ const LessonTable = ({onEdit, categories, loading}: LessonTableProps) => {
                         <button
                             key={0}
                             onClick={() => setSelectedCategoryId(0)}
-                            className={`group relative flex flex-col p-4 rounded-[24px] border transition-all duration-300 text-left overflow-hidden h-full ${
+                            className={`group relative flex flex-col p-4 rounded-2xl border transition-all duration-300 text-left overflow-hidden h-full ${
                                 selectedCategoryId === 0
                                     ? 'bg-emerald-500/10 border-emerald-500/50 shadow-[0_0_25px_rgba(16,185,129,0.15)] ring-1 ring-emerald-500/20'
                                     : 'bg-[#0f131a]/40 border-white/5 hover:border-white/20 hover:bg-[#1a202c]/40'
@@ -189,7 +189,7 @@ const LessonTable = ({onEdit, categories, loading}: LessonTableProps) => {
                             <button
                                 key={category.category_id}
                                 onClick={() => setSelectedCategoryId(category.category_id)}
-                                className={`group relative flex flex-col p-4 rounded-[24px] border transition-all duration-300 text-left overflow-hidden h-full ${
+                                className={`group relative flex flex-col p-4 rounded-2xl border transition-all duration-300 text-left overflow-hidden h-full ${
                                     selectedCategoryId === category.category_id
                                         ? 'bg-emerald-500/10 border-emerald-500/50 shadow-[0_0_25px_rgba(16,185,129,0.15)] ring-1 ring-emerald-500/20'
                                         : 'bg-[#0f131a]/40 border-white/5 hover:border-white/20 hover:bg-[#1a202c]/40'
@@ -241,7 +241,7 @@ const LessonTable = ({onEdit, categories, loading}: LessonTableProps) => {
                     </div>
                 </div>
 
-                <div className="bg-[#1a202c]/60 backdrop-blur-xl rounded-[32px] border border-white/5 shadow-2xl overflow-hidden">
+                <div className="bg-[#1a202c]/60 backdrop-blur-xl rounded-3xl border border-white/5 shadow-2xl overflow-hidden">
                     <div className="overflow-x-auto">
                         <table className="w-full text-sm text-left">
                             <thead className="text-xs text-gray-400 uppercase bg-black/20">
@@ -260,7 +260,7 @@ const LessonTable = ({onEdit, categories, loading}: LessonTableProps) => {
                                     filteredLessons.map((lesson) => {
                                     return (
                                         <tr key={lesson.lesson_id}
-                                            className="group hover:bg-white/[0.02] transition-colors duration-200">
+                                            className="group hover:bg-white/2 transition-colors duration-200">
                                             {/*<td className="px-6 py-5">
                             <span
                                 className="font-mono text-xs text-emerald-400/80 bg-emerald-400/10 px-2 py-1 rounded border border-emerald-400/20">

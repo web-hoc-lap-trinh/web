@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Avatar, Divider } from "antd";
-import { UserOutlined, CodeOutlined, LogoutOutlined } from "@ant-design/icons";
+import { UserOutlined, LogoutOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../../../../hooks/useAuth";
 

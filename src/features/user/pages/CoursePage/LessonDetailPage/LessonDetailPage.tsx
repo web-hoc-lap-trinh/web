@@ -1,6 +1,7 @@
 import { ArrowLeftOutlined } from "@ant-design/icons";
 import { Button, Empty } from "antd";
 import { useNavigate, useParams } from "react-router-dom";
+import { skipToken } from "@reduxjs/toolkit/query";
 import { useGetLessonQuery } from "../../../../../services/lesson/lesson.service";
 import LessonHeader from "./components/LessonHeader";
 import LessonContentTabs from "./components/LessonContentTabs";
@@ -11,8 +12,7 @@ const LessonDetailPage = () => {
   const navigate = useNavigate();
 
   const { data: lesson, isLoading, isError } = useGetLessonQuery(
-    lessonId || "", 
-    { skip: !lessonId }
+    lessonId ? Number(lessonId) : skipToken
   );
 
   if (isLoading) {

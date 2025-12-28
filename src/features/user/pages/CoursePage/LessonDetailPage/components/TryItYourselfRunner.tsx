@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Button, Select, Skeleton, message, Tooltip } from "antd";
 import { PlayCircleFilled, ReloadOutlined, InfoCircleOutlined } from "@ant-design/icons";
 import Editor from "@monaco-editor/react";
+import { skipToken } from "@reduxjs/toolkit/query";
 import {
     useGetLessonTryItYourselfQuery,
     useRunPlaygroundCodeMutation,
@@ -43,13 +44,19 @@ const TryItYourselfRunner = ({ lessonId }: TryItYourselfRunnerProps) => {
         executionTime: 0
     });
 
-    const { data: lessonConfig, isLoading: isConfigLoading } = useGetLessonTryItYourselfQuery(lessonId);
+    const numericLessonId = Number(lessonId);
+    const { data: lessonConfig, isLoading: isConfigLoading } = useGetLessonTryItYourselfQuery(
+        Number.isNaN(numericLessonId) ? skipToken : numericLessonId
+    );
     const { data: allLanguages, isLoading: isLanguagesLoading } = useGetPlaygroundLanguagesQuery();
     const [runCode, { isLoading: isRunning }] = useRunPlaygroundCodeMutation();
 
+    const languageName = lessonConfig?.language?.name;
+
     useEffect(() => {
         if (lessonConfig) {
-            setSelectedLangCode(lessonConfig.language.code);
+            const langCode = lessonConfig.language?.code ?? "javascript";
+            setSelectedLangCode(langCode);
             setCode(lessonConfig.example_code || "");
         } else if (allLanguages && allLanguages.length > 0 && !code) {
             setCode(DEFAULT_CODE_SNIPPETS['javascript'] || "");
@@ -83,12 +90,8 @@ const TryItYourselfRunner = ({ lessonId }: TryItYourselfRunnerProps) => {
     };
 
     const handleReset = () => {
-        if (lessonConfig) {
-            setCode(lessonConfig.example_code);
-        } else {
-            const snippet = DEFAULT_CODE_SNIPPETS[getMonacoLanguageId(selectedLangCode)] || "";
-            setCode(snippet);
-        }
+        const snippet = DEFAULT_CODE_SNIPPETS[getMonacoLanguageId(selectedLangCode)] || "";
+        setCode(lessonConfig?.example_code ?? snippet);
         setOutputState({ output: "", error: null, status: null, executionTime: 0 });
     };
 
@@ -105,10 +108,10 @@ const TryItYourselfRunner = ({ lessonId }: TryItYourselfRunnerProps) => {
         <div className="flex flex-col gap-4 h-[600px] lg:h-[750px]">
             <div className="flex justify-between items-center bg-[#0a1514]! p-3 rounded-xl border border-white/10! shrink-0">
                 <div className="flex items-center gap-3">
-                    {lessonConfig ? (
+                    {languageName ? (
                         <Tooltip title="Bài học này yêu cầu ngôn ngữ cụ thể">
                             <div className="px-3 py-1 rounded bg-emerald-500/10! text-emerald-400! text-sm font-bold border border-emerald-500/20! uppercase font-mono cursor-default">
-                                {lessonConfig.language.name}
+                                {languageName}
                             </div>
                         </Tooltip>
                     ) : (

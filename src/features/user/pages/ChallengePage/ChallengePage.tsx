@@ -81,7 +81,7 @@ const ChallengePage = () => {
                 </div>
 
                 {isLoadingStats ? (
-                  <Skeleton.Button active className="mb-2 !w-24" />
+                  <Skeleton.Button active className="mb-2 w-24!" />
                 ) : (
                   <div className="text-3xl font-extrabold text-white animate-fade-in">
                     {currentStreak} Ngày

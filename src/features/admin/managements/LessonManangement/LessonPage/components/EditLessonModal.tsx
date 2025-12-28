@@ -3,7 +3,6 @@ import { CloseOutlined, LoadingOutlined } from "@ant-design/icons";
 import { Skeleton, message } from "antd";
 import {
     useGetAdminLessonQuery,
-    useGetLessonQuery,
     useUpdateLessonMutation
 } from "../../../../../../services/lesson/lesson.service.ts";
 import { useGetCategoriesQuery } from "../../../../../../services/category/category.service.ts";
@@ -16,10 +15,8 @@ import {
     useGetProblemLanguagesQuery, useUpdateLessonTryItYourselfMutation
 } from "../../../../../../services/try-it-yourself/try-it-yourself.service.ts";
 import type {
-    CreateTryItYourselfPayload,
     UpdateTryItYourselfPayload
 } from "../../../../../../services/try-it-yourself/try-it-yourself.types.ts";
-import type {UpdateLessonPayload} from "../../../../../../services/lesson/lesson.types.ts";
 import {createPortal} from "react-dom";
 
 interface EditLessonModalProps {
@@ -105,7 +102,7 @@ const EditLessonModal = ({ isOpen, onClose, lessonId }: EditLessonModalProps) =>
             <div className="relative w-full max-w-5xl max-h-[95vh] bg-[#1a202c] rounded-3xl shadow-2xl border border-white/10 overflow-hidden flex flex-col animate-in fade-in zoom-in-95 duration-200">
 
                 {/* Header */}
-                <div className="px-8 py-5 border-b border-white/5 flex justify-between items-center bg-white/[0.02]">
+                <div className="px-8 py-5 border-b border-white/5 flex justify-between items-center bg-white/2">
                     <div>
                         <h3 className="text-xl font-bold text-white tracking-wide">Chỉnh sửa nội dung bài học</h3>
                         <p className="text-xs text-gray-500 mt-1 font-mono uppercase">Mã bài học: {lessonId}</p>
@@ -115,7 +112,7 @@ const EditLessonModal = ({ isOpen, onClose, lessonId }: EditLessonModalProps) =>
                     </button>
                 </div>
 
-                <div className="flex px-8 border-b border-white/5 bg-white/[0.01]">
+                <div className="flex px-8 border-b border-white/5 bg-white/1">
                     <TabButton
                         active={activeTab === 'basic'}
                         onClick={() => setActiveTab('basic')}
@@ -195,7 +192,7 @@ const EditLessonModal = ({ isOpen, onClose, lessonId }: EditLessonModalProps) =>
                                             onChange={(val) => setFormData(prev => ({ ...prev, content: val || "" }))}
                                             height={450}
                                             preview="live"
-                                            className="!bg-[#0f131a] !border-none"
+                                            className="bg-[#0f131a]! border-none!"
                                         />
                                     </div>
                                 </div>
@@ -219,7 +216,7 @@ const EditLessonModal = ({ isOpen, onClose, lessonId }: EditLessonModalProps) =>
                     <button
                         onClick={handleSave}
                         disabled={isUpdating || isLoading}
-                        className="px-8 py-2.5 rounded-xl text-sm font-semibold text-white bg-gradient-to-r from-emerald-600 to-teal-600 shadow-lg hover:-translate-y-0.5 transition-all disabled:opacity-50"
+                        className="px-8 py-2.5 rounded-xl text-sm font-semibold text-white bg-linear-to-r from-emerald-600 to-teal-600 shadow-lg hover:-translate-y-0.5 transition-all disabled:opacity-50"
                     >
                         {isUpdating ? <><LoadingOutlined className="mr-2" /> Đang lưu...</> : "Lưu thay đổi"}
                     </button>

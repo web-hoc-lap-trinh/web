@@ -6,7 +6,6 @@ import type {
     ISubmissionStatsParams,
     IUserGrowth
 } from "../../types/dashboard.types.ts";
-import type {IDiscussion} from "../../types/discussion.types.ts";
 
 export const adminApi = authApi.injectEndpoints({
     endpoints: (builder) => ({

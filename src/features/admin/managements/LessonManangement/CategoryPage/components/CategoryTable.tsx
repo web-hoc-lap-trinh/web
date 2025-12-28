@@ -103,7 +103,7 @@ const CategoryTable = ({ onEdit, categories, loading }: CategoryTableProps) => {
             </div>
 
             {/* Modern Table Container */}
-            <div className="bg-[#1a202c]/60 backdrop-blur-xl rounded-[32px] border border-white/5 shadow-2xl overflow-hidden">
+            <div className="bg-[#1a202c]/60 backdrop-blur-xl rounded-3xl border border-white/5 shadow-2xl overflow-hidden">
                 <div className="overflow-x-auto">
                     <table className="w-full text-sm text-left">
                         <thead className="text-[11px] text-gray-500 uppercase font-bold bg-black/20 tracking-wider">
@@ -117,7 +117,7 @@ const CategoryTable = ({ onEdit, categories, loading }: CategoryTableProps) => {
                         </thead>
                         <tbody className="divide-y divide-white/5">
                         {filteredCategories.map((cat, index) => (
-                            <tr key={cat.category_id} className="group hover:bg-white/[0.03] transition-colors duration-300">
+                            <tr key={cat.category_id} className="group hover:bg-white/3 transition-colors duration-300">
                                 <td className="px-8 py-5 text-center font-mono text-[10px] text-gray-600 font-bold">
                                     {String(index + 1).padStart(2, '0')}
                                 </td>

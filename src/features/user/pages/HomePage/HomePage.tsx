@@ -38,11 +38,11 @@ const HomePage = () => {
                             </div>
                             <Typography.Title
                                 level={1}
-                                className="!text-5xl lg:!text-6xl !text-white leading-tight"
+                                className="text-5xl! lg:text-6xl! text-white! leading-tight"
                                 style={{ fontFamily: "Arial, Helvetica, sans-serif" }}
                             >
                                 Viết Code <br />
-                                <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-300">
+                                <span className="text-transparent bg-clip-text bg-linear-to-r from-emerald-400 to-teal-300">
                                     Kiến Tạo Tương Lai
                                 </span>
                             </Typography.Title>
@@ -50,22 +50,22 @@ const HomePage = () => {
                                 Nền tảng học lập trình tương tác. Kết hợp lý thuyết chuyên sâu và thử thách thực chiến  .
                             </p>
                             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start pt-4">
-                                <Button type="primary" size="large" className="h-12 px-8 text-base bg-emerald-500 hover:!bg-emerald-400 border-0 shadow-lg shadow-emerald-500/25">
+                                <Button type="primary" size="large" className="h-12 px-8 text-base bg-emerald-500 hover:bg-emerald-400! border-0 shadow-lg shadow-emerald-500/25">
                                     Bắt đầu học ngay
                                 </Button>
-                                <Button size="large" className="h-12 px-8 text-base bg-white/5 border-white/10 text-white hover:!text-emerald-400 hover:!border-emerald-400 backdrop-blur-sm">
+                                <Button size="large" className="h-12 px-8 text-base bg-white/5 border-white/10 text-white hover:text-emerald-400! hover:!border-emerald-400 backdrop-blur-sm">
                                     Giải bài tập
                                 </Button>
                             </div>
                             
                             <div className="pt-8 flex items-center justify-center lg:justify-start gap-6 text-gray-500 text-sm">
-                                <span className="flex items-center gap-2"><CheckCircleFilled className="!text-emerald-500"/> Miễn phí trọn đời</span>
-                                <span className="flex items-center gap-2"><CheckCircleFilled className="!text-emerald-500"/> Cấp chứng chỉ</span>
+                                <span className="flex items-center gap-2"><CheckCircleFilled className="text-emerald-500!"/> Miễn phí trọn đời</span>
+                                <span className="flex items-center gap-2"><CheckCircleFilled className="text-emerald-500!"/> Cấp chứng chỉ</span>
                             </div>
                         </div>
 
                         <div className="relative hidden lg:block">
-                            <div className="absolute -inset-1 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-2xl blur opacity-30"></div>
+                            <div className="absolute -inset-1 bg-linear-to-r from-emerald-500 to-teal-500 rounded-2xl blur opacity-30"></div>
                             <div className="relative bg-[#0A1F1A] border border-white/10 rounded-2xl p-6 shadow-2xl">
                                 <div className="flex items-center gap-2 mb-4 border-b border-white/5 pb-4">
                                     <div className="w-3 h-3 rounded-full bg-red-500" />
@@ -97,7 +97,7 @@ const HomePage = () => {
                     </div>
                 </section>
 
-                <section className="border-y border-white/5 bg-white/[0.02]">
+                <section className="border-y border-white/5 bg-white/2">
                     <div className="container mx-auto max-w-7xl px-4 py-12">
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
                             {[
@@ -172,7 +172,7 @@ const HomePage = () => {
                                 <h3 className="text-2xl font-bold text-white mb-2">Các ngôn ngữ phổ biến</h3>
                                 <p className="text-gray-400">Bắt đầu hành trình với ngôn ngữ bạn yêu thích</p>
                             </div>
-                            <Button type="link" className="!text-emerald-400 hover:!text-emerald-300 flex items-center gap-1 p-0">
+                            <Button type="link" className="text-emerald-400! hover:text-emerald-300! flex items-center gap-1 p-0">
                                 Xem tất cả khóa học <RightOutlined />
                             </Button>
                         </div>
@@ -191,7 +191,7 @@ const HomePage = () => {
                 </section>
 
                 <section className="py-24 px-4 text-center">
-                    <div className="container mx-auto max-w-4xl bg-gradient-to-b from-[#0F2E26] to-[#051311] border border-emerald-500/20 rounded-3xl p-12 relative overflow-hidden">
+                    <div className="container mx-auto max-w-4xl bg-linear-to-b from-[#0F2E26] to-[#051311] border border-emerald-500/20 rounded-3xl p-12 relative overflow-hidden">
                         <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/10 rounded-full blur-[80px]" />
                         
                         <h2 className="text-3xl md:text-5xl font-bold text-white mb-6 relative z-10">
@@ -203,7 +203,7 @@ const HomePage = () => {
                         <Button 
                             type="primary" 
                             size="large" 
-                            className="h-14 px-10 text-lg font-semibold bg-emerald-500 hover:!bg-emerald-400 shadow-xl shadow-emerald-500/20 relative z-10"
+                            className="h-14 px-10 text-lg font-semibold bg-emerald-500 hover:bg-emerald-400! shadow-xl shadow-emerald-500/20 relative z-10"
                             onClick={() => navigate('/signup')}
                         >
                             Tạo tài khoản miễn phí

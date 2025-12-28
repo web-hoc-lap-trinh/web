@@ -3,13 +3,12 @@ import {
     FolderAddOutlined,
     FileOutlined,
     CommentOutlined,
-    FireOutlined,
     UserOutlined,
-    KeyOutlined, TagsOutlined, LogoutOutlined, CodeOutlined
+    LogoutOutlined, 
+    CodeOutlined
 } from '@ant-design/icons';
 import {useEffect, useState} from "react";
 import {useNavigate, useLocation} from "react-router-dom";
-import {logout} from "../../stores/slices/authSlice.ts";
 import {useAuth} from "../../hooks/useAuth.ts";
 
 interface MenuItem {
@@ -142,7 +141,7 @@ const SideBar = () => {
                                     }}
                                     className={`relative flex items-center w-full text-left py-2.5 px-4 text-[13px] font-medium transition-all duration-300 rounded-xl group
                     ${activeSubItem === sub.id
-                                        ? 'bg-gradient-to-r from-emerald-500/20 to-teal-500/5 text-emerald-300 shadow-md shadow-emerald-900/20 ring-1 ring-emerald-500/20'
+                                        ? 'bg-linear-to-r from-emerald-500/20 to-teal-500/5 text-emerald-300 shadow-md shadow-emerald-900/20 ring-1 ring-emerald-500/20'
                                         : 'text-gray-400 hover:text-gray-200 hover:bg-white/5'
                                     }`}
                                 >

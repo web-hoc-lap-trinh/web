@@ -1,10 +1,9 @@
 import { useState } from "react";
 import { Avatar, Button, Input, Form, message } from "antd";
-import { UserOutlined, MessageOutlined } from "@ant-design/icons";
+import { UserOutlined } from "@ant-design/icons";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { useCreateReplyMutation } from "../../../../../../services/discussion/discussion.service";
-import VoteControl from "./VoteControl";
 import type { IReply } from "../../../../../../types/discussion.types";
 
 dayjs.extend(relativeTime);
@@ -48,7 +47,7 @@ const ReplyItem = ({ reply, discussionId, level = 0 }: ReplyItemProps) => {
 
   return (
     <div className={`flex gap-3 ${level > 0 ? "pl-8 border-l-2 border-[#333] ml-2" : ""}`}>
-      <Avatar size="small" src={reply.user.avatar_url} icon={<UserOutlined />} className="bg-white/10 mt-1 flex-shrink-0" />
+      <Avatar size="small" src={reply.user.avatar_url} icon={<UserOutlined />} className="bg-white/10 mt-1 shrink-0" />
 
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2 mb-1">

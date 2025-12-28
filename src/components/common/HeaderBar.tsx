@@ -6,8 +6,8 @@ const {Title} = Typography;
 
 interface HeaderProps {
     title: string;
-    buttonText: string;
-    setOpen: () => void;
+    buttonText?: string;
+    setOpen?: () => void;
 }
 
 const HeaderBar = ({title, buttonText, setOpen}: HeaderProps) => {

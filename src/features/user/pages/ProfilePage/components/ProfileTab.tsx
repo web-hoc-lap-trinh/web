@@ -98,7 +98,7 @@ const ProfileTab = () => {
                         <UserOutlined style={{ fontSize: '20px' }} />
                     </div>
                     <div>
-                        <Typography.Title level={4} className="!text-white !m-0">Thông tin cá nhân</Typography.Title>
+                        <Typography.Title level={4} className="text-white! m-0!">Thông tin cá nhân</Typography.Title>
                         <p className="text-gray-500 text-sm">Quản lý thông tin hiển thị công khai của bạn</p>
                     </div>
                 </div>
@@ -149,7 +149,7 @@ const ProfileTab = () => {
                                     size="large" 
                                     prefix={<MailOutlined className="text-gray-500"/>} 
                                     disabled={true} 
-                                    className="!text-gray-400" 
+                                    className="text-gray-400!" 
                                     suffix={<span className="text-xs text-emerald-500 bg-emerald-500/10 px-2 py-0.5 rounded">Đã xác thực</span>} 
                                 />
                             </Form.Item>
@@ -162,7 +162,7 @@ const ProfileTab = () => {
                                 loading={updating} 
                                 disabled={isBusy}
                                 size="large" 
-                                className="bg-emerald-500 hover:!bg-emerald-400 border-0 shadow-lg shadow-emerald-500/20 px-8"
+                                className="bg-emerald-500 hover:bg-emerald-400! border-0 shadow-lg shadow-emerald-500/20 px-8"
                             >
                                 Lưu thay đổi
                             </Button>
@@ -177,7 +177,7 @@ const ProfileTab = () => {
                         <LockOutlined style={{ fontSize: '20px' }} />
                     </div>
                     <div>
-                        <Typography.Title level={4} className="!text-white !m-0">Đổi mật khẩu</Typography.Title>
+                        <Typography.Title level={4} className="text-white! m-0!">Đổi mật khẩu</Typography.Title>
                         <p className="text-gray-500 text-sm">Cập nhật mật khẩu định kỳ để bảo vệ tài khoản</p>
                     </div>
                 </div>
@@ -223,7 +223,7 @@ const ProfileTab = () => {
                             size="large" 
                             loading={changingPw}
                             disabled={changingPw}
-                            className="bg-white/10 hover:!bg-white/20 border-white/10 text-white px-8"
+                            className="bg-white/10 hover:bg-white/20 border-white/10 text-white px-8"
                         >
                             Cập nhật mật khẩu
                         </Button>

@@ -13,7 +13,6 @@ import type {
   CreateReplyPayload,
   VotePayload,
 } from "./discussion.types";
-import type {ICategory} from "../../types/category.types.ts";
 
 export const discussionApi = authApi.injectEndpoints({
   endpoints: (builder) => ({

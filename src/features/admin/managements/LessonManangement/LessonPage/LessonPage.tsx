@@ -4,7 +4,7 @@ import LessonTable from "./components/LessonTable.tsx";
 import type {ILesson} from "../../../../../types/lesson.types.ts";
 import AddLessonModal from "./components/AddLessonModal.tsx";
 import EditLessonModal from "./components/EditLessonModal.tsx";
-import {useGetAdminCategoriesQuery, useGetCategoriesQuery} from "../../../../../services/category/category.service.ts";
+import {useGetAdminCategoriesQuery} from "../../../../../services/category/category.service.ts";
 
 const LessonPage = () => {
     const {data: categories = [], isLoading} = useGetAdminCategoriesQuery()

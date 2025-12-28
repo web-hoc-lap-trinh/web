@@ -39,7 +39,7 @@ const ProblemSidebar = ({ problem }: { problem: IProblem }) => {
                     size="large"
                     icon={<CodeOutlined />}
                     onClick={handleSolveClick} // 4. Gắn sự kiện click
-                    className="mb-4 h-12 rounded-xl border-0 bg-emerald-600 font-bold shadow-lg shadow-emerald-900/40 hover:!bg-emerald-500 transition-all active:scale-95"
+                    className="mb-4 h-12 rounded-xl border-0 bg-emerald-600 font-bold shadow-lg shadow-emerald-900/40 hover:bg-emerald-500! transition-all active:scale-95"
                 >
                     GIẢI BÀI TẬP
                 </Button>

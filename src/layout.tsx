@@ -50,7 +50,7 @@ const AdminLayout = () => {
                 {/* Khu vực 2: Nội dung chính (Outlet) */}
                 <main className="flex-1 flex flex-col min-w-0 relative overflow-hidden">
                     {/* Lớp phủ hiệu ứng gradient phía sau */}
-                    <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-emerald-900/10 via-transparent to-transparent pointer-events-none" />
+                    <div className="absolute top-0 left-0 w-full h-full bg-linear-to-br from-emerald-900/10 via-transparent to-transparent pointer-events-none" />
 
                     {/* Vùng chứa nội dung có thể cuộn */}
                     <div className="flex-1 overflow-y-auto overflow-x-hidden relative z-10 custom-scrollbar">

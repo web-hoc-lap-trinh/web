@@ -140,7 +140,7 @@ const ProblemTable = ({onEdit, tags, loading}: ProblemTableProps) => {
                             <button
                                 key={tag.tag_id}
                                 onClick={() => setSelectedTagId(tag.tag_id)}
-                                className={`group relative flex flex-col p-4 rounded-[24px] border transition-all duration-300 text-left overflow-hidden h-full ${
+                                className={`group relative flex flex-col p-4 rounded-2xl border transition-all duration-300 text-left overflow-hidden h-full ${
                                     selectedTagId === tag.tag_id
                                         ? 'bg-emerald-500/10 border-emerald-500/50 shadow-[0_0_25px_rgba(16,185,129,0.15)] ring-1 ring-emerald-500/20'
                                         : 'bg-[#0f131a]/40 border-white/5 hover:border-white/20 hover:bg-[#1a202c]/40'
@@ -188,7 +188,7 @@ const ProblemTable = ({onEdit, tags, loading}: ProblemTableProps) => {
                     </div>
                 </div>
 
-                <div className="bg-[#1a202c]/60 backdrop-blur-xl rounded-[32px] border border-white/5 shadow-2xl overflow-hidden">
+                <div className="bg-[#1a202c]/60 backdrop-blur-xl rounded-3xl border border-white/5 shadow-2xl overflow-hidden">
                     <div className="bg-[#1a202c]/60 backdrop-blur-xl rounded-3xl border border-white/5 shadow-2xl overflow-hidden">
                         <div className="overflow-x-auto">
                             <table className="w-full text-sm text-left">
@@ -204,7 +204,7 @@ const ProblemTable = ({onEdit, tags, loading}: ProblemTableProps) => {
                                 </thead>
                                 <tbody className="divide-y divide-white/5">
                                 {filteredProblems.map((ex) => (
-                                    <tr key={ex.problem_id} className="group hover:bg-white/[0.02] transition-colors">
+                                    <tr key={ex.problem_id} className="group hover:bg-white/2 transition-colors">
                                         <td className="px-6 py-5">
                                             <div className="flex flex-col">
                                                 <span className="font-bold text-gray-200 group-hover:text-emerald-300 transition-colors">{ex.title}</span>

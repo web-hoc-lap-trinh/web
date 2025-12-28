@@ -128,7 +128,7 @@ const DiscussionTable = ({discussions, loading}: DiscussionTableProps) => {
             </div>
 
             {/* Table Container */}
-            <div className="bg-[#1a202c]/60 backdrop-blur-xl rounded-[32px] border border-white/5 shadow-2xl overflow-hidden">
+            <div className="bg-[#1a202c]/60 backdrop-blur-xl rounded-4xl border border-white/5 shadow-2xl overflow-hidden">
                 <div className="overflow-x-auto">
                     <table className="w-full text-sm text-left">
                         <thead className="text-[11px] text-gray-500 uppercase font-bold bg-black/20 tracking-wider">
@@ -145,7 +145,7 @@ const DiscussionTable = ({discussions, loading}: DiscussionTableProps) => {
                         <tbody className="divide-y divide-white/5">
                         {filteredPosts.length > 0 ? (
                             filteredPosts.map((post) => (
-                                <tr key={post.discussion_id} className="group hover:bg-white/[0.03] transition-colors duration-300">
+                                <tr key={post.discussion_id} className="group hover:bg-white/3 transition-colors duration-300">
                                     <td className="px-8 py-6">
                                         <div className="flex flex-col gap-1 max-w-md">
                         <span className="font-bold text-gray-100 text-sm group-hover:text-emerald-400 transition-colors line-clamp-2 leading-snug">

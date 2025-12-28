@@ -17,9 +17,9 @@ const LessonItem = ({ lesson, index }: { lesson: ILesson; index: number }) => {
     return (
         <div 
             onClick={() => navigate(`/learn/${lesson.lesson_id}`)}
-            className="group relative bg-white/5 border border-white/5 hover:border-emerald-500/40 hover:bg-white/[0.08] rounded-xl p-4 md:p-5 transition-all duration-300 cursor-pointer flex gap-4 md:gap-5 items-center"
+            className="group relative bg-white/5 border border-white/5 hover:border-emerald-500/40 hover:bg-white/8 rounded-xl p-4 md:p-5 transition-all duration-300 cursor-pointer flex gap-4 md:gap-5 items-center"
         >
-            <div className="flex-shrink-0 w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 font-mono text-xs md:text-sm group-hover:text-emerald-400 group-hover:border-emerald-500/50 transition-colors">
+            <div className="shrink-0 w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 font-mono text-xs md:text-sm group-hover:text-emerald-400 group-hover:border-emerald-500/50 transition-colors">
                 {index + 1}
             </div>
 
@@ -43,7 +43,7 @@ const LessonItem = ({ lesson, index }: { lesson: ILesson; index: number }) => {
                 </div>
             </div>
 
-            <div className="flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity -translate-x-2 group-hover:translate-x-0 duration-300">
+            <div className="shrink-0 opacity-0 group-hover:opacity-100 transition-opacity -translate-x-2 group-hover:translate-x-0 duration-300">
                 <div className="w-8 h-8 rounded-full bg-emerald-500 flex items-center justify-center text-white shadow-lg shadow-emerald-500/30">
                     <PlayCircleFilled />
                 </div>

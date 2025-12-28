@@ -17,20 +17,20 @@ const Footer = () => {
                     </div>
                     
                     <div>
-                        <h4 className="!text-white font-semibold mb-4">Học tập</h4>
+                        <h4 className="text-white! font-semibold mb-4">Học tập</h4>
                         <ul className="space-y-2 text-sm">
-                            <li><a href="#" className="!text-gray-500 hover:!text-emerald-400 transition">Lộ trình Frontend</a></li>
-                            <li><a href="#" className="!text-gray-500 hover:!text-emerald-400 transition">Lộ trình Backend</a></li>
-                            <li><a href="#" className="!text-gray-500 hover:!text-emerald-400 transition">Cấu trúc dữ liệu</a></li>
+                            <li><a href="#" className="text-gray-500! hover:text-emerald-400! transition">Lộ trình Frontend</a></li>
+                            <li><a href="#" className="text-gray-500! hover:text-emerald-400! transition">Lộ trình Backend</a></li>
+                            <li><a href="#" className="text-gray-500! hover:text-emerald-400! transition">Cấu trúc dữ liệu</a></li>
                         </ul>
                     </div>
 
                     <div>
                         <h4 className="text-white font-semibold mb-4">Cộng đồng</h4>
                         <ul className="space-y-2 text-sm">
-                            <li><a href="#" className="!text-gray-500 hover:!text-emerald-400 transition">Diễn đàn thảo luận</a></li>
-                            <li><a href="#" className="!text-gray-500 hover:!text-emerald-400 transition">Bảng xếp hạng</a></li>
-                            <li><a href="#" className="!text-gray-500 hover:!text-emerald-400 transition">Blog công nghệ</a></li>
+                            <li><a href="#" className="text-gray-500! hover:text-emerald-400! transition">Diễn đàn thảo luận</a></li>
+                            <li><a href="#" className="text-gray-500! hover:text-emerald-400! transition">Bảng xếp hạng</a></li>
+                            <li><a href="#" className="text-gray-500! hover:text-emerald-400! transition">Blog công nghệ</a></li>
                         </ul>
                     </div>
 

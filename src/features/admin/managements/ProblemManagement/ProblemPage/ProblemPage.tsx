@@ -1,5 +1,4 @@
 import HeaderBar from "../../../../../components/common/HeaderBar.tsx";
-import {useGetProblemsQuery} from "../../../../../services/problem/problem.service.ts";
 import {useState} from "react";
 import ProblemTable from "./components/ProblemTable.tsx";
 import type {IProblem} from "../../../../../types/problem.types.ts";

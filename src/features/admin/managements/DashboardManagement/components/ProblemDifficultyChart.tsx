@@ -13,11 +13,19 @@ interface Props {
     loading: boolean;
 }
 
+type ChartItem = {
+    difficulty: string;
+    count: number;
+    [key: string]: string | number | undefined;
+};
+
 const ProblemDifficultyChart = ({ data, loading }: Props) => {
-    if (loading) return <Skeleton active className="bg-[#1e293b]/50 p-6 rounded-[24px] h-[350px]" />;
+    if (loading) return <Skeleton active className="bg-[#1e293b]/50 p-6 rounded-3xl h-[350px]" />;
+
+    const chartData: ChartItem[] | undefined = data?.map((d) => ({ ...d }));
 
     return (
-        <div className="bg-[#1e293b]/50 backdrop-blur-xl border border-white/5 p-6 rounded-[24px] h-full">
+        <div className="bg-[#1e293b]/50 backdrop-blur-xl border border-white/5 p-6 rounded-3xl h-full">
             <div className="mb-6">
                 <h3 className="text-white text-lg font-semibold">Độ khó bài tập</h3>
                 <p className="text-gray-400 text-xs">Phân bố bài toán theo cấp độ</p>
@@ -27,7 +35,7 @@ const ProblemDifficultyChart = ({ data, loading }: Props) => {
                 <ResponsiveContainer width="100%" height="100%">
                     <PieChart>
                         <Pie
-                            data={data}
+                            data={chartData}
                             cx="50%"
                             cy="50%"
                             innerRadius={60}
@@ -36,10 +44,10 @@ const ProblemDifficultyChart = ({ data, loading }: Props) => {
                             dataKey="count"
                             nameKey="difficulty"
                         >
-                            {data?.map((entry, index) => (
+                            {chartData?.map((entry, index) => (
                                 <Cell
                                     key={`cell-${index}`}
-                                    fill={DIFFICULTY_COLORS[entry.difficulty] || '#94a3b8'}
+                                    fill={DIFFICULTY_COLORS[(entry.difficulty as string)] || '#94a3b8'}
                                     stroke="none"
                                 />
                             ))}
