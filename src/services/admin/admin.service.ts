@@ -6,11 +6,15 @@ import type {
     ISubmissionStatsParams,
     IUserGrowth
 } from "../../types/dashboard.types.ts";
+import type {GetAdminUsersParams} from "./admin.types.ts";
 
 export const adminApi = authApi.injectEndpoints({
     endpoints: (builder) => ({
-        getAdminUsers: builder.query<IUser[], void>({
-            query: () => "/admin/users",
+        getAdminUsers: builder.query<IUser[], GetAdminUsersParams>({
+            query: (params) => ({
+                url: "/admin/users",
+                params: params || undefined
+            }),
             transformResponse: (response: IApiResponse<IUser[]>) =>
                 response.result,
 
@@ -24,6 +28,17 @@ export const adminApi = authApi.injectEndpoints({
                         { type: "AdminUser", id: "LIST"}
                     ]
                     : [{type: "AdminUser", id: "LIST"}],
+        }),
+
+        deleteUser: builder.mutation<void, number>({
+            query: (id) => ({
+                url: `/admin/users/${id}`,
+                method: "DELETE",
+            }),
+            invalidatesTags: (_result, _error, id) => [
+                { type: "AdminUser", id: id },
+                { type: "AdminUser", id: "LIST" },
+            ],
         }),
 
         updateUserStatus: builder.mutation<
@@ -46,7 +61,7 @@ export const adminApi = authApi.injectEndpoints({
             query: () => `/admin/stats`,
             transformResponse: (response: IApiResponse<IDashboardStats>) =>
                 response.result,
-            providesTags: (_result, _error) => [
+            providesTags:   [
                 { type: "DashboardStats" },
             ],
         }),
@@ -99,6 +114,7 @@ export const adminApi = authApi.injectEndpoints({
 
 export const {
     useGetAdminUsersQuery,
+    useDeleteUserMutation,
     useUpdateUserStatusMutation,
     useGetDashboardStatsQuery,
     useGetUserGrowthQuery,

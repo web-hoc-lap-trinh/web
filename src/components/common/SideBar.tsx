@@ -53,7 +53,7 @@ const MENU_ITEMS: MenuItem[] = [
         icon: <CommentOutlined size={20}/>,
         subItems: [
             {id: 'discussion', title: 'Quản lý bài đăng'},
-            {id: 'reply', title: 'Quản lý phản hồi'}
+            // {id: 'reply', title: 'Quản lý phản hồi'}
         ]
     },
     {

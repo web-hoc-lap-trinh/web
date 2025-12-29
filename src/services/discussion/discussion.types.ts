@@ -45,3 +45,27 @@ export interface VotePayload {
   reply_id?: number;
   vote_type: VoteType;
 }
+
+export interface PaginatedAdminDiscussionResult {
+    items: IDiscussion[];
+    total: number;
+    page: number;
+    limit: number;
+}
+
+export interface GetAdminDiscussionParams {
+    search?: string;
+    is_solution?: boolean;
+    page?: number;
+    limit?: number;
+}
+
+export interface AdminDiscussionsResponse {
+    data: IDiscussion[];
+    pagination?: {
+        page: number;
+        limit: number;
+        total: number;
+        totalPages?: number;
+    };
+}

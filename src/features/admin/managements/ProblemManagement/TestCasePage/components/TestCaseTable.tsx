@@ -142,7 +142,7 @@ const TestCaseTable = ({onEdit, problems, loading}: TestCaseTableProps) => {
                     {problem.title}
                   </span>
                                 <div className="flex items-center gap-2 mt-1">
-                                    <span className="text-[9px] text-gray-600 font-bold uppercase">{problem.difficulty}</span>
+                                    <span className="text-[10px] text-white font-bold uppercase">{problem.difficulty}</span>
                                 </div>
                             </button>
                         ))) : (
@@ -229,10 +229,12 @@ const TestCaseTable = ({onEdit, problems, loading}: TestCaseTableProps) => {
                                                 {tc.score}
                                             </div>
                                         </td>
-                                        <td className="px-6 py-5 text-center">
-                                            <div className="flex items-center justify-center gap-1.5 text-gray-500 text-xs">
-                                                <ClockCircleOutlined size={12} />
-                                                {formatDateTime(tc.created_at)}
+                                        <td className="px-6 py-5">
+                                            <div className="flex flex-col items-center">
+                            <span className="text-gray-400 text-xs flex items-center gap-1">
+                                <ClockCircleOutlined size={12} />
+                                {formatDateTime(tc.created_at)}
+                            </span>
                                             </div>
                                         </td>
                                         <td className="px-6 py-5">

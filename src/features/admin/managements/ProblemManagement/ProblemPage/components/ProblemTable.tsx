@@ -1,16 +1,19 @@
 import type {Difficulty, IProblem} from "../../../../../../types/problem.types.ts";
 import {useEffect, useMemo, useState} from "react";
-import {message, Modal, Skeleton} from "antd";
+import {Button, message, Modal, Skeleton} from "antd";
 import {
     AppstoreOutlined,
     ClockCircleOutlined, DeleteOutlined,
     EditOutlined, ExclamationCircleFilled,
     EyeInvisibleOutlined,
-    EyeOutlined, ReadOutlined,
+    EyeOutlined, ReadOutlined, ReloadOutlined,
     SearchOutlined,
     TrophyOutlined, UnorderedListOutlined
 } from "@ant-design/icons";
-import {useDeleteProblemMutation} from "../../../../../../services/problem/problem.service.ts";
+import {
+    useDeleteProblemMutation,
+    useTriggerDailyChallengeMutation
+} from "../../../../../../services/problem/problem.service.ts";
 import {useGetProblemsByTagQuery} from "../../../../../../services/tag/tag.service.ts";
 import type {GetTagProblemsParams} from "../../../../../../services/tag/tag.types.ts";
 import type {ITag} from "../../../../../../types/tag.types.ts";
@@ -24,6 +27,7 @@ interface ProblemTableProps {
 const {confirm} = Modal;
 
 const ProblemTable = ({onEdit, tags, loading}: ProblemTableProps) => {
+    const [triggerDailyChallenge] = useTriggerDailyChallengeMutation()
     const [deleteProblem, {isLoading: isDeleting}] = useDeleteProblemMutation();
     const [selectedTagId, setSelectedTagId] = useState<number>(0);
     const [searchQueryTag, setSearchQueryTag] = useState('');
@@ -35,7 +39,6 @@ const ProblemTable = ({onEdit, tags, loading}: ProblemTableProps) => {
         skip: selectedTagId === 0,
     });
     
-
     const filteredTags = useMemo(() => {
         if (!tags) return [];
         return tags.filter(res => {
@@ -57,7 +60,7 @@ const ProblemTable = ({onEdit, tags, loading}: ProblemTableProps) => {
         if (tags.length > 0 && !selectedTagId) {
             setSelectedTagId(tags[0].tag_id);
         }
-    }, [tags]);
+    }, [selectedTagId, tags]);
 
     const formatDateTime = (isoString: string) => {
         const date = new Date(isoString);
@@ -76,6 +79,15 @@ const ProblemTable = ({onEdit, tags, loading}: ProblemTableProps) => {
             case 'MEDIUM': return 'bg-blue-500/10 text-blue-400 border-blue-500/20';
             case 'HARD': return 'bg-red-500/10 text-red-400 border-red-500/20';
             default: return 'bg-gray-500/10 text-gray-400 border-gray-500/20';
+        }
+    };
+
+    const handleTrigger = async () => {
+        try {
+            await triggerDailyChallenge();
+            message.success("Đã cập nhật Daily Challenge!");
+        } catch (error) {
+            message.error(`Không thể cập nhật Daily Challenge. Vui lòng thử lại. [${error}]`);
         }
     };
 
@@ -154,6 +166,10 @@ const ProblemTable = ({onEdit, tags, loading}: ProblemTableProps) => {
                                 <span className={`text-sm font-bold tracking-tight line-clamp-1 ${selectedTagId === tag.tag_id ? 'text-emerald-400' : 'text-gray-300'}`}>
                                     {tag.name}
                                 </span>
+                                <div className="flex items-center gap-2 mt-1">
+                                    <span
+                                        className="text-[10px] text-white font-bold uppercase">{tag.is_active ? "ACTIVE" : "INACTIVE"}</span>
+                                </div>
                             </button>
                         ))) : (
                             <td className="px-8 py-8 text-center">
@@ -175,16 +191,21 @@ const ProblemTable = ({onEdit, tags, loading}: ProblemTableProps) => {
                         <span className="text-xs text-gray-500 font-medium ml-2">({filteredProblems.length} kết quả)</span>
                     </div>
 
-                    {/* Neat Compact Search Bar */}
-                    <div className="relative group w-2/3 sm:w-80">
-                        <SearchOutlined size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-emerald-400 transition-colors" />
-                        <input
-                            type="text"
-                            value={searchQueryProblem}
-                            onChange={(e) => setSearchQueryProblem(e.target.value)}
-                            placeholder="Tìm kiếm câu hỏi"
-                            className="w-full pl-11 pr-4 py-2.5 bg-[#0f131a]/60 text-gray-200 rounded-2xl border border-white/10 outline-none focus:ring-2 focus:ring-emerald-500/30 transition-all placeholder-gray-600 shadow-inner text-sm"
-                        />
+                    <div className="flex items-center gap-2">
+                        {/* Neat Compact Search Bar */}
+                        <div className="relative group w-2/3 sm:w-80">
+                            <SearchOutlined size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-emerald-400 transition-colors" />
+                            <input
+                                type="text"
+                                value={searchQueryProblem}
+                                onChange={(e) => setSearchQueryProblem(e.target.value)}
+                                placeholder="Tìm kiếm câu hỏi"
+                                className="w-full pl-11 pr-4 py-2.5 bg-[#0f131a]/60 text-gray-200 rounded-2xl border border-white/10 outline-none focus:ring-2 focus:ring-emerald-500/30 transition-all placeholder-gray-600 shadow-inner text-sm"
+                            />
+                        </div>
+                        <Button onClick={handleTrigger}>
+                            <ReloadOutlined size={20} />
+                        </Button>
                     </div>
                 </div>
 
@@ -203,7 +224,7 @@ const ProblemTable = ({onEdit, tags, loading}: ProblemTableProps) => {
                                 </tr>
                                 </thead>
                                 <tbody className="divide-y divide-white/5">
-                                {filteredProblems.map((ex) => (
+                                {filteredProblems.length > 0 ? (filteredProblems.map((ex) => (
                                     <tr key={ex.problem_id} className="group hover:bg-white/2 transition-colors">
                                         <td className="px-6 py-5">
                                             <div className="flex flex-col">
@@ -237,12 +258,12 @@ const ProblemTable = ({onEdit, tags, loading}: ProblemTableProps) => {
                                                 )}
                                             </div>
                                         </td>
-                                        <td className="px-6 py-5 text-center">
+                                        <td className="px-6 py-5">
                                             <div className="flex flex-col items-center">
-                               <span className="text-gray-400 text-xs flex items-center gap-1">
-                                 <ClockCircleOutlined size={12} />
-                                   {formatDateTime(ex.created_at)}
-                               </span>
+                            <span className="text-gray-400 text-xs flex items-center gap-1">
+                                <ClockCircleOutlined size={12} />
+                                {formatDateTime(ex.updated_at)}
+                            </span>
                                             </div>
                                         </td>
                                         <td className="px-6 py-5">
@@ -263,7 +284,16 @@ const ProblemTable = ({onEdit, tags, loading}: ProblemTableProps) => {
                                             </div>
                                         </td>
                                     </tr>
-                                ))}
+                                ))) : (
+                                    <tr>
+                                        <td colSpan={5} className="px-8 py-24 text-center">
+                                            <div className="flex flex-col items-center gap-3 opacity-20">
+                                                <UnorderedListOutlined size={40} className="text-gray-400" />
+                                                <p className="text-sm font-bold text-gray-300">Không có dữ liệu</p>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                )}
                                 </tbody>
                             </table>
                         </div>

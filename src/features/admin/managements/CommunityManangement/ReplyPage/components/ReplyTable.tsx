@@ -2,13 +2,13 @@ import type {IDiscussion} from "../../../../../../types/discussion.types.ts";
 import {useEffect, useMemo, useState} from "react";
 import {Skeleton} from "antd";
 import {
-    CalendarOutlined,
+    ClockCircleOutlined,
     DislikeOutlined,
-    FileTextOutlined, 
+    FileTextOutlined,
     InfoCircleOutlined,
-    LikeOutlined, 
+    LikeOutlined,
     MessageOutlined,
-    SearchOutlined, 
+    SearchOutlined,
     UnorderedListOutlined,
     UserOutlined,
 } from "@ant-design/icons";
@@ -32,7 +32,7 @@ const ReplyTable = ({discussions, loading}: ReplyTableProps) => {
         if (discussions.length > 0 && !selectedDiscussionId) {
             setSelectedDiscussionId(discussions[0].discussion_id);
         }
-    }, [discussions]);
+    }, [discussions, selectedDiscussionId]);
 
     const filteredDiscussions = useMemo(() => {
         if (!discussions) return [];
@@ -49,6 +49,17 @@ const ReplyTable = ({discussions, loading}: ReplyTableProps) => {
             return res.content.toLowerCase().includes(searchLower)
         });
     }, [searchQueryReply, replies]);
+
+    const formatDateTime = (isoString: string) => {
+        const date = new Date(isoString);
+        return date.toLocaleString('vi-VN', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+        });
+    };
 
     if (loading) {
         return (
@@ -71,7 +82,7 @@ const ReplyTable = ({discussions, loading}: ReplyTableProps) => {
                 <div className="flex items-center justify-between px-1">
                     <div className="flex items-center gap-2">
                         <MessageOutlined size={18} className="text-emerald-400" />
-                        <h3 className="text-xs font-bold text-gray-400 uppercase tracking-[0.2em]">Chọn bài đăng cần quản lý</h3>
+                        <h3 className="text-xs font-bold text-gray-400 uppercase tracking-[0.2em]">Chọn bài đăng</h3>
                     </div>
                     <div className="relative group w-2/3 sm:w-80">
                         <SearchOutlined size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-emerald-400 transition-colors" />
@@ -106,7 +117,7 @@ const ReplyTable = ({discussions, loading}: ReplyTableProps) => {
                     {dis.title}
                   </span>
                                 <div className="flex items-center gap-2 mt-1">
-                                    <span className="text-[9px] text-gray-600 font-bold uppercase">{dis.discussion_type}</span>
+                                    <span className="text-[10px] text-white font-bold uppercase">{dis.discussion_type}</span>
                                 </div>
                             </button>
                         ))) : (
@@ -195,12 +206,12 @@ const ReplyTable = ({discussions, loading}: ReplyTableProps) => {
                                                 </div>
                                             </div>
                                         </td>
-                                        <td className="px-8 py-6 text-center">
-                                            <div className="flex flex-col items-center gap-1">
-                                                <div className="flex items-center gap-1.5 text-gray-300 font-semibold text-[11px]">
-                                                    <CalendarOutlined size={12} className="text-gray-500" />
-                                                    {new Date(fb.created_at).toLocaleDateString('vi-VN')}
-                                                </div>
+                                        <td className="px-8 py-6">
+                                            <div className="flex flex-col items-center">
+                            <span className="text-gray-400 text-xs flex items-center gap-1">
+                                <ClockCircleOutlined size={12} />
+                                {formatDateTime(fb.updated_at)}
+                            </span>
                                             </div>
                                         </td>
                                     </tr>

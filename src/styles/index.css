@@ -1,7 +1,7 @@
 /*! tailwindcss v4.1.13 | MIT License | https://tailwindcss.com */
 @import "tailwindcss";
 @layer properties;
-@layer theme, base, components, utilities;
+@layer theme, base, components, utilities, antd;
 @layer theme {
     :root, :host {
         --font-sans: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
@@ -814,4 +814,46 @@
 /* Fix màu chữ placeholder cho select dark mode */
 .ant-select-selection-placeholder {
     color: #4b5563 !important; /* gray-600 */
+}
+
+.dark-confirm-modal .ant-modal-content {
+    background-color: #1a202c !important;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+}
+
+.dark-confirm-modal .ant-modal-confirm-title {
+    color: white !important;
+}
+
+.dark-confirm-modal .ant-btn-default {
+    background: transparent;
+    color: #9ca3af;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.dark-confirm-modal .ant-btn-default:hover {
+    color: white;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.dark-pagination .ant-pagination-item {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+.dark-pagination .ant-pagination-item a {
+    color: #9ca3af;
+}
+.dark-pagination .ant-pagination-item-active {
+    background: rgba(16, 185, 129, 0.1) !important;
+    border-color: #10b981 !important;
+}
+.dark-pagination .ant-pagination-item-active a {
+    color: #10b981 !important;
+}
+.dark-pagination .ant-pagination-prev .ant-pagination-item-link,
+.dark-pagination .ant-pagination-next .ant-pagination-item-link {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.1);
+    color: #9ca3af;
 }

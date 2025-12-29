@@ -123,7 +123,10 @@ export const tagApi = authApi.injectEndpoints({
                 url: `/tags/${id}`,
                 method: "DELETE",
             }),
-            transformResponse: (response: IApiResponse<{ success: boolean }>) => response.result,
+            transformResponse: (response: IApiResponse<{ success: boolean }>) => {
+                if (!response) return { success: true };
+                return response.result;
+            },
             invalidatesTags: [
                 { type: "Tag", id: "LIST" },
                 { type: "Tag", id: "ACTIVE" }

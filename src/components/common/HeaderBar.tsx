@@ -12,7 +12,7 @@ interface HeaderProps {
 
 const HeaderBar = ({title, buttonText, setOpen}: HeaderProps) => {
     const location = useLocation();
-    const hiddenRoutes = ["/admin/dashboard", "/admin/discussion", "/admin/reply", "/admin/user", "/admin/tag"];
+    const hiddenRoutes = ["/admin/dashboard", "/admin/discussion", "/admin/reply", "/admin/user"];
     const shouldShowButton = !hiddenRoutes.includes(location.pathname);
 
     return (

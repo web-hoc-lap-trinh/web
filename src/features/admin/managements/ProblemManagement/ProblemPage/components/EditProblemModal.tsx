@@ -10,7 +10,7 @@ import {
     useGetProblemQuery,
     useUpdateProblemMutation
 } from "../../../../../../services/problem/problem.service.ts";
-import {message} from "antd";
+import {message, Switch} from "antd";
 import MDEditor from "@uiw/react-md-editor";
 import {createPortal} from "react-dom";
 import type {ITag} from "../../../../../../types/tag.types.ts";
@@ -33,7 +33,7 @@ const EditProblemModal = ({isOpen, onClose, tags, problemId}: EditProblemModalPr
         difficulty: 'EASY' as Difficulty,
         points: 10,
         is_published: true,
-        is_daily: true,
+        is_daily_challenge: true,
         input_format: '',
         output_format: '',
         constraints: '',
@@ -49,7 +49,7 @@ const EditProblemModal = ({isOpen, onClose, tags, problemId}: EditProblemModalPr
                 difficulty: problem.difficulty,
                 points: problem.points,
                 is_published: problem.is_published,
-                is_daily: true,
+                is_daily_challenge: !!problem.is_daily_challenge,
                 input_format: problem.input_format,
                 output_format: problem.output_format,
                 constraints: problem.constraints,
@@ -417,21 +417,26 @@ const EditProblemModal = ({isOpen, onClose, tags, problemId}: EditProblemModalPr
                     <section className="pt-6 border-t border-white/5">
                         <div className="flex items-center justify-between p-4 bg-[#0f131a]/50 rounded-2xl border border-white/5">
                             <div className="flex items-center gap-3">
-                                <div className={`p-2 rounded-lg ${formData.is_daily ? 'bg-emerald-500/10' : 'bg-gray-500/10'}`}>
-                                    {formData.is_daily ? <FireFilled size={20} className="text-emerald-400" /> : <FireOutlined size={20} className="text-gray-500" />}
+                                <div className={`p-2 rounded-lg ${formData.is_daily_challenge ? 'bg-emerald-500/10' : 'bg-gray-500/10'}`}>
+                                    {formData.is_daily_challenge ? <FireFilled size={20} className="text-emerald-400" /> : <FireOutlined size={20} className="text-gray-500" />}
                                 </div>
                                 <div>
                                     <div className="text-sm font-bold text-white">{formData.is_published ? 'Là thử thách hàng ngày' : 'Không phải là thử thách hàng ngày'}</div>
                                     <div className="text-[10px] text-gray-500 uppercase tracking-widest">Học viên có thể thực hành hàng ngày</div>
                                 </div>
                             </div>
-                            <button
+                            <Switch
+                                checked={formData.is_daily_challenge}
+                                onChange={(checked) => setFormData({...formData, is_daily_challenge: checked})}
+                                className={formData.is_daily_challenge ? 'bg-emerald-500' : 'bg-gray-600'}
+                            />
+                            {/*<button
                                 type="button"
-                                onClick={() => setFormData(prev => ({ ...prev, is_daily: !prev.is_daily }))}
-                                className={`relative w-12 h-6 rounded-full transition-colors ${formData.is_daily ? 'bg-emerald-500' : 'bg-gray-700'}`}
+                                onClick={() => setFormData(prev => ({ ...prev, is_daily_challenge: !prev.is_daily_challenge }))}
+                                className={`relative w-12 h-6 rounded-full transition-colors ${formData.is_daily_challenge ? 'bg-emerald-500' : 'bg-gray-700'}`}
                             >
-                                <div className={`absolute top-1 w-4 h-4 rounded-full bg-white transition-all ${formData.is_daily ? 'left-7' : 'left-1'}`} />
-                            </button>
+                                <div className={`absolute top-1 w-4 h-4 rounded-full bg-white transition-all ${formData.is_daily_challenge ? 'left-7' : 'left-1'}`} />
+                            </button>*/}
                         </div>
                     </section>
                 </div>

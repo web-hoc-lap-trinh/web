@@ -32,7 +32,7 @@ export interface IProblem {
   memory_limit: number;
   points: number;
   is_published: boolean;
-  is_daily?: boolean;
+  is_daily_challenge?: boolean;
   submission_count?: number; 
   accepted_count?: number;   
   acceptance_rate?: string;  
@@ -71,7 +71,7 @@ export interface CreateProblemPayload {
 	memory_limit?: number;
 	points?: number;
 	is_published?: boolean;
-    is_daily?: boolean;
+    is_daily_challenge?: boolean;
 }
 
 export type UpdateProblemPayload = Partial<CreateProblemPayload>;

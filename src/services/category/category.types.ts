@@ -10,6 +10,7 @@ export interface UpdateCategoryPayload {
   name?: string;
   order_index?: number;
   icon_file?: File;
+    is_active: boolean;
 }
 
 export interface CategoryResponse {

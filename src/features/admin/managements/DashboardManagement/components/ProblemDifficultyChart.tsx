@@ -53,8 +53,8 @@ const ProblemDifficultyChart = ({ data, loading }: Props) => {
                             ))}
                         </Pie>
                         <Tooltip
-                            contentStyle={{ backgroundColor: '#0f172a', border: 'none', borderRadius: '12px' }}
-                            itemStyle={{ fontSize: '12px', textTransform: 'capitalize' }}
+                            contentStyle={{ backgroundColor: '#0f172a', border: 'none', borderRadius: '8px', color: '#fff' }}
+                            itemStyle={{ fontSize: '12px', textTransform: 'capitalize', color: '#fff' }}
                         />
                         <Legend
                             verticalAlign="bottom"

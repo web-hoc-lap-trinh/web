@@ -27,7 +27,7 @@ const AddProblemModal = ({isOpen, onClose, tags}: AddProblemModalProps) => {
         description: '',
         difficulty: 'EASY' as Difficulty,
         points: 10,
-        is_published: true,
+        is_published: false,
         input_format: '',
         output_format: '',
         constraints: '',

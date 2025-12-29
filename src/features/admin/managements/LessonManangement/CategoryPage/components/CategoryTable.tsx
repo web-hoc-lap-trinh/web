@@ -1,7 +1,7 @@
 import type {ICategory} from "../../../../../../types/category.types.ts";
 import {
     AppstoreOutlined, ClockCircleOutlined, DeleteOutlined,
-    DownOutlined, EditOutlined, ExclamationCircleFilled,
+    EditOutlined, ExclamationCircleOutlined,
     EyeInvisibleOutlined, EyeOutlined, FileImageOutlined, SearchOutlined
 } from "@ant-design/icons";
 import {message, Modal, Skeleton} from "antd";
@@ -13,8 +13,6 @@ interface CategoryTableProps {
     categories: ICategory[];
     loading: boolean;
 }
-
-const {confirm} = Modal;
 
 const CategoryTable = ({ onEdit, categories, loading }: CategoryTableProps) => {
     const [deleteCategory, { isLoading: isDeleting }] = useDeleteCategoryMutation();
@@ -36,20 +34,28 @@ const CategoryTable = ({ onEdit, categories, loading }: CategoryTableProps) => {
     };
 
     const handleDelete = (id: number, name: string) => {
-        confirm({
-            title: 'Xác nhận xóa chủ đề?',
-            icon: <ExclamationCircleFilled />,
-            content: `Bạn có chắc chắn muốn xóa "${name}"? Hành động này không thể hoàn tác.`,
+        Modal.confirm({
+            title: <span className="text-white">Xác nhận xóa nhãn</span>,
+            icon: <ExclamationCircleOutlined className="text-red-500" />,
+            content: (
+                <div className="text-gray-400">
+                    Bạn có chắc chắn muốn xóa nhãn <span className="text-emerald-400 font-bold">{name}</span>?
+                    Hành động này không thể hoàn tác.
+                </div>
+            ),
             okText: 'Xóa ngay',
             okType: 'danger',
             cancelText: 'Hủy',
             centered: true,
+            // Custom style để khớp với Dark Theme của bạn
+            className: "dark-confirm-modal",
             async onOk() {
                 try {
                     await deleteCategory(id).unwrap();
-                    message.success('Đã xóa chủ đề thành công');
-                } catch (error: any) {
-                    message.error(error?.data?.message || 'Không thể xóa chủ đề này');
+                    message.success('Đã xóa nhãn thành công');
+                } catch (error) {
+                    message.error('Không thể xóa nhãn này');
+                    console.log(error)
                 }
             },
         });
@@ -79,7 +85,7 @@ const CategoryTable = ({ onEdit, categories, loading }: CategoryTableProps) => {
                         <AppstoreOutlined size={20} className="text-emerald-400" />
                     </div>
                     <div>
-                        <h3 className="text-xl font-bold text-white tracking-tight">Quản lý chủ đề</h3>
+                        <h3 className="text-xl font-bold text-white tracking-tight">Danh sách chủ đề</h3>
                         <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest">Phân loại nội dung theo công nghệ</p>
                     </div>
                 </div>
@@ -96,9 +102,6 @@ const CategoryTable = ({ onEdit, categories, loading }: CategoryTableProps) => {
                             className="w-full pl-11 pr-4 py-2.5 bg-[#0f131a]/60 text-gray-200 rounded-2xl border border-white/10 outline-none focus:ring-2 focus:ring-emerald-500/30 transition-all text-sm shadow-inner"
                         />
                     </div>
-                    <button className="p-2.5 text-gray-400 hover:text-white bg-white/5 rounded-xl border border-white/10 transition-all">
-                        <DownOutlined size={18} />
-                    </button>
                 </div>
             </div>
 
@@ -123,7 +126,7 @@ const CategoryTable = ({ onEdit, categories, loading }: CategoryTableProps) => {
                                 </td>
                                 <td className="px-8 py-5">
                                     <div className="flex items-center gap-4">
-                                        <div className="w-11 h-11 rounded-xl bg-[#0f131a] border border-white/10 flex items-center justify-center p-2.5 shadow-inner group-hover:border-emerald-500/30 transition-all duration-300">
+                                        <div className="w-11 h-11 rounded-xl bg-[#0f131a] border border-white/10 flex items-center justify-center p-1 shadow-inner group-hover:border-emerald-500/30 transition-all duration-300">
                                             {cat.icon_url ? (
                                                 <img src={cat.icon_url} alt={cat.name} className="w-full h-full object-contain filter drop-shadow-sm" />
                                             ) : (
