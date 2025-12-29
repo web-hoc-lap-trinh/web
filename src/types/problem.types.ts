@@ -1,4 +1,6 @@
+export type Sort = "created_at" | "title" | "difficulty" | "submission_count" | "accepted_count";
 export type Difficulty = "EASY" | "MEDIUM" | "HARD";
+export type Order = "ASC" | "DESC"
 
 export interface IProblemTag {
   tag_id: number;
@@ -48,14 +50,14 @@ export interface IProblemSample {
 }
 
 export interface ProblemListQuery {
-	page?: number;
-	limit?: number; 
-	difficulty?: Difficulty;
-	tag_id?: number;
-	tag?: string; 
-	search?: string; 
-	sort?: "created_at" | "title" | "difficulty" | "submission_count" | "accepted_count";
-	order?: "ASC" | "DESC";
+    page?: number;
+    limit?: number;
+    difficulty?: Difficulty;
+    tag_id?: number;
+    tag?: string;
+    search?: string;
+    sort?: Sort;
+    order?: Order;
 }
 
 export interface CreateProblemPayload {

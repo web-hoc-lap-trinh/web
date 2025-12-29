@@ -1,6 +1,6 @@
 import type {Difficulty, IProblem} from "../../../../../../types/problem.types.ts";
-import {useEffect, useMemo, useState} from "react";
-import {Button, message, Modal, Skeleton} from "antd";
+import {useMemo, useState} from "react";
+import {Button, Input, message, Modal, Pagination, Select} from "antd";
 import {
     AppstoreOutlined,
     ClockCircleOutlined, DeleteOutlined,
@@ -14,31 +14,55 @@ import {
     useDeleteProblemMutation,
     useTriggerDailyChallengeMutation
 } from "../../../../../../services/problem/problem.service.ts";
-import {useGetProblemsByTagQuery} from "../../../../../../services/tag/tag.service.ts";
-import type {GetTagProblemsParams} from "../../../../../../services/tag/tag.types.ts";
 import type {ITag} from "../../../../../../types/tag.types.ts";
 
 interface ProblemTableProps {
     onEdit: (problem: IProblem) => void;
     tags: ITag[];
+    problems: IProblem[];
     loading: boolean;
+    total: number;
+    currentPage: number;
+    pageSize: number;
+    onPageChange: (page: number, pageSize: number) => void;
+    selectedTagId: number;
+    setSelectedTagId: (selectedTag: number) => void;
+    searchProblemValue: string;
+    onSearchProblemChange: (value: string) => void;
+    sortValue: string | undefined;
+    onSortValue: (sort: string | undefined) => void;
+    difficultySortValue: string | undefined;
+    onDifficultySortChange: (selectedTag: string | undefined) => void;
+    orderValue: string | undefined;
+    onOrderValue: (order: string | undefined) => void;
 }
 
 const {confirm} = Modal;
 
-const ProblemTable = ({onEdit, tags, loading}: ProblemTableProps) => {
+const ProblemTable = ({
+    onEdit,
+    tags,
+    problems,
+    loading,
+    total,
+    currentPage,
+    pageSize,
+    onPageChange,
+    selectedTagId,
+    setSelectedTagId,
+    searchProblemValue,
+    onSearchProblemChange,
+    sortValue,
+    onSortValue,
+    difficultySortValue,
+    onDifficultySortChange,
+    orderValue,
+    onOrderValue,
+}: ProblemTableProps) => {
     const [triggerDailyChallenge] = useTriggerDailyChallengeMutation()
     const [deleteProblem, {isLoading: isDeleting}] = useDeleteProblemMutation();
-    const [selectedTagId, setSelectedTagId] = useState<number>(0);
     const [searchQueryTag, setSearchQueryTag] = useState('');
-    const [searchQueryProblem, setSearchQueryProblem] = useState('');
-    const params: GetTagProblemsParams = {
-        id: selectedTagId,
-    }
-    const {data} = useGetProblemsByTagQuery(params, {
-        skip: selectedTagId === 0,
-    });
-    
+
     const filteredTags = useMemo(() => {
         if (!tags) return [];
         return tags.filter(res => {
@@ -47,20 +71,11 @@ const ProblemTable = ({onEdit, tags, loading}: ProblemTableProps) => {
         });
     }, [searchQueryTag, tags]);
 
-    const filteredProblems = useMemo(() => {
-        const problems = data?.items || [];
-        if (!problems) return [];
-        return problems.filter(res => {
-            const searchLower = searchQueryProblem.toLowerCase();
-            return res.title.toLowerCase().includes(searchLower)
-        });
-    }, [data?.items, searchQueryProblem]);
-
-    useEffect(() => {
+    /*useEffect(() => {
         if (tags.length > 0 && !selectedTagId) {
             setSelectedTagId(tags[0].tag_id);
         }
-    }, [selectedTagId, tags]);
+    }, [selectedTagId, tags]);*/
 
     const formatDateTime = (isoString: string) => {
         const date = new Date(isoString);
@@ -111,7 +126,7 @@ const ProblemTable = ({onEdit, tags, loading}: ProblemTableProps) => {
         });
     };
 
-    if (loading) {
+    /*if (loading) {
         return (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
                 {Array.from({ length: 6 }).map((_, idx) => (
@@ -124,7 +139,7 @@ const ProblemTable = ({onEdit, tags, loading}: ProblemTableProps) => {
                 ))}
             </div>
         );
-    }
+    }*/
 
     return (
         <div className="space-y-6">
@@ -148,6 +163,24 @@ const ProblemTable = ({onEdit, tags, loading}: ProblemTableProps) => {
 
                 <div className="max-h-[290px] overflow-y-auto pr-2">
                     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+                        <button
+                            key={0}
+                            onClick={() => setSelectedTagId(0)}
+                            className={`group relative flex flex-col p-4 rounded-2xl border transition-all duration-300 text-left overflow-hidden h-full ${
+                                selectedTagId === 0
+                                    ? 'bg-emerald-500/10 border-emerald-500/50 shadow-[0_0_25px_rgba(16,185,129,0.15)] ring-1 ring-emerald-500/20'
+                                    : 'bg-[#0f131a]/40 border-white/5 hover:border-white/20 hover:bg-[#1a202c]/40'
+                            }`}
+                        >
+                            <div className={`w-10 h-10 rounded-xl mb-3 flex items-center justify-center transition-all duration-300 ${
+                                selectedTagId === 0 ? 'bg-emerald-500 text-white shadow-lg' : 'bg-white/5 text-gray-500'
+                            }`}>
+                                <ReadOutlined size={20} />
+                            </div>
+                            <span className={`text-sm font-bold tracking-tight line-clamp-1 ${selectedTagId === 0 ? 'text-emerald-400' : 'text-gray-300'}`}>
+                                    All
+                                </span>
+                        </button>
                         {filteredTags.length > 0 ? (filteredTags.map((tag) => (
                             <button
                                 key={tag.tag_id}
@@ -188,23 +221,59 @@ const ProblemTable = ({onEdit, tags, loading}: ProblemTableProps) => {
                     <div className="flex items-center gap-2">
                         <div className="w-2 h-6 bg-emerald-500 rounded-full" />
                         <h4 className="text-lg font-bold text-white tracking-tight">Danh sách bài tập</h4>
-                        <span className="text-xs text-gray-500 font-medium ml-2">({filteredProblems.length} kết quả)</span>
+                        <span className="text-xs text-gray-500 font-medium ml-2">({problems.length} kết quả)</span>
                     </div>
 
-                    <div className="flex items-center gap-2">
-                        <Button onClick={handleTrigger}>
+                    <div className="flex justify-end items-center gap-2">
+                        <Select
+                            size={"large"}
+                            value={sortValue}
+                            allowClear={true}
+                            style={{ width: 150 }}
+                            onChange={(e) => onSortValue(e)}
+                            options={[
+                                { value: 'created_at', label: 'Ngày tạo' },
+                                { value: 'title', label: 'Tựa đề' },
+                                { value: 'difficulty', label: 'Mức độ' },
+                                { value: 'submission_count', label: 'Tổng bài nộp' },
+                                { value: 'accepted_count', label: 'Tổng bài đúng' }
+                            ]}
+                        />
+                        <Select
+                            size={"large"}
+                            value={difficultySortValue}
+                            allowClear={true}
+                            style={{ width: 120 }}
+                            onChange={(e) => onDifficultySortChange(e)}
+                            options={[
+                                { value: 'EASY', label: 'Easy' },
+                                { value: 'MEDIUM', label: 'Medium' },
+                                { value: 'HARD', label: 'Hard' },
+                            ]}
+                        />
+                        <Select
+                            size={"large"}
+                            value={orderValue}
+                            allowClear={true}
+                            style={{ width: 120 }}
+                            onChange={(e) => onOrderValue(e)}
+                            options={[
+                                { value: 'ASC', label: 'Tăng dần' },
+                                { value: 'DESC', label: 'Giảm dần' }
+                            ]}
+                        />
+                        <Button size={"large"} onClick={handleTrigger}>
                             <ReloadOutlined size={20} />
                         </Button>
-                        <div className="relative group w-2/3 sm:w-80">
-                            <SearchOutlined size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-emerald-400 transition-colors" />
-                            <input
-                                type="text"
-                                value={searchQueryProblem}
-                                onChange={(e) => setSearchQueryProblem(e.target.value)}
-                                placeholder="Tìm kiếm câu hỏi"
-                                className="w-full pl-11 pr-4 py-2.5 bg-[#0f131a]/60 text-gray-200 rounded-2xl border border-white/10 outline-none focus:ring-2 focus:ring-emerald-500/30 transition-all placeholder-gray-600 shadow-inner text-sm"
-                            />
-                        </div>
+                        <Input.Search
+                            size={"large"}
+                            type="text"
+                            value={searchProblemValue}
+                            onChange={(e) => onSearchProblemChange(e.target.value)}
+                            placeholder="Tìm tiêu đề bài đăng..."
+                            loading={loading}
+                            style={{ width: '40%' }}
+                        />
                     </div>
                 </div>
 
@@ -223,7 +292,7 @@ const ProblemTable = ({onEdit, tags, loading}: ProblemTableProps) => {
                                 </tr>
                                 </thead>
                                 <tbody className="divide-y divide-white/5">
-                                {filteredProblems.length > 0 ? (filteredProblems.map((ex) => (
+                                {problems.length > 0 ? (problems.map((ex) => (
                                     <tr key={ex.problem_id} className="group hover:bg-white/2 transition-colors">
                                         <td className="px-6 py-5">
                                             <div className="flex flex-col">
@@ -261,7 +330,7 @@ const ProblemTable = ({onEdit, tags, loading}: ProblemTableProps) => {
                                             <div className="flex flex-col items-center">
                             <span className="text-gray-400 text-xs flex items-center gap-1">
                                 <ClockCircleOutlined size={12} />
-                                {formatDateTime(ex.updated_at)}
+                                {formatDateTime(ex.created_at)}
                             </span>
                                             </div>
                                         </td>
@@ -288,13 +357,27 @@ const ProblemTable = ({onEdit, tags, loading}: ProblemTableProps) => {
                                         <td colSpan={5} className="px-8 py-24 text-center">
                                             <div className="flex flex-col items-center gap-3 opacity-20">
                                                 <UnorderedListOutlined size={40} className="text-gray-400" />
-                                                <p className="text-sm font-bold text-gray-300">Không có dữ liệu</p>
+                                                <p className="text-sm font-bold text-gray-300">{loading ? "Đang tải dữ liệu" : "Không có dữ liệu"}</p>
                                             </div>
                                         </td>
                                     </tr>
                                 )}
                                 </tbody>
                             </table>
+                        </div>
+
+                        <div className="px-8 py-5 border-t border-white/5 bg-black/20 flex items-center justify-between">
+                            <div className="text-xs text-gray-500 font-medium">
+                                Hiển thị <span className="text-emerald-400">{problems.length}</span> trên <span className="text-emerald-400">{total}</span> bài tập
+                            </div>
+                            <Pagination
+                                current={currentPage}
+                                pageSize={pageSize}
+                                total={total}
+                                onChange={onPageChange}
+                                showSizeChanger={false} // Tắt nếu bạn muốn fix cứng limit
+                                className="dark-pagination" // CSS custom bên dưới
+                            />
                         </div>
                     </div>
                 </div>
