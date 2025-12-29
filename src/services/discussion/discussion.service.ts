@@ -5,13 +5,13 @@ import type {
     IReply,
 } from "../../types/discussion.types";
 import type {
-  DiscussionListResponse,
-  ReplyListResponse,
-  GetDiscussionsParams,
-  CreateDiscussionPayload,
-  UpdateDiscussionPayload,
-  CreateReplyPayload,
-  VotePayload,
+    DiscussionListResponse,
+    ReplyListResponse,
+    GetDiscussionsParams,
+    CreateDiscussionPayload,
+    UpdateDiscussionPayload,
+    CreateReplyPayload,
+    VotePayload, PaginatedAdminDiscussionResult, GetAdminDiscussionParams, AdminDiscussionsResponse,
 } from "./discussion.types";
 
 export const discussionApi = authApi.injectEndpoints({
@@ -48,18 +48,24 @@ export const discussionApi = authApi.injectEndpoints({
           : [{ type: "Discussion", id: "LIST" }],
     }),
 
-      getAdminDiscussions: builder.query<IDiscussion[], void>({
-          query: () => "/admin/discussions",
-          transformResponse: (response: IApiResponse<{ data: IDiscussion[] }>) =>
-              response.result.data,
-
+      getAdminDiscussions: builder.query<PaginatedAdminDiscussionResult, GetAdminDiscussionParams | void>({
+          query: (params) => ({
+              url: "/admin/discussions",
+              params: params || undefined,
+          }),
+          transformResponse: (response: IApiResponse<AdminDiscussionsResponse>) => {
+              const { data, pagination } = response.result;
+              return {
+                  items: data,
+                  total: pagination?.total || 0,
+                  page: pagination?.page || 1,
+                  limit: pagination?.limit || 10,
+              };
+          },
           providesTags: (result) =>
               result
                   ? [
-                      ...result.map(({ discussion_id }) => ({
-                          type: "Discussion" as const,
-                          id: discussion_id,
-                      })),
+                      ...result.items.map(({ discussion_id }) => ({ type: "Discussion" as const, id: discussion_id })),
                       { type: "Discussion", id: "LIST" },
                   ]
                   : [{ type: "Discussion", id: "LIST" }],
@@ -166,6 +172,7 @@ export const discussionApi = authApi.injectEndpoints({
       transformResponse: (response: IApiResponse<IReply>) => response.result,
       invalidatesTags: (_res, _err, { discussionId }) => [
         { type: "Reply", id: `LIST_${discussionId}` },
+          { type: "Reply", id: "LIST" },
         { type: "Discussion", id: discussionId }, 
       ],
     }),

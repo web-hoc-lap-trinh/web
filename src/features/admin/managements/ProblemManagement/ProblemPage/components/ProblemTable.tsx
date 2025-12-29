@@ -1,16 +1,19 @@
 import type {Difficulty, IProblem} from "../../../../../../types/problem.types.ts";
 import {useEffect, useMemo, useState} from "react";
-import {message, Modal, Skeleton} from "antd";
+import {Button, message, Modal, Skeleton} from "antd";
 import {
     AppstoreOutlined,
     ClockCircleOutlined, DeleteOutlined,
     EditOutlined, ExclamationCircleFilled,
     EyeInvisibleOutlined,
-    EyeOutlined, ReadOutlined,
+    EyeOutlined, ReadOutlined, ReloadOutlined,
     SearchOutlined,
     TrophyOutlined, UnorderedListOutlined
 } from "@ant-design/icons";
-import {useDeleteProblemMutation} from "../../../../../../services/problem/problem.service.ts";
+import {
+    useDeleteProblemMutation,
+    useTriggerDailyChallengeMutation
+} from "../../../../../../services/problem/problem.service.ts";
 import {useGetProblemsByTagQuery} from "../../../../../../services/tag/tag.service.ts";
 import type {GetTagProblemsParams} from "../../../../../../services/tag/tag.types.ts";
 import type {ITag} from "../../../../../../types/tag.types.ts";
@@ -24,6 +27,7 @@ interface ProblemTableProps {
 const {confirm} = Modal;
 
 const ProblemTable = ({onEdit, tags, loading}: ProblemTableProps) => {
+    const [triggerDailyChallenge] = useTriggerDailyChallengeMutation()
     const [deleteProblem, {isLoading: isDeleting}] = useDeleteProblemMutation();
     const [selectedTagId, setSelectedTagId] = useState<number>(0);
     const [searchQueryTag, setSearchQueryTag] = useState('');
@@ -35,7 +39,6 @@ const ProblemTable = ({onEdit, tags, loading}: ProblemTableProps) => {
         skip: selectedTagId === 0,
     });
     
-
     const filteredTags = useMemo(() => {
         if (!tags) return [];
         return tags.filter(res => {
@@ -76,6 +79,15 @@ const ProblemTable = ({onEdit, tags, loading}: ProblemTableProps) => {
             case 'MEDIUM': return 'bg-blue-500/10 text-blue-400 border-blue-500/20';
             case 'HARD': return 'bg-red-500/10 text-red-400 border-red-500/20';
             default: return 'bg-gray-500/10 text-gray-400 border-gray-500/20';
+        }
+    };
+
+    const handleTrigger = async () => {
+        try {
+            await triggerDailyChallenge();
+            message.success("Đã cập nhật Daily Challenge!");
+        } catch (error) {
+            message.error(`Không thể cập nhật Daily Challenge. Vui lòng thử lại. [${error}]`);
         }
     };
 
@@ -179,16 +191,21 @@ const ProblemTable = ({onEdit, tags, loading}: ProblemTableProps) => {
                         <span className="text-xs text-gray-500 font-medium ml-2">({filteredProblems.length} kết quả)</span>
                     </div>
 
-                    {/* Neat Compact Search Bar */}
-                    <div className="relative group w-2/3 sm:w-80">
-                        <SearchOutlined size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-emerald-400 transition-colors" />
-                        <input
-                            type="text"
-                            value={searchQueryProblem}
-                            onChange={(e) => setSearchQueryProblem(e.target.value)}
-                            placeholder="Tìm kiếm câu hỏi"
-                            className="w-full pl-11 pr-4 py-2.5 bg-[#0f131a]/60 text-gray-200 rounded-2xl border border-white/10 outline-none focus:ring-2 focus:ring-emerald-500/30 transition-all placeholder-gray-600 shadow-inner text-sm"
-                        />
+                    <div className="flex items-center gap-2">
+                        {/* Neat Compact Search Bar */}
+                        <div className="relative group w-2/3 sm:w-80">
+                            <SearchOutlined size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-emerald-400 transition-colors" />
+                            <input
+                                type="text"
+                                value={searchQueryProblem}
+                                onChange={(e) => setSearchQueryProblem(e.target.value)}
+                                placeholder="Tìm kiếm câu hỏi"
+                                className="w-full pl-11 pr-4 py-2.5 bg-[#0f131a]/60 text-gray-200 rounded-2xl border border-white/10 outline-none focus:ring-2 focus:ring-emerald-500/30 transition-all placeholder-gray-600 shadow-inner text-sm"
+                            />
+                        </div>
+                        <Button onClick={handleTrigger}>
+                            <ReloadOutlined size={20} />
+                        </Button>
                     </div>
                 </div>
 

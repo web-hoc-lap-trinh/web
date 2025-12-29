@@ -28,7 +28,7 @@ export const problemApi = authApi.injectEndpoints({
 					limit: pagination?.limit || 10,
 				};
 			},
-			providesTags: ["Problem"],
+			providesTags: [{ type: "Problem", id: "LIST" } as ProblemTag],
 		}),
 
 		getProblem: builder.query<IProblem, number>({
@@ -48,7 +48,10 @@ export const problemApi = authApi.injectEndpoints({
 		updateProblem: builder.mutation<IProblem, { id: number; data: UpdateProblemPayload }>({
 			query: ({ id, data }) => ({ url: `/problems/${id}`, method: "PUT", body: data }),
 			transformResponse: (response: IApiResponse<ProblemResponse>) => response.result.problem,
-			invalidatesTags: (result) => (result ? [{ type: "Problem", id: result.problem_id } as ProblemTag] : []),
+            invalidatesTags: (_result, _error, arg) => [
+                { type: "Problem", id: arg.id },
+                { type: "Problem", id: "LIST" }
+            ],
 		}),
 
 		deleteProblem: builder.mutation<{ success: boolean }, number>({
@@ -65,7 +68,7 @@ export const problemApi = authApi.injectEndpoints({
 
 		triggerDailyChallenge: builder.mutation<any, void>({
 			query: () => ({
-				url: "/problems/daily-challenge",
+				url: "/problems/daily-challenge/update",
 				method: "POST",
 			}),
 			invalidatesTags: [
@@ -104,9 +107,9 @@ export const problemApi = authApi.injectEndpoints({
                             type: "TestCase" as const,
                             id: test_case_id,
                         })),
-                        { type: "TestCase", id: `LESSON_${problemId}` },
+                        { type: "TestCase", id: `LIST_BY_PROBLEM_${problemId}` },
                     ]
-                    : [{ type: "TestCase", id: `LESSON_${problemId}` }],
+                    : [{ type: "TestCase", id: `LIST_BY_PROBLEM_${problemId}` }],
         }),
 
         getProblemTestCase: builder.query<
@@ -124,7 +127,9 @@ export const problemApi = authApi.injectEndpoints({
 		createProblemTestCase: builder.mutation<ITestCase, { id: number; data: CreateTestCasePayload }>({
 			query: ({ id, data }) => ({ url: `/problems/${id}/testcases`, method: "POST", body: data }),
 			transformResponse: (response: IApiResponse<TestCaseResponse>) => response.result.testcase,
-			invalidatesTags: [{ type: "TestCase", id: "LIST" } as TestCaseTag],
+            invalidatesTags: (_result, _error, arg) => [
+                { type: "TestCase", id: `LIST_BY_PROBLEM_${arg.id}` }
+            ],
 		}),
 
 		bulkCreateProblemTestCases: builder.mutation<{ success: boolean }, { id: number; data: BulkCreateTestCasesPayload }>({
@@ -142,15 +147,16 @@ export const problemApi = authApi.injectEndpoints({
 		deleteTestCase: builder.mutation<{ success: boolean }, number>({
 			query: (id) => ({ url: `/testcases/${id}`, method: "DELETE" }),
 			transformResponse: (response: IApiResponse<{ success: boolean }>) => response.result,
-			invalidatesTags: [{ type: "TestCase", id: "LIST" } as TestCaseTag],
+            invalidatesTags: (_result, _error, arg) => [
+                { type: "TestCase", id: `LIST_BY_PROBLEM_${arg}` }
+            ],
 		}),
 	}),
 });
 
 export const {
 	useGetProblemsQuery,
-	useLazyGetProblemsQuery,
-	useGetProblemQuery,
+    useGetProblemQuery,
 	useCreateProblemMutation,
 	useUpdateProblemMutation,
 	useDeleteProblemMutation,
@@ -159,7 +165,6 @@ export const {
 	useGetProblemTestCasesQuery,
     useGetProblemTestCaseQuery,
 	useCreateProblemTestCaseMutation,
-	useBulkCreateProblemTestCasesMutation,
-	useUpdateTestCaseMutation,
+    useUpdateTestCaseMutation,
 	useDeleteTestCaseMutation,
 } = problemApi;
