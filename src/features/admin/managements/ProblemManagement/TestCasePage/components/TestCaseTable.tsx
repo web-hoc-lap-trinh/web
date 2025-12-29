@@ -1,5 +1,5 @@
 import type {IProblem, ITestCase} from "../../../../../../types/problem.types.ts";
-import {useEffect, useMemo, useState} from "react";
+import {useMemo, useState} from "react";
 import {
     useDeleteTestCaseMutation,
     useGetProblemTestCasesQuery
@@ -9,20 +9,19 @@ import {
     CheckCircleOutlined,
     ClockCircleOutlined, CloseCircleOutlined,
     DeleteOutlined, EditOutlined,
-    ExclamationCircleFilled, ReadOutlined, SearchOutlined, StarFilled, UnorderedListOutlined
+    ExclamationCircleOutlined, ReadOutlined, SearchOutlined, StarFilled, UnorderedListOutlined
 } from "@ant-design/icons";
 import {message, Modal, Skeleton} from "antd";
-
-const {confirm} = Modal;
 
 interface TestCaseTableProps {
     onEdit: (testCase: ITestCase) => void;
     problems: IProblem[];
     loading: boolean;
+    selectedProblemId: number;
+    setSelectedProblemId: (id: number) => void;
 }
 
-const TestCaseTable = ({onEdit, problems, loading}: TestCaseTableProps) => {
-    const [selectedProblemId, setSelectedProblemId] = useState<number>(0);
+const TestCaseTable = ({onEdit, problems, loading, selectedProblemId, setSelectedProblemId}: TestCaseTableProps) => {
     const [searchQueryProblem, setSearchQueryProblem] = useState('');
     const [searchQueryTestCase, setSearchQueryTestCase] = useState('');
     const {data: testCases} = useGetProblemTestCasesQuery(selectedProblemId, {
@@ -30,12 +29,6 @@ const TestCaseTable = ({onEdit, problems, loading}: TestCaseTableProps) => {
         refetchOnMountOrArgChange: true
     });
     const [deleteTestCase, {isLoading: isDeleting}] = useDeleteTestCaseMutation()
-
-    useEffect(() => {
-        if (problems.length > 0 && selectedProblemId === 0) {
-            setSelectedProblemId(problems[0].problem_id);
-        }
-    }, [problems, selectedProblemId]);
     
     const filteredProblems = useMemo(() => {
         if(!problems) return [];
@@ -65,21 +58,32 @@ const TestCaseTable = ({onEdit, problems, loading}: TestCaseTableProps) => {
         });
     };
 
-    const handleDelete = (id: number, name: string) => {
-        confirm({
-            title: 'Xác nhận xóa Test case?',
-            icon: <ExclamationCircleFilled />,
-            content: `Bạn có chắc chắn muốn xóa "${name}"? Hành động này không thể hoàn tác.`,
+    const handleDelete = (testCaseId: number, problemId: number, name: string) => {
+        Modal.confirm({
+            title: <span className="text-white">Xác nhận xóa test case</span>,
+            icon: <ExclamationCircleOutlined className="text-red-500" />,
+            content: (
+                <div className="text-gray-400">
+                    Bạn có chắc chắn muốn xóa test case <span className="text-emerald-400 font-bold">{name}</span>?
+                    Hành động này không thể hoàn tác.
+                </div>
+            ),
             okText: 'Xóa ngay',
             okType: 'danger',
             cancelText: 'Hủy',
             centered: true,
+            // Custom style để khớp với Dark Theme của bạn
+            className: "dark-confirm-modal",
             async onOk() {
                 try {
-                    await deleteTestCase(id).unwrap();
+                    await deleteTestCase({
+                        testCaseId,
+                        problemId
+                    }).unwrap();
                     message.success('Đã xóa test case thành công');
-                } catch (error: any) {
-                    message.error(error?.data?.message || 'Không thể xóa test case này');
+                } catch (error) {
+                    message.error('Không thể xóa test case này');
+                    console.log(error)
                 }
             },
         });
@@ -238,7 +242,7 @@ const TestCaseTable = ({onEdit, problems, loading}: TestCaseTableProps) => {
                                             </div>
                                         </td>
                                         <td className="px-6 py-5">
-                                            <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                            <div className="flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                                                 <button
                                                     onClick={() => onEdit(tc)}
                                                     className="p-2 text-gray-400 hover:text-emerald-400 hover:bg-emerald-400/10 rounded-lg transition-all"
@@ -247,7 +251,7 @@ const TestCaseTable = ({onEdit, problems, loading}: TestCaseTableProps) => {
                                                 </button>
                                                 <button
                                                     className="p-2 text-gray-400 hover:text-red-400 hover:bg-red-400/10 rounded-lg transition-all"
-                                                    onClick={() => handleDelete(tc.test_case_id, tc.test_case_id.toString())}
+                                                    onClick={() => handleDelete(tc.test_case_id, tc.problem_id, tc.test_case_id.toString())}
                                                     disabled={isDeleting}
                                                 >
                                                     <DeleteOutlined size={18} />

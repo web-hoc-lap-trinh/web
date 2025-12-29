@@ -119,12 +119,11 @@ const AdminUserTable = ({users, loading, searchQuery, onSearchChange, sort, onSo
                         <tr>
                             <th className="px-6 py-5 font-semibold">Người dùng</th>
                             <th className="px-6 py-5 font-semibold">User ID</th>
-                            {/*<th className="px-6 py-5 font-semibold text-center">Vai trò</th>*/}
                             <th className="px-6 py-5 font-semibold text-center">Trạng thái</th>
                             <th className="px-6 py-5 font-semibold text-center">Chuỗi</th>
                             <th className="px-6 py-5 font-semibold text-center">Hoạt động cuối</th>
                             <th className="px-6 py-5 font-semibold text-center">Ngày tạo</th>
-                            <th className="px-6 py-5 font-semibold text-right">Tác vụ</th>
+                            <th className="px-6 py-5 font-semibold text-center">Tác vụ</th>
                         </tr>
                         </thead>
                         <tbody className="divide-y divide-white/5">
@@ -182,8 +181,8 @@ const AdminUserTable = ({users, loading, searchQuery, onSearchChange, sort, onSo
                             </span>
                                     </div>
                                 </td>
-                                <td className="px-6 py-5 text-right">
-                                    <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <td className="px-6 py-5 text-center">
+                                    <div className="flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                                         <button
                                             onClick={() => handleUpdate({ id: user.user_id, userStatus: user.status })}
                                             className="p-2 text-gray-400 hover:text-gray-400 hover:bg-gray-400/10 rounded-lg transition-all transform hover:scale-110"

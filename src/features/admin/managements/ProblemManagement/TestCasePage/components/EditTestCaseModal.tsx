@@ -11,6 +11,7 @@ import {
 } from "@ant-design/icons";
 import type {IProblem} from "../../../../../../types/problem.types.ts";
 import {createPortal} from "react-dom";
+import {message} from "antd";
 
 interface EditTestCaseModalProps {
     isOpen: boolean;
@@ -19,12 +20,11 @@ interface EditTestCaseModalProps {
     testCaseId: number;
 }
 
-const EditTestCaseModal = ({isOpen, onClose, problems, testCaseId}: EditTestCaseModalProps) => {
+const EditTestCaseModal = ({isOpen, onClose, testCaseId}: EditTestCaseModalProps) => {
     const {data: testCase} = useGetProblemTestCaseQuery(testCaseId);
     const [updateTestCase] = useUpdateTestCaseMutation()
 
     const [formData, setFormData] = useState({
-        problemId: problems[0]?.problem_id || 0,
         input_data: '',
         expected_output: '',
         explanation: '',
@@ -44,7 +44,6 @@ const EditTestCaseModal = ({isOpen, onClose, problems, testCaseId}: EditTestCase
 
         if(testCase && isOpen) {
             setFormData({
-                problemId: testCase.problem_id,
                 input_data: testCase.input_data,
                 expected_output: testCase.expected_output,
                 explanation: testCase.explanation,
@@ -64,9 +63,15 @@ const EditTestCaseModal = ({isOpen, onClose, problems, testCaseId}: EditTestCase
     };
 
     const handleSubmit = async () => {
+        if (!testCase) {
+            message.error("Dữ liệu chưa tải xong, vui lòng thử lại");
+            return;
+        }
+
         try {
             await updateTestCase({
-                id: testCaseId,
+                testCaseId,
+                problemId: testCase.problem_id,
                 data: {
                     input_data: formData.input_data,
                     expected_output: formData.expected_output,
@@ -76,9 +81,11 @@ const EditTestCaseModal = ({isOpen, onClose, problems, testCaseId}: EditTestCase
                     score: formData.score,
                 }
             });
+            message.success("Cập nhật test case thành công")
             onClose();
         } catch (error) {
             console.error(error);
+            message.success("Cập nhật test case thất bại")
         }
     };
 

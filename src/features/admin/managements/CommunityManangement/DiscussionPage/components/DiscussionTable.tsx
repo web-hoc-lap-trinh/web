@@ -143,7 +143,7 @@ const DiscussionTable = ({
                             <th className="px-8 py-6 text-center">Lượt xem</th>
                             <th className="px-8 py-6 text-center">Phản hồi</th>
                             <th className="px-8 py-6 text-center">Cập nhật</th>
-                            <th className="px-8 py-6 text-right">Thao tác</th>
+                            <th className="px-8 py-6 text-center">Thao tác</th>
                         </tr>
                         </thead>
                         <tbody className="divide-y divide-white/5">
@@ -202,8 +202,8 @@ const DiscussionTable = ({
                             </span>
                                         </div>
                                     </td>
-                                    <td className="px-8 py-6 text-right">
-                                        <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-all duration-300">
+                                    <td className="px-8 py-6 text-center">
+                                        <div className="flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100 transition-all duration-300">
                                             <button
                                                 onClick={() => handleMarkSolution(post.discussion_id)}
                                                 disabled={isMarking || post.is_solution}
