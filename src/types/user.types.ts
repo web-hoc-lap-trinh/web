@@ -1,5 +1,5 @@
 export type UserRole = "ADMIN" | "STUDENT";
-export type UserStatus = "ACTIVE" | "INACTIVE";
+export type UserStatus = "ACTIVE" | "BLOCKED";
 
 export interface IUser {
   user_id: number

@@ -2,7 +2,7 @@ import type {IExerciseAdminDetail} from "../../../../../../types/exercise.types.
 import type {ILesson} from "../../../../../../types/lesson.types.ts";
 import {useEffect, useMemo, useState} from "react";
 import {
-    AppstoreOutlined,
+    AppstoreOutlined, ClockCircleOutlined,
     DeleteOutlined,
     EditOutlined, ExclamationCircleFilled,
     ReadOutlined,
@@ -125,7 +125,7 @@ const QuestionTable = ({onEdit, lessons, loading}: ExerciseTableProps) => {
                 <div className="flex items-center justify-between px-1">
                     <div className="flex items-center gap-2">
                         <AppstoreOutlined size={18} className="text-emerald-400"/>
-                        <h3 className="text-xs font-bold text-gray-400 uppercase tracking-[0.2em]">Chọn bài học cần quản
+                        <h3 className="text-xs font-bold text-gray-400 uppercase tracking-[0.2em]">Chọn bài học
                             lý</h3>
                     </div>
                     <div className="relative group w-2/3 sm:w-80">
@@ -240,10 +240,13 @@ const QuestionTable = ({onEdit, lessons, loading}: ExerciseTableProps) => {
                           {ex.exercise_type}
                         </span>
                                         </td>
-                                        <td className="px-8 py-5 text-center">
-                        <span className="text-gray-500 text-[10px] font-bold">
-                          {formatDateTime(ex.created_at)}
-                        </span>
+                                        <td className="px-8 py-5">
+                                            <div className="flex flex-col items-center">
+                            <span className="text-gray-400 text-xs flex items-center gap-1">
+                                <ClockCircleOutlined size={12} />
+                                {formatDateTime(ex.created_at)}
+                            </span>
+                                            </div>
                                         </td>
                                         <td className="px-8 py-5 text-right">
                                             <div

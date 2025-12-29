@@ -2,13 +2,13 @@ import type {IDiscussion} from "../../../../../../types/discussion.types.ts";
 import {useEffect, useMemo, useState} from "react";
 import {Skeleton} from "antd";
 import {
-    CalendarOutlined,
+    ClockCircleOutlined,
     DislikeOutlined,
-    FileTextOutlined, 
+    FileTextOutlined,
     InfoCircleOutlined,
-    LikeOutlined, 
+    LikeOutlined,
     MessageOutlined,
-    SearchOutlined, 
+    SearchOutlined,
     UnorderedListOutlined,
     UserOutlined,
 } from "@ant-design/icons";
@@ -32,7 +32,7 @@ const ReplyTable = ({discussions, loading}: ReplyTableProps) => {
         if (discussions.length > 0 && !selectedDiscussionId) {
             setSelectedDiscussionId(discussions[0].discussion_id);
         }
-    }, [discussions]);
+    }, [discussions, selectedDiscussionId]);
 
     const filteredDiscussions = useMemo(() => {
         if (!discussions) return [];
@@ -49,6 +49,17 @@ const ReplyTable = ({discussions, loading}: ReplyTableProps) => {
             return res.content.toLowerCase().includes(searchLower)
         });
     }, [searchQueryReply, replies]);
+
+    const formatDateTime = (isoString: string) => {
+        const date = new Date(isoString);
+        return date.toLocaleString('vi-VN', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+        });
+    };
 
     if (loading) {
         return (
@@ -195,12 +206,12 @@ const ReplyTable = ({discussions, loading}: ReplyTableProps) => {
                                                 </div>
                                             </div>
                                         </td>
-                                        <td className="px-8 py-6 text-center">
-                                            <div className="flex flex-col items-center gap-1">
-                                                <div className="flex items-center gap-1.5 text-gray-300 font-semibold text-[11px]">
-                                                    <CalendarOutlined size={12} className="text-gray-500" />
-                                                    {new Date(fb.created_at).toLocaleDateString('vi-VN')}
-                                                </div>
+                                        <td className="px-8 py-6">
+                                            <div className="flex flex-col items-center">
+                            <span className="text-gray-400 text-xs flex items-center gap-1">
+                                <ClockCircleOutlined size={12} />
+                                {formatDateTime(fb.updated_at)}
+                            </span>
                                             </div>
                                         </td>
                                     </tr>

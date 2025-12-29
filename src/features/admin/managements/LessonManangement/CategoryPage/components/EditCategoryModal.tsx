@@ -4,7 +4,7 @@ import {
     useGetAdminCategoryQuery,
     useUpdateCategoryMutation
 } from "../../../../../../services/category/category.service.ts";
-import {Button, Modal, Skeleton, message, Switch, Input} from "antd";
+import {Modal, Skeleton, message, Switch, Input} from "antd";
 
 interface EditCategoryModalProps {
     isOpen: boolean;
@@ -21,7 +21,7 @@ const EditCategoryModal = ({ isOpen, onClose, categoryId }: EditCategoryModalPro
         refetchOnMountOrArgChange: true
     });
 
-    const [updateCategory, { isLoading: isUpdating }] = useUpdateCategoryMutation();
+    const [updateCategory] = useUpdateCategoryMutation();
 
     // 2. State quản lý form
     const [formData, setFormData] = useState({
@@ -154,21 +154,22 @@ const EditCategoryModal = ({ isOpen, onClose, categoryId }: EditCategoryModalPro
             </div>
 
             {/* Footer */}
-            <div className="px-8 py-6 bg-white/2 border-t border-white/5 flex gap-3">
-                <Button
+            <div className="flex items-center justify-end gap-3 pb-8 pe-8">
+                <button
+                    type="button"
                     onClick={onClose}
-                    className="flex-1 h-12 rounded-xl text-gray-400 border-none bg-white/5 hover:bg-white/10"
+                    className="px-6 py-2.5 rounded-xl text-gray-400 font-bold text-sm hover:bg-white/5 transition-all"
                 >
-                    Hủy
-                </Button>
-                <Button
-                    loading={isUpdating}
+                    Hủy bỏ
+                </button>
+                <button
+                    type="submit"
                     onClick={handleSave}
                     disabled={isLoading}
-                    className="flex-[2] h-12 rounded-xl text-sm font-bold border-none bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-lg shadow-emerald-900/20"
+                    className="px-8 py-2.5 bg-emerald-500 hover:bg-emerald-600 disabled:opacity-50 text-white font-bold text-sm rounded-xl shadow-lg shadow-emerald-500/20 transition-all"
                 >
-                    Lưu thay đổi
-                </Button>
+                    {isLoading ? 'Đang tạo...' : 'Lưu chủ đề'}
+                </button>
             </div>
         </Modal>
     );

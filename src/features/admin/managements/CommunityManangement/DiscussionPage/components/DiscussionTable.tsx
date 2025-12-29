@@ -2,13 +2,11 @@ import type {DiscussionType, IDiscussion} from "../../../../../../types/discussi
 import {useState} from "react";
 import {
     AlertOutlined,
-    CalendarOutlined,
-    CheckCircleOutlined, CheckOutlined, DeleteOutlined,
-    DownOutlined, ExclamationCircleFilled, EyeOutlined, InfoCircleOutlined,
-    MessageOutlined,
-    SearchOutlined
+    CheckCircleOutlined, CheckOutlined, ClockCircleOutlined, DeleteOutlined,
+    ExclamationCircleFilled, EyeOutlined, InfoCircleOutlined,
+    MessageOutlined
 } from "@ant-design/icons";
-import {message, Modal, Skeleton} from "antd";
+import {Input, message, Modal, Skeleton} from "antd";
 import {
     useDeleteDiscussionMutation,
     useMarkSolutionMutation
@@ -104,23 +102,21 @@ const DiscussionTable = ({discussions, loading}: DiscussionTableProps) => {
                         <MessageOutlined size={20} className="text-emerald-400" />
                     </div>
                     <div>
-                        <h3 className="text-xl font-bold text-white tracking-tight">Quản lý bài đăng</h3>
+                        <h3 className="text-xl font-bold text-white tracking-tight">Danh sách bài đăng</h3>
                         {/*<p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest">Phân loại nội dung theo công nghệ</p>*/}
                     </div>
                 </div>
 
                 <div className="flex items-center gap-3 w-2/3 md:w-auto">
                     {/* Neat Search */}
-                    <div className="relative group flex-1 md:w-72">
-                        <SearchOutlined size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-emerald-400 transition-colors" />
-                        <input
-                            type="text"
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            placeholder="Tìm tên bài đăng"
-                            className="w-full pl-11 pr-4 py-2.5 bg-[#0f131a]/60 text-gray-200 rounded-2xl border border-white/10 outline-none focus:ring-2 focus:ring-emerald-500/30 transition-all text-sm shadow-inner"
-                        />
-                    </div>
+                    <Input.Search
+                        size={"large"}
+                        type="text"
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        placeholder="Tìm tiêu đề bài đăng..."
+                        loading={loading}
+                    />
                 </div>
             </div>
 
@@ -187,12 +183,12 @@ const DiscussionTable = ({discussions, loading}: DiscussionTableProps) => {
                                             </div>
                                         </div>
                                     </td>
-                                    <td className="px-8 py-6 text-center">
-                                        <div className="flex flex-col items-center gap-0.5">
-                                            <div className="flex items-center gap-1.5 text-gray-300 font-semibold text-[11px]">
-                                                <CalendarOutlined size={12} className="text-gray-500" />
-                                                {formatDateTime(post.updated_at)}
-                                            </div>
+                                    <td className="px-8 py-6">
+                                        <div className="flex flex-col items-center">
+                            <span className="text-gray-400 text-xs flex items-center gap-1">
+                                <ClockCircleOutlined size={12} />
+                                {formatDateTime(post.updated_at)}
+                            </span>
                                         </div>
                                     </td>
                                     <td className="px-8 py-6 text-right">
@@ -210,7 +206,14 @@ const DiscussionTable = ({discussions, loading}: DiscussionTableProps) => {
                                                 <CheckOutlined size={16} className={isMarking ? "animate-pulse" : ""} />
                                             </button>
                                             <button
-                                                className="p-2.5 bg-red-400/5 text-gray-400 hover:text-red-400 hover:bg-red-400/10 rounded-xl border border-transparent hover:border-red-500/20 transition-all"
+                                                className="p-2.5 text-gray-400 hover:bg-gray-400/10 rounded-xl border border-transparent transition-all"
+                                                onClick={() => {}}
+                                                title="Xem bài viết"
+                                            >
+                                                <EyeOutlined size={18} />
+                                            </button>
+                                            <button
+                                                className="p-2.5 text-gray-400 hover:text-red-400 hover:bg-red-400/10 rounded-xl border border-transparent hover:border-red-500/20 transition-all"
                                                 onClick={() => handleDelete(post.discussion_id, post.title)}
                                                 disabled={isDeleting}
                                                 title="Xóa bài viết"

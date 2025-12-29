@@ -126,7 +126,7 @@ const CategoryTable = ({ onEdit, categories, loading }: CategoryTableProps) => {
                                 </td>
                                 <td className="px-8 py-5">
                                     <div className="flex items-center gap-4">
-                                        <div className="w-11 h-11 rounded-xl bg-[#0f131a] border border-white/10 flex items-center justify-center p-2.5 shadow-inner group-hover:border-emerald-500/30 transition-all duration-300">
+                                        <div className="w-11 h-11 rounded-xl bg-[#0f131a] border border-white/10 flex items-center justify-center p-1 shadow-inner group-hover:border-emerald-500/30 transition-all duration-300">
                                             {cat.icon_url ? (
                                                 <img src={cat.icon_url} alt={cat.name} className="w-full h-full object-contain filter drop-shadow-sm" />
                                             ) : (

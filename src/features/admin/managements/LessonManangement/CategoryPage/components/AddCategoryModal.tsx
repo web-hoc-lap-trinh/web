@@ -1,7 +1,7 @@
 import { CloseOutlined, UploadOutlined, PictureOutlined } from "@ant-design/icons";
 import { useState, useRef } from "react";
 import { useCreateCategoryMutation } from "../../../../../../services/category/category.service.ts";
-import {Button, Input, message, Modal} from "antd";
+import {Input, message, Modal} from "antd";
 
 interface AddCategoryModalProps {
     isOpen: boolean;
@@ -126,21 +126,22 @@ const AddCategoryModal = ({ isOpen, onClose }: AddCategoryModalProps) => {
             </div>
 
             {/* Footer */}
-            <div className="px-8 py-6 bg-white/2 border-t border-white/5 flex gap-3">
-                <Button
-                    onClick={handleClose}
-                    className="flex-1 h-12 rounded-xl text-gray-400 border-none bg-white/5 hover:bg-white/10"
-                    type="text"
+            <div className="flex items-center justify-end gap-3 pb-8 pe-8">
+                <button
+                    type="button"
+                    onClick={onClose}
+                    className="px-6 py-2.5 rounded-xl text-gray-400 font-bold text-sm hover:bg-white/5 transition-all"
                 >
                     Hủy bỏ
-                </Button>
-                <Button
-                    loading={isLoading}
+                </button>
+                <button
+                    type="submit"
                     onClick={handleSubmit}
-                    className="flex-[2] h-12 rounded-xl text-sm font-bold border-none bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-lg shadow-emerald-900/20"
+                    disabled={isLoading}
+                    className="px-8 py-2.5 bg-emerald-500 hover:bg-emerald-600 disabled:opacity-50 text-white font-bold text-sm rounded-xl shadow-lg shadow-emerald-500/20 transition-all"
                 >
-                    Xác nhận tạo
-                </Button>
+                    {isLoading ? 'Đang tạo...' : 'Lưu nhãn'}
+                </button>
             </div>
         </Modal>
     );

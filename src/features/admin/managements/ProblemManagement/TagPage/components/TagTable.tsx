@@ -1,7 +1,6 @@
 import type {ITag} from "../../../../../../types/tag.types.ts";
 import {
-    CalendarOutlined,
-    CheckCircleOutlined,
+    CheckCircleOutlined, ClockCircleOutlined,
     CloseCircleOutlined, DeleteOutlined,
     EditOutlined, ExclamationCircleOutlined,
     SearchOutlined,
@@ -175,12 +174,12 @@ const TagTable = ({
                                         <span className="text-sm font-bold">{tag.problem_count}</span>
                                     </div>
                                 </td>
-                                <td className="px-8 py-6 text-center">
-                                    <div className="flex flex-col items-center gap-0.5">
-                                        <div className="flex items-center gap-1.5 text-gray-300 font-semibold text-xs">
-                                            <CalendarOutlined size={12} className="text-gray-500" />
-                                            {formatDateTime(tag.updated_at)}
-                                        </div>
+                                <td className="px-8 py-6">
+                                    <div className="flex flex-col items-center">
+                            <span className="text-gray-400 text-xs flex items-center gap-1">
+                                <ClockCircleOutlined size={12} />
+                                {formatDateTime(tag.updated_at)}
+                            </span>
                                     </div>
                                 </td>
                                 <td className="px-8 py-6 text-right">

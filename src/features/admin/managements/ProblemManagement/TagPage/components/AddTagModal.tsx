@@ -127,22 +127,22 @@ const AddTagModal = ({ isOpen, onClose }: CreateTagModalProps) => {
                             </div>
 
                             {/* Actions */}
-                            <div className="flex items-center justify-end gap-3 mt-8">
-                                <button
-                                    type="button"
-                                    onClick={onClose}
-                                    className="px-6 py-2.5 rounded-xl text-gray-400 font-bold text-sm hover:bg-white/5 transition-all"
-                                >
-                                    Hủy bỏ
-                                </button>
-                                <button
-                                    type="submit"
-                                    disabled={isLoading}
-                                    className="px-8 py-2.5 bg-emerald-500 hover:bg-emerald-600 disabled:opacity-50 text-white font-bold text-sm rounded-xl shadow-lg shadow-emerald-500/20 transition-all"
-                                >
-                                    {isLoading ? 'Đang tạo...' : 'Lưu nhãn'}
-                                </button>
-                            </div>
+                                <div className="flex items-center justify-end gap-3 mt-8">
+                                    <button
+                                        type="button"
+                                        onClick={onClose}
+                                        className="px-6 py-2.5 rounded-xl text-gray-400 font-bold text-sm hover:bg-white/5 transition-all"
+                                    >
+                                        Hủy bỏ
+                                    </button>
+                                    <button
+                                        type="submit"
+                                        disabled={isLoading}
+                                        className="px-8 py-2.5 bg-emerald-500 hover:bg-emerald-600 disabled:opacity-50 text-white font-bold text-sm rounded-xl shadow-lg shadow-emerald-500/20 transition-all"
+                                    >
+                                        {isLoading ? 'Đang tạo...' : 'Lưu nhãn'}
+                                    </button>
+                                </div>
                         </Form>
                     </div>
                 </div>

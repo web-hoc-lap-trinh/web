@@ -241,12 +241,12 @@ const ProblemTable = ({onEdit, tags, loading}: ProblemTableProps) => {
                                                 )}
                                             </div>
                                         </td>
-                                        <td className="px-6 py-5 text-center">
+                                        <td className="px-6 py-5">
                                             <div className="flex flex-col items-center">
-                               <span className="text-gray-400 text-xs flex items-center gap-1">
-                                 <ClockCircleOutlined size={12} />
-                                   {formatDateTime(ex.created_at)}
-                               </span>
+                            <span className="text-gray-400 text-xs flex items-center gap-1">
+                                <ClockCircleOutlined size={12} />
+                                {formatDateTime(ex.updated_at)}
+                            </span>
                                             </div>
                                         </td>
                                         <td className="px-6 py-5">

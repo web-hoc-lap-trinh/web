@@ -1,6 +1,6 @@
 import type {ILesson} from "../../../../../../types/lesson.types.ts";
 import {
-    AppstoreOutlined,
+    AppstoreOutlined, ClockCircleOutlined,
     DeleteOutlined,
     EditOutlined,
     ExclamationCircleOutlined, ReadOutlined,
@@ -267,10 +267,13 @@ const LessonTable = ({onEdit, categories, lessons, loading}: LessonTableProps) =
                               {lesson.difficulty_level}
                             </span>
                                             </td>
-                                            <td className="px-6 py-5 text-center">
-                            <span className="text-gray-500 text-[10px] font-bold">
+                                            <td className="px-6 py-5">
+                                                <div className="flex flex-col items-center">
+                            <span className="text-gray-400 text-xs flex items-center gap-1">
+                                <ClockCircleOutlined size={12} />
                               {formatDateTime(lesson.updated_at)}
                             </span>
+                                                </div>
                                             </td>
                                             <td className="px-6 py-5">
                                                 <div className="flex items-center gap-2">
