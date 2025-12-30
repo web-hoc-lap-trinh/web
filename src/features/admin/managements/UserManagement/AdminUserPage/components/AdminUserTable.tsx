@@ -1,5 +1,5 @@
 import type {IUser} from "../../../../../../types/user.types.ts";
-import {Input, message, Modal, Select} from "antd";
+import {Input, message, Modal, Pagination, Select} from "antd";
 import {
     CheckOutlined, ClockCircleOutlined,
     DeleteOutlined, ExclamationCircleOutlined,
@@ -11,6 +11,10 @@ import {useDeleteUserMutation, useUpdateUserStatusMutation} from "../../../../..
 interface AdminUserTableProps {
     users: IUser[];
     loading: boolean;
+    total: number;
+    currentPage: number;
+    pageSize: number;
+    onPageChange: (page: number, pageSize: number) => void;
     searchQuery: string;
     onSearchChange: (value: string) => void;
     sort: string;
@@ -22,7 +26,18 @@ interface UpdateProps {
     userStatus: string;
 }
 
-const AdminUserTable = ({users, loading, searchQuery, onSearchChange, sort, onSortChange} : AdminUserTableProps) => {
+const AdminUserTable = ({
+    users,
+    loading,
+    total,
+    currentPage,
+    pageSize,
+    onPageChange,
+    searchQuery,
+    onSearchChange,
+    sort,
+    onSortChange
+} : AdminUserTableProps) => {
     const [updateStatus] = useUpdateUserStatusMutation();
     const [deleteUser, {isLoading: isDeleting}] = useDeleteUserMutation();
 
@@ -215,6 +230,20 @@ const AdminUserTable = ({users, loading, searchQuery, onSearchChange, sort, onSo
                         )}
                         </tbody>
                     </table>
+                </div>
+
+                <div className="px-8 py-5 border-t border-white/5 bg-black/20 flex items-center justify-between">
+                    <div className="text-xs text-gray-500 font-medium">
+                        Hiển thị <span className="text-emerald-400">{users.length}</span> trên <span className="text-emerald-400">{total}</span> nhãn
+                    </div>
+                    <Pagination
+                        current={currentPage}
+                        pageSize={pageSize}
+                        total={total}
+                        onChange={onPageChange}
+                        showSizeChanger={false} // Tắt nếu bạn muốn fix cứng limit
+                        className="dark-pagination" // CSS custom bên dưới
+                    />
                 </div>
             </div>
         </div>

@@ -1,11 +1,8 @@
 import type {ICategory} from "../../../../../../types/category.types.ts";
 import {
-    AppstoreOutlined, ClockCircleOutlined, DeleteOutlined,
-    EditOutlined, ExclamationCircleOutlined,
-    EyeInvisibleOutlined, EyeOutlined, FileImageOutlined, SearchOutlined
+    AppstoreOutlined, ClockCircleOutlined, EditOutlined, EyeInvisibleOutlined, EyeOutlined, FileImageOutlined
 } from "@ant-design/icons";
-import {message, Modal, Skeleton} from "antd";
-import {useDeleteCategoryMutation} from "../../../../../../services/category/category.service.ts";
+import {Input, Skeleton} from "antd";
 import {useState} from "react";
 
 interface CategoryTableProps {
@@ -15,7 +12,6 @@ interface CategoryTableProps {
 }
 
 const CategoryTable = ({ onEdit, categories, loading }: CategoryTableProps) => {
-    const [deleteCategory, { isLoading: isDeleting }] = useDeleteCategoryMutation();
     const [searchQuery, setSearchQuery] = useState('');
 
     const filteredCategories = categories.filter(cat =>
@@ -30,34 +26,6 @@ const CategoryTable = ({ onEdit, categories, loading }: CategoryTableProps) => {
             year: 'numeric',
             hour: '2-digit',
             minute: '2-digit',
-        });
-    };
-
-    const handleDelete = (id: number, name: string) => {
-        Modal.confirm({
-            title: <span className="text-white">Xác nhận xóa nhãn</span>,
-            icon: <ExclamationCircleOutlined className="text-red-500" />,
-            content: (
-                <div className="text-gray-400">
-                    Bạn có chắc chắn muốn xóa nhãn <span className="text-emerald-400 font-bold">{name}</span>?
-                    Hành động này không thể hoàn tác.
-                </div>
-            ),
-            okText: 'Xóa ngay',
-            okType: 'danger',
-            cancelText: 'Hủy',
-            centered: true,
-            // Custom style để khớp với Dark Theme của bạn
-            className: "dark-confirm-modal",
-            async onOk() {
-                try {
-                    await deleteCategory(id).unwrap();
-                    message.success('Đã xóa nhãn thành công');
-                } catch (error) {
-                    message.error('Không thể xóa nhãn này');
-                    console.log(error)
-                }
-            },
         });
     };
 
@@ -90,19 +58,14 @@ const CategoryTable = ({ onEdit, categories, loading }: CategoryTableProps) => {
                     </div>
                 </div>
 
-                <div className="flex items-center gap-3 w-2/3 md:w-auto">
-                    {/* Neat Search */}
-                    <div className="relative group flex-1 md:w-72">
-                        <SearchOutlined size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-emerald-400 transition-colors" />
-                        <input
-                            type="text"
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            placeholder="Tìm tên chủ đề hoặc mã ID..."
-                            className="w-full pl-11 pr-4 py-2.5 bg-[#0f131a]/60 text-gray-200 rounded-2xl border border-white/10 outline-none focus:ring-2 focus:ring-emerald-500/30 transition-all text-sm shadow-inner"
-                        />
-                    </div>
-                </div>
+                <Input.Search
+                    size={"large"}
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Tìm câu hỏi..."
+                    style={{ width: '20%' }}
+                />
             </div>
 
             {/* Modern Table Container */}
@@ -168,13 +131,6 @@ const CategoryTable = ({ onEdit, categories, loading }: CategoryTableProps) => {
                                             className="p-2.5 bg-emerald-400/5 text-gray-400 hover:text-emerald-400 hover:bg-emerald-400/10 rounded-xl border border-transparent hover:border-emerald-500/20 transition-all"
                                         >
                                             <EditOutlined size={16} />
-                                        </button>
-                                        <button
-                                            className="p-2.5 bg-red-400/5 text-gray-400 hover:text-red-400 hover:bg-red-400/10 rounded-xl border border-transparent hover:border-red-500/20 transition-all"
-                                            onClick={() => handleDelete(cat.category_id, cat.name)}
-                                            disabled={isDeleting}
-                                        >
-                                            <DeleteOutlined size={16} />
                                         </button>
                                     </div>
                                 </td>

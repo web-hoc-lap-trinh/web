@@ -9,9 +9,9 @@ import {
     CheckCircleOutlined,
     ClockCircleOutlined, CloseCircleOutlined,
     DeleteOutlined, EditOutlined,
-    ExclamationCircleOutlined, ReadOutlined, SearchOutlined, StarFilled, UnorderedListOutlined
+    ExclamationCircleOutlined, ReadOutlined, StarFilled, UnorderedListOutlined
 } from "@ant-design/icons";
-import {message, Modal, Skeleton} from "antd";
+import {Input, message, Modal, Skeleton} from "antd";
 
 interface TestCaseTableProps {
     onEdit: (testCase: ITestCase) => void;
@@ -113,16 +113,14 @@ const TestCaseTable = ({onEdit, problems, loading, selectedProblemId, setSelecte
                         <AppstoreOutlined size={18} className="text-emerald-400" />
                         <h3 className="text-xs font-bold text-gray-400 uppercase tracking-[0.2em]">Chọn bài tập cần quản lý</h3>
                     </div>
-                    <div className="relative group w-2/3 sm:w-80">
-                        <SearchOutlined size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-emerald-400 transition-colors" />
-                        <input
-                            type="text"
-                            value={searchQueryProblem}
-                            onChange={(e) => setSearchQueryProblem(e.target.value)}
-                            placeholder="Tìm kiếm bài học"
-                            className="w-full pl-11 pr-4 py-2.5 bg-[#0f131a]/60 text-gray-200 rounded-2xl border border-white/10 outline-none focus:ring-2 focus:ring-emerald-500/30 transition-all placeholder-gray-600 shadow-inner text-sm"
-                        />
-                    </div>
+                    <Input.Search
+                        size={"large"}
+                        type="text"
+                        value={searchQueryProblem}
+                        onChange={(e) => setSearchQueryProblem(e.target.value)}
+                        placeholder="Tìm tên bài tập..."
+                        style={{ width: "20%" }}
+                    />
                 </div>
 
                 <div className="max-h-[290px] overflow-y-auto pr-2">
@@ -171,16 +169,14 @@ const TestCaseTable = ({onEdit, problems, loading, selectedProblemId, setSelecte
                     </div>
 
                     {/* Neat Compact Search Bar */}
-                    <div className="relative group w-2/3 sm:w-80">
-                        <SearchOutlined size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-emerald-400 transition-colors" />
-                        <input
-                            type="text"
-                            value={searchQueryTestCase}
-                            onChange={(e) => setSearchQueryTestCase(e.target.value)}
-                            placeholder="Tìm kiếm test case"
-                            className="w-full pl-11 pr-4 py-2.5 bg-[#0f131a]/60 text-gray-200 rounded-2xl border border-white/10 outline-none focus:ring-2 focus:ring-emerald-500/30 transition-all placeholder-gray-600 shadow-inner text-sm"
-                        />
-                    </div>
+                    <Input.Search
+                        size={"large"}
+                        type="text"
+                        value={searchQueryTestCase}
+                        onChange={(e) => setSearchQueryTestCase(e.target.value)}
+                        placeholder="Tìm test case..."
+                        style={{ width: "20%" }}
+                    />
                 </div>
 
                 <div className="bg-[#1a202c]/60 backdrop-blur-xl rounded-3xl border border-white/5 shadow-2xl overflow-hidden">

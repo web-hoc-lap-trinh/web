@@ -7,7 +7,6 @@ import {
     EditOutlined, ExclamationCircleFilled,
     EyeInvisibleOutlined,
     EyeOutlined, ReadOutlined, ReloadOutlined,
-    SearchOutlined,
     TrophyOutlined, UnorderedListOutlined
 } from "@ant-design/icons";
 import {
@@ -149,16 +148,14 @@ const ProblemTable = ({
                         <AppstoreOutlined size={18} className="text-emerald-400" />
                         <h3 className="text-xs font-bold text-gray-400 uppercase tracking-[0.2em]">Chọn nhãn cần quản lý</h3>
                     </div>
-                    <div className="relative group w-2/3 sm:w-80">
-                        <SearchOutlined size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-emerald-400 transition-colors" />
-                        <input
-                            type="text"
-                            value={searchQueryTag}
-                            onChange={(e) => setSearchQueryTag(e.target.value)}
-                            placeholder="Tìm kiếm nhãn"
-                            className="w-full pl-11 pr-4 py-2.5 bg-[#0f131a]/60 text-gray-200 rounded-2xl border border-white/10 outline-none focus:ring-2 focus:ring-emerald-500/30 transition-all placeholder-gray-600 shadow-inner text-sm"
-                        />
-                    </div>
+                    <Input.Search
+                        size={"large"}
+                        type="text"
+                        value={searchQueryTag}
+                        onChange={(e) => setSearchQueryTag(e.target.value)}
+                        placeholder="Tìm kiếm nhãn..."
+                        style={{ width: '18%' }}
+                    />
                 </div>
 
                 <div className="max-h-[290px] overflow-y-auto pr-2">
