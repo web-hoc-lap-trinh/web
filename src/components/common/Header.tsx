@@ -19,6 +19,7 @@ const Header = () => {
     });
 
     const streakCount = activityStats?.streak_day || 0;
+    const isActiveStreak = streakCount > 0;
 
     return (
         <header className="fixed top-0 left-0 right-0 z-50 bg-[#051311]/80 backdrop-blur-md border-b border-white/5 h-16 flex items-center">
@@ -54,11 +55,15 @@ const Header = () => {
                     ) : (
                         <>
                             <div 
-                                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-orange-500/10 border border-orange-500/20 transition-all hover:bg-orange-500/20"
+                                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full border transition-all ${
+                                    isActiveStreak
+                                        ? "bg-orange-500/10! border-orange-500/20! hover:bg-orange-500/20!"
+                                        : "bg-gray-500/10! border-gray-500/20! hover:bg-gray-500/20!"
+                                }`}
                                 title="Chuỗi ngày hoạt động liên tiếp"
                             >
-                                <FireFilled className="text-orange-500 animate-pulse" />
-                                <span className="text-orange-400 font-bold text-sm">{streakCount}</span>
+                                <FireFilled className={`${isActiveStreak ? "text-orange-500! animate-pulse" : "text-gray-400!"}`} />
+                                <span className={`${isActiveStreak ? "text-orange-400!" : "text-gray-400!"} font-bold text-sm`}>{streakCount}</span>
                             </div>
 
                             <Button 
