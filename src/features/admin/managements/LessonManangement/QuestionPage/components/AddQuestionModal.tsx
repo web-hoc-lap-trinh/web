@@ -1,37 +1,38 @@
 import type {ExerciseType, IExerciseOption} from "../../../../../../types/exercise.types.ts";
 import React, {useEffect, useState} from "react";
 import {useGetAdminLessonsQuery} from "../../../../../../services/lesson/lesson.service.ts";
-import {CheckCircleOutlined, CheckSquareOutlined, CloseOutlined, DownOutlined, InfoCircleOutlined} from "@ant-design/icons";
+import {CheckCircleOutlined, CheckSquareOutlined, CloseOutlined, InfoCircleOutlined} from "@ant-design/icons";
 import {useCreateExerciseMutation} from "../../../../../../services/exercise/exercise.service.ts";
-import {message} from "antd";
+import {message, Select} from "antd";
 import {createPortal} from "react-dom";
 
 interface AddExerciseModalProps {
     isOpen: boolean;
     onClose: () => void;
+    selectedLessonId: number;
 }
 
-const AddQuestionModal = ({isOpen, onClose} : AddExerciseModalProps) => {
+const AddQuestionModal = ({isOpen, onClose, selectedLessonId} : AddExerciseModalProps) => {
     const {data: lessons = []} = useGetAdminLessonsQuery();
     const [createExercise] = useCreateExerciseMutation();
 
     const [type, setType] = useState<ExerciseType>("MULTIPLE_CHOICE");
     const [formData, setFormData] = useState({
         question: '',
-        lesson_id: lessons[0]?.lesson_id || 0,
+        lesson_id: 0,
         explanation: '',
         options: ['', '', '', ''],
         correct_answer: ''
     });
 
     useEffect(() => {
-        if (lessons.length > 0 && formData.lesson_id === 0) {
+        if (isOpen) {
             setFormData(prev => ({
                 ...prev,
-                lesson_id: lessons[0].lesson_id
+                lesson_id: selectedLessonId !== 0 ? selectedLessonId : (lessons[0]?.lesson_id || 0)
             }));
         }
-    }, [lessons]);
+    }, [isOpen, lessons, selectedLessonId]);
 
     if (!isOpen) return null;
 
@@ -123,7 +124,7 @@ const AddQuestionModal = ({isOpen, onClose} : AddExerciseModalProps) => {
                 {/* Header */}
                 <div className="px-8 py-6 border-b border-white/5 flex justify-between items-center bg-white/2 shrink-0">
                     <div>
-                        <h3 className="text-xl font-bold text-white tracking-wide">Thêm bài tập mới</h3>
+                        <h3 className="text-xl font-bold text-white tracking-wide">Thêm câu hỏi mới</h3>
                         <p className="text-xs text-gray-500 mt-1 uppercase tracking-widest font-semibold opacity-70">Cấu hình câu hỏi và đáp án chi tiết</p>
                     </div>
                     <button onClick={onClose} className="p-2 text-gray-400 hover:text-white transition-colors">
@@ -153,19 +154,17 @@ const AddQuestionModal = ({isOpen, onClose} : AddExerciseModalProps) => {
                         <div className="space-y-2">
                             <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Thuộc bài học</label>
                             <div className="relative group">
-                                <select
-                                    name="lesson_id"
+                                <Select
+                                    size={"large"}
+                                    key={formData.lesson_id}
                                     value={formData.lesson_id}
-                                    onChange={handleInputChange}
+                                    onChange={(value: number) => setFormData(prev => ({ ...prev, lesson_id: value }))}
                                     className="w-full pl-12 pr-10 py-3.5 bg-[#0f131a]/50 text-gray-200 rounded-xl border border-white/10 outline-none focus:ring-2 focus:ring-emerald-500/50 transition-all appearance-none cursor-pointer shadow-inner text-sm"
                                 >
                                     {lessons.map(lesson => (
-                                        <option key={lesson.lesson_id} value={lesson.lesson_id}>{lesson.title}</option>
+                                        <Select.Option key={lesson.lesson_id} value={lesson.lesson_id}>{lesson.title}</Select.Option>
                                     ))}
-                                </select>
-                                <div className="absolute inset-y-0 right-4 flex items-center pointer-events-none text-gray-500">
-                                    <DownOutlined size={14} />
-                                </div>
+                                </Select>
                             </div>
                         </div>
 

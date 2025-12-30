@@ -1,5 +1,5 @@
 import type {IUser} from "../../../../../../types/user.types.ts";
-import {Input, message, Modal, Select} from "antd";
+import {Input, message, Modal, Pagination, Select} from "antd";
 import {
     CheckOutlined, ClockCircleOutlined,
     DeleteOutlined, ExclamationCircleOutlined,
@@ -11,6 +11,10 @@ import {useDeleteUserMutation, useUpdateUserStatusMutation} from "../../../../..
 interface AdminUserTableProps {
     users: IUser[];
     loading: boolean;
+    total: number;
+    currentPage: number;
+    pageSize: number;
+    onPageChange: (page: number, pageSize: number) => void;
     searchQuery: string;
     onSearchChange: (value: string) => void;
     sort: string;
@@ -22,7 +26,18 @@ interface UpdateProps {
     userStatus: string;
 }
 
-const AdminUserTable = ({users, loading, searchQuery, onSearchChange, sort, onSortChange} : AdminUserTableProps) => {
+const AdminUserTable = ({
+    users,
+    loading,
+    total,
+    currentPage,
+    pageSize,
+    onPageChange,
+    searchQuery,
+    onSearchChange,
+    sort,
+    onSortChange
+} : AdminUserTableProps) => {
     const [updateStatus] = useUpdateUserStatusMutation();
     const [deleteUser, {isLoading: isDeleting}] = useDeleteUserMutation();
 
@@ -119,12 +134,11 @@ const AdminUserTable = ({users, loading, searchQuery, onSearchChange, sort, onSo
                         <tr>
                             <th className="px-6 py-5 font-semibold">Người dùng</th>
                             <th className="px-6 py-5 font-semibold">User ID</th>
-                            {/*<th className="px-6 py-5 font-semibold text-center">Vai trò</th>*/}
                             <th className="px-6 py-5 font-semibold text-center">Trạng thái</th>
                             <th className="px-6 py-5 font-semibold text-center">Chuỗi</th>
                             <th className="px-6 py-5 font-semibold text-center">Hoạt động cuối</th>
                             <th className="px-6 py-5 font-semibold text-center">Ngày tạo</th>
-                            <th className="px-6 py-5 font-semibold text-right">Tác vụ</th>
+                            <th className="px-6 py-5 font-semibold text-center">Tác vụ</th>
                         </tr>
                         </thead>
                         <tbody className="divide-y divide-white/5">
@@ -182,8 +196,8 @@ const AdminUserTable = ({users, loading, searchQuery, onSearchChange, sort, onSo
                             </span>
                                     </div>
                                 </td>
-                                <td className="px-6 py-5 text-right">
-                                    <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <td className="px-6 py-5 text-center">
+                                    <div className="flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                                         <button
                                             onClick={() => handleUpdate({ id: user.user_id, userStatus: user.status })}
                                             className="p-2 text-gray-400 hover:text-gray-400 hover:bg-gray-400/10 rounded-lg transition-all transform hover:scale-110"
@@ -216,6 +230,20 @@ const AdminUserTable = ({users, loading, searchQuery, onSearchChange, sort, onSo
                         )}
                         </tbody>
                     </table>
+                </div>
+
+                <div className="px-8 py-5 border-t border-white/5 bg-black/20 flex items-center justify-between">
+                    <div className="text-xs text-gray-500 font-medium">
+                        Hiển thị <span className="text-emerald-400">{users.length}</span> trên <span className="text-emerald-400">{total}</span> nhãn
+                    </div>
+                    <Pagination
+                        current={currentPage}
+                        pageSize={pageSize}
+                        total={total}
+                        onChange={onPageChange}
+                        showSizeChanger={false} // Tắt nếu bạn muốn fix cứng limit
+                        className="dark-pagination" // CSS custom bên dưới
+                    />
                 </div>
             </div>
         </div>

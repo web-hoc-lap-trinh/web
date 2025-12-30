@@ -116,19 +116,19 @@ export const problemApi = authApi.injectEndpoints({
             ITestCase,
             number
         >({
-            query: (id) => `/testcases/${id}`,
+            query: (testCaseId) => `/testcases/${testCaseId}`,
             transformResponse: (response: IApiResponse<ITestCase>) =>
                 response.result,
-            providesTags: (_, __, testcaseId) => [
-                { type: "TestCase", id: testcaseId },
+            providesTags: (_, __, testCaseId) => [
+                { type: "TestCase", id: testCaseId },
             ],
         }),
 
-		createProblemTestCase: builder.mutation<ITestCase, { id: number; data: CreateTestCasePayload }>({
-			query: ({ id, data }) => ({ url: `/problems/${id}/testcases`, method: "POST", body: data }),
+		createProblemTestCase: builder.mutation<ITestCase, { problemId: number; data: CreateTestCasePayload }>({
+			query: ({ problemId, data }) => ({ url: `/problems/${problemId}/testcases`, method: "POST", body: data }),
 			transformResponse: (response: IApiResponse<TestCaseResponse>) => response.result.testcase,
             invalidatesTags: (_result, _error, arg) => [
-                { type: "TestCase", id: `LIST_BY_PROBLEM_${arg.id}` }
+                { type: "TestCase", id: `LIST_BY_PROBLEM_${arg.problemId}` }
             ],
 		}),
 
@@ -138,17 +138,25 @@ export const problemApi = authApi.injectEndpoints({
 			invalidatesTags: [{ type: "TestCase", id: "LIST" } as TestCaseTag],
 		}),
 
-		updateTestCase: builder.mutation<ITestCase, { id: number; data: UpdateTestCasePayload }>({
-			query: ({ id, data }) => ({ url: `/testcases/${id}`, method: "PUT", body: data }),
+		updateTestCase: builder.mutation<ITestCase, { testCaseId: number, problemId: number, data: UpdateTestCasePayload }>({
+			query: ({ testCaseId, data }) => ({ url: `/testcases/${testCaseId}`, method: "PUT", body: data }),
 			transformResponse: (response: IApiResponse<TestCaseResponse>) => response.result.testcase,
-			invalidatesTags: (result) => (result ? [{ type: "TestCase", id: result.test_case_id } as TestCaseTag] : []),
+            invalidatesTags: (_result, _error, arg) => [
+                { type: "TestCase", id: `LIST_BY_PROBLEM_${arg.problemId}` },
+                { type: "TestCase", id: arg.testCaseId}
+            ],
 		}),
 
-		deleteTestCase: builder.mutation<{ success: boolean }, number>({
-			query: (id) => ({ url: `/testcases/${id}`, method: "DELETE" }),
-			transformResponse: (response: IApiResponse<{ success: boolean }>) => response.result,
+		deleteTestCase: builder.mutation<{ success: boolean }, {testCaseId: number, problemId: number}>({
+			query: ({testCaseId}) => ({ url: `/testcases/${testCaseId}`, method: "DELETE" }),
+            transformResponse: (response: IApiResponse<any>) => {
+                // Kiểm tra nếu response hoặc response.result bị null/undefined
+                if (!response) return { success: true };
+                return response.result ?? response;
+            },
             invalidatesTags: (_result, _error, arg) => [
-                { type: "TestCase", id: `LIST_BY_PROBLEM_${arg}` }
+                { type: "TestCase", id: `LIST_BY_PROBLEM_${arg.problemId}` },
+                { type: "TestCase", id: arg.testCaseId}
             ],
 		}),
 	}),

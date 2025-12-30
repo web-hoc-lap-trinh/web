@@ -4,10 +4,9 @@ import {
     DeleteOutlined,
     EditOutlined,
     ExclamationCircleOutlined, ReadOutlined,
-    SearchOutlined,
     UnorderedListOutlined, UploadOutlined
 } from "@ant-design/icons";
-import {message, Modal, Skeleton} from "antd";
+import {Input, message, Modal, Skeleton} from "antd";
 import {
     useDeleteLessonMutation, useUploadLessonMediaMutation
 } from "../../../../../../services/lesson/lesson.service.ts";
@@ -159,16 +158,14 @@ const LessonTable = ({onEdit, categories, lessons, loading}: LessonTableProps) =
                         <AppstoreOutlined size={18} className="text-emerald-400" />
                         <h3 className="text-xs font-bold text-gray-400 uppercase tracking-[0.2em]">Chọn chủ đề</h3>
                     </div>
-                    <div className="relative group w-2/3 sm:w-80">
-                        <SearchOutlined size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-emerald-400 transition-colors" />
-                        <input
-                            type="text"
-                            value={searchQueryCategory}
-                            onChange={(e) => setSearchQueryCategory(e.target.value)}
-                            placeholder="Tìm kiếm bài học"
-                            className="w-full pl-11 pr-4 py-2.5 bg-[#0f131a]/60 text-gray-200 rounded-2xl border border-white/10 outline-none focus:ring-2 focus:ring-emerald-500/30 transition-all placeholder-gray-600 shadow-inner text-sm"
-                        />
-                    </div>
+                    <Input.Search
+                        size={"large"}
+                        type="text"
+                        value={searchQueryCategory}
+                        onChange={(e) => setSearchQueryCategory(e.target.value)}
+                        placeholder="Tìm câu hỏi..."
+                        style={{ width: '20%' }}
+                    />
                 </div>
 
                 <div className="max-h-[290px] overflow-y-auto pr-2">
@@ -217,16 +214,14 @@ const LessonTable = ({onEdit, categories, lessons, loading}: LessonTableProps) =
                     </div>
 
                     {/* Neat Compact Search Bar */}
-                    <div className="relative group w-2/3 sm:w-80">
-                        <SearchOutlined size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-emerald-400 transition-colors" />
-                        <input
-                            type="text"
-                            value={searchQueryLesson}
-                            onChange={(e) => setSearchQueryLesson(e.target.value)}
-                            placeholder="Tìm kiếm câu hỏi"
-                            className="w-full pl-11 pr-4 py-2.5 bg-[#0f131a]/60 text-gray-200 rounded-2xl border border-white/10 outline-none focus:ring-2 focus:ring-emerald-500/30 transition-all placeholder-gray-600 shadow-inner text-sm"
-                        />
-                    </div>
+                    <Input.Search
+                        size={"large"}
+                        type="text"
+                        value={searchQueryLesson}
+                        onChange={(e) => setSearchQueryLesson(e.target.value)}
+                        placeholder="Tìm câu hỏi..."
+                        style={{ width: '20%' }}
+                    />
                 </div>
 
                 <div className="bg-[#1a202c]/60 backdrop-blur-xl rounded-3xl border border-white/5 shadow-2xl overflow-hidden">

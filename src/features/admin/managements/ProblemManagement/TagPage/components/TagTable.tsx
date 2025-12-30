@@ -3,10 +3,9 @@ import {
     CheckCircleOutlined, ClockCircleOutlined,
     CloseCircleOutlined, DeleteOutlined,
     EditOutlined, ExclamationCircleOutlined,
-    SearchOutlined,
     TagsOutlined, UnorderedListOutlined
 } from "@ant-design/icons";
-import {Skeleton, Modal, message, Pagination} from "antd";
+import {Modal, message, Pagination, Input, Select} from "antd";
 import {useDeleteTagMutation} from "../../../../../../services/tag/tag.service.ts";
 
 interface TagTableProps {
@@ -17,8 +16,10 @@ interface TagTableProps {
     currentPage: number;
     pageSize: number;
     onPageChange: (page: number, pageSize: number) => void;
-    searchQuery: string;
-    onSearchChange: (value: string) => void;
+    searchQuery: string | null;
+    onSearchChange: (value: string | null) => void;
+    sort: boolean | undefined;
+    onSortChange: (value: boolean | undefined) => void;
 }
 
 const TagTable = ({
@@ -30,7 +31,9 @@ const TagTable = ({
     pageSize,
     onPageChange,
     searchQuery,
-    onSearchChange
+    onSearchChange,
+    sort,
+    onSortChange,
 }: TagTableProps) => {
     const [deleteTag, { isLoading: isDeleting }] = useDeleteTagMutation();
 
@@ -73,21 +76,6 @@ const TagTable = ({
         });
     };
 
-    if (loading) {
-        return (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-                {Array.from({ length: 6 }).map((_, idx) => (
-                    <Skeleton
-                        key={idx}
-                        active
-                        className="bg-white/5! rounded-2xl! p-5!"
-                        paragraph={{ rows: 3 }}
-                    />
-                ))}
-            </div>
-        );
-    }
-
     return (
         <div className="space-y-4">
             {/* Header Controls */}
@@ -102,16 +90,26 @@ const TagTable = ({
                     </div>
                 </div>
 
-                <div className="relative group w-96">
-                    <SearchOutlined size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-emerald-400 transition-colors" />
-                    <input
-                        type="text"
-                        value={searchQuery}
-                        onChange={(e) => onSearchChange(e.target.value)}
-                        placeholder="Tìm kiếm nhãn theo tên hoặc mã..."
-                        className="w-full pl-12 pr-4 py-3 bg-black/40 text-gray-200 rounded-xl border border-white/10 outline-none focus:ring-2 focus:ring-emerald-500/30 transition-all text-sm shadow-inner"
+                <div className="relative group w-96 flex flex-row gap-1">
+                    <Select
+                        size={"large"}
+                        value={sort}
+                        allowClear={true}
+                        style={{ width: 150 }}
+                        onChange={(e) => onSortChange(e)}
+                        options={[
+                            { value: true, label: 'Active' },
+                            { value: false, label: 'Inactive' },
+                        ]}
                     />
-                    {loading && <span className="absolute right-4 top-1/2 -translate-y-1/2 text-[10px] text-emerald-400">Đang tìm...</span>}
+                    <Input.Search
+                        size={"large"}
+                        type="text"
+                        value={searchQuery ? searchQuery : ""}
+                        onChange={(e) => onSearchChange(e.target.value)}
+                        placeholder="Tìm tên nhãn..."
+                        loading={loading}
+                    />
                 </div>
             </div>
 
@@ -207,7 +205,7 @@ const TagTable = ({
                                 <td colSpan={5} className="px-8 py-24 text-center">
                                     <div className="flex flex-col items-center gap-3 opacity-20">
                                         <UnorderedListOutlined size={40} className="text-gray-400" />
-                                        <p className="text-sm font-bold text-gray-300">Không có dữ liệu</p>
+                                        <p className="text-sm font-bold text-gray-300">{loading ? "Đang tải dữ liệu" : "Không có dữ liệu"}</p>
                                     </div>
                                 </td>
                             </tr>

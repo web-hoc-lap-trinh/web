@@ -7,6 +7,7 @@ import AddQuestionModal from "./components/AddQuestionModal.tsx";
 import EditQuestionModal from "./components/EditQuestionModal.tsx";
 
 const QuestionPage = () => {
+    const [selectedLessonId, setSelectedLessonId] = useState<number>(0);
     const [selectedExerciseId, setSelectedExerciseId] = useState<number>(0);
     const [isExerciseAddOpen, setIsExerciseAddOpen] = useState<boolean>(false);
     const [isExerciseEditOpen, setIsExerciseEditOpen] = useState<boolean>(false);
@@ -20,9 +21,9 @@ const QuestionPage = () => {
     return (
         <div className="flex-1 overflow-auto px-10 pb-10 z-10">
             <HeaderBar title={"Quản lý câu hỏi"} buttonText={"Thêm câu hỏi"} setOpen={() => setIsExerciseAddOpen(true)} />
-            <QuestionTable onEdit={handleEditExercise} lessons={lessons} loading={isLoading} />
+            <QuestionTable onEdit={handleEditExercise} lessons={lessons} loading={isLoading} selectedLessonId={selectedLessonId} setSelectedLessonId={setSelectedLessonId} />
 
-            <AddQuestionModal isOpen={isExerciseAddOpen} onClose={() => setIsExerciseAddOpen(false)} />
+            <AddQuestionModal isOpen={isExerciseAddOpen} onClose={() => setIsExerciseAddOpen(false)} selectedLessonId={selectedLessonId} />
             <EditQuestionModal
                 isOpen={isExerciseEditOpen}
                 onClose={() => {

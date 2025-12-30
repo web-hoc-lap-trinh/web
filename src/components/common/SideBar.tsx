@@ -175,7 +175,6 @@ const SideBar = () => {
                         <div
                             className="text-sm font-semibold text-gray-200 truncate group-hover:text-white transition-colors">Administrator
                         </div>
-                        <div className="text-xs text-gray-500 truncate">admin@system.com</div>
                     </div>
                 </div>
             </div>

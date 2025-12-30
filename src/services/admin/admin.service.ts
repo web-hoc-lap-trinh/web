@@ -6,22 +6,29 @@ import type {
     ISubmissionStatsParams,
     IUserGrowth
 } from "../../types/dashboard.types.ts";
-import type {GetAdminUsersParams} from "./admin.types.ts";
+import type {GetAdminUsersParams, PaginatedAdminUserResponse, PaginatedAdminUserResult,} from "./admin.types.ts";
 
 export const adminApi = authApi.injectEndpoints({
     endpoints: (builder) => ({
-        getAdminUsers: builder.query<IUser[], GetAdminUsersParams>({
+        getAdminUsers: builder.query<PaginatedAdminUserResult, GetAdminUsersParams>({
             query: (params) => ({
                 url: "/admin/users",
                 params: params || undefined
             }),
-            transformResponse: (response: IApiResponse<IUser[]>) =>
-                response.result,
+            transformResponse: (response: IApiResponse<PaginatedAdminUserResponse>) => {
+                const { users, pagination } = response.result;
+                return {
+                    items: users,
+                    total: pagination?.total || 0,
+                    page: pagination?.page || 1,
+                    limit: pagination?.limit || 10,
+                };
+            },
 
             providesTags: (result) =>
                 result ?
                     [
-                        ...result.map(({ user_id }) => ({
+                        ...result.items.map(({ user_id }) => ({
                             type: "AdminUser" as const,
                             id: user_id,
                         })),

@@ -12,7 +12,8 @@ const TagPage = () => {
     const [isTagEditOpen, setIsTagEditOpen] = useState<boolean>(false)
     const [selectedTagId, setSelectedTagId] = useState<number>(0)
     const [params, setParams] = useState({ page: 1, limit: 10 });
-    const [searchQuery, setSearchQuery] = useState('');
+    const [searchQuery, setSearchQuery] = useState<string | null>(null);
+    const [sortTagValue, setSortTagValue] = useState<boolean | undefined>(undefined);
     const debouncedSearch = useDebounce(searchQuery, 500);
 
     useEffect(() => {
@@ -32,7 +33,8 @@ const TagPage = () => {
     const { data, isLoading, isFetching } = useGetTagsQuery({
         page: params.page,
         limit: params.limit,
-        search: debouncedSearch || undefined
+        search: debouncedSearch || undefined,
+        is_active: sortTagValue,
     });
 
     return (
@@ -48,6 +50,8 @@ const TagPage = () => {
                 onPageChange={handlePageChange}
                 searchQuery={searchQuery}
                 onSearchChange={setSearchQuery}
+                sort={sortTagValue}
+                onSortChange={setSortTagValue}
             />
 
             <AddTagModal isOpen={isTagAddOpen} onClose={() => setIsTagAddOpen(false)} />

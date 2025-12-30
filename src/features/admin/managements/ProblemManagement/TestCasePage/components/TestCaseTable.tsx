@@ -1,5 +1,5 @@
 import type {IProblem, ITestCase} from "../../../../../../types/problem.types.ts";
-import {useEffect, useMemo, useState} from "react";
+import {useMemo, useState} from "react";
 import {
     useDeleteTestCaseMutation,
     useGetProblemTestCasesQuery
@@ -9,20 +9,19 @@ import {
     CheckCircleOutlined,
     ClockCircleOutlined, CloseCircleOutlined,
     DeleteOutlined, EditOutlined,
-    ExclamationCircleFilled, ReadOutlined, SearchOutlined, StarFilled, UnorderedListOutlined
+    ExclamationCircleOutlined, ReadOutlined, StarFilled, UnorderedListOutlined
 } from "@ant-design/icons";
-import {message, Modal, Skeleton} from "antd";
-
-const {confirm} = Modal;
+import {Input, message, Modal, Skeleton} from "antd";
 
 interface TestCaseTableProps {
     onEdit: (testCase: ITestCase) => void;
     problems: IProblem[];
     loading: boolean;
+    selectedProblemId: number;
+    setSelectedProblemId: (id: number) => void;
 }
 
-const TestCaseTable = ({onEdit, problems, loading}: TestCaseTableProps) => {
-    const [selectedProblemId, setSelectedProblemId] = useState<number>(0);
+const TestCaseTable = ({onEdit, problems, loading, selectedProblemId, setSelectedProblemId}: TestCaseTableProps) => {
     const [searchQueryProblem, setSearchQueryProblem] = useState('');
     const [searchQueryTestCase, setSearchQueryTestCase] = useState('');
     const {data: testCases} = useGetProblemTestCasesQuery(selectedProblemId, {
@@ -30,12 +29,6 @@ const TestCaseTable = ({onEdit, problems, loading}: TestCaseTableProps) => {
         refetchOnMountOrArgChange: true
     });
     const [deleteTestCase, {isLoading: isDeleting}] = useDeleteTestCaseMutation()
-
-    useEffect(() => {
-        if (problems.length > 0 && selectedProblemId === 0) {
-            setSelectedProblemId(problems[0].problem_id);
-        }
-    }, [problems, selectedProblemId]);
     
     const filteredProblems = useMemo(() => {
         if(!problems) return [];
@@ -65,21 +58,32 @@ const TestCaseTable = ({onEdit, problems, loading}: TestCaseTableProps) => {
         });
     };
 
-    const handleDelete = (id: number, name: string) => {
-        confirm({
-            title: 'Xác nhận xóa Test case?',
-            icon: <ExclamationCircleFilled />,
-            content: `Bạn có chắc chắn muốn xóa "${name}"? Hành động này không thể hoàn tác.`,
+    const handleDelete = (testCaseId: number, problemId: number, name: string) => {
+        Modal.confirm({
+            title: <span className="text-white">Xác nhận xóa test case</span>,
+            icon: <ExclamationCircleOutlined className="text-red-500" />,
+            content: (
+                <div className="text-gray-400">
+                    Bạn có chắc chắn muốn xóa test case <span className="text-emerald-400 font-bold">{name}</span>?
+                    Hành động này không thể hoàn tác.
+                </div>
+            ),
             okText: 'Xóa ngay',
             okType: 'danger',
             cancelText: 'Hủy',
             centered: true,
+            // Custom style để khớp với Dark Theme của bạn
+            className: "dark-confirm-modal",
             async onOk() {
                 try {
-                    await deleteTestCase(id).unwrap();
+                    await deleteTestCase({
+                        testCaseId,
+                        problemId
+                    }).unwrap();
                     message.success('Đã xóa test case thành công');
-                } catch (error: any) {
-                    message.error(error?.data?.message || 'Không thể xóa test case này');
+                } catch (error) {
+                    message.error('Không thể xóa test case này');
+                    console.log(error)
                 }
             },
         });
@@ -109,16 +113,14 @@ const TestCaseTable = ({onEdit, problems, loading}: TestCaseTableProps) => {
                         <AppstoreOutlined size={18} className="text-emerald-400" />
                         <h3 className="text-xs font-bold text-gray-400 uppercase tracking-[0.2em]">Chọn bài tập cần quản lý</h3>
                     </div>
-                    <div className="relative group w-2/3 sm:w-80">
-                        <SearchOutlined size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-emerald-400 transition-colors" />
-                        <input
-                            type="text"
-                            value={searchQueryProblem}
-                            onChange={(e) => setSearchQueryProblem(e.target.value)}
-                            placeholder="Tìm kiếm bài học"
-                            className="w-full pl-11 pr-4 py-2.5 bg-[#0f131a]/60 text-gray-200 rounded-2xl border border-white/10 outline-none focus:ring-2 focus:ring-emerald-500/30 transition-all placeholder-gray-600 shadow-inner text-sm"
-                        />
-                    </div>
+                    <Input.Search
+                        size={"large"}
+                        type="text"
+                        value={searchQueryProblem}
+                        onChange={(e) => setSearchQueryProblem(e.target.value)}
+                        placeholder="Tìm tên bài tập..."
+                        style={{ width: "20%" }}
+                    />
                 </div>
 
                 <div className="max-h-[290px] overflow-y-auto pr-2">
@@ -167,16 +169,14 @@ const TestCaseTable = ({onEdit, problems, loading}: TestCaseTableProps) => {
                     </div>
 
                     {/* Neat Compact Search Bar */}
-                    <div className="relative group w-2/3 sm:w-80">
-                        <SearchOutlined size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-emerald-400 transition-colors" />
-                        <input
-                            type="text"
-                            value={searchQueryTestCase}
-                            onChange={(e) => setSearchQueryTestCase(e.target.value)}
-                            placeholder="Tìm kiếm test case"
-                            className="w-full pl-11 pr-4 py-2.5 bg-[#0f131a]/60 text-gray-200 rounded-2xl border border-white/10 outline-none focus:ring-2 focus:ring-emerald-500/30 transition-all placeholder-gray-600 shadow-inner text-sm"
-                        />
-                    </div>
+                    <Input.Search
+                        size={"large"}
+                        type="text"
+                        value={searchQueryTestCase}
+                        onChange={(e) => setSearchQueryTestCase(e.target.value)}
+                        placeholder="Tìm test case..."
+                        style={{ width: "20%" }}
+                    />
                 </div>
 
                 <div className="bg-[#1a202c]/60 backdrop-blur-xl rounded-3xl border border-white/5 shadow-2xl overflow-hidden">
@@ -238,7 +238,7 @@ const TestCaseTable = ({onEdit, problems, loading}: TestCaseTableProps) => {
                                             </div>
                                         </td>
                                         <td className="px-6 py-5">
-                                            <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                            <div className="flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                                                 <button
                                                     onClick={() => onEdit(tc)}
                                                     className="p-2 text-gray-400 hover:text-emerald-400 hover:bg-emerald-400/10 rounded-lg transition-all"
@@ -247,7 +247,7 @@ const TestCaseTable = ({onEdit, problems, loading}: TestCaseTableProps) => {
                                                 </button>
                                                 <button
                                                     className="p-2 text-gray-400 hover:text-red-400 hover:bg-red-400/10 rounded-lg transition-all"
-                                                    onClick={() => handleDelete(tc.test_case_id, tc.test_case_id.toString())}
+                                                    onClick={() => handleDelete(tc.test_case_id, tc.problem_id, tc.test_case_id.toString())}
                                                     disabled={isDeleting}
                                                 >
                                                     <DeleteOutlined size={18} />

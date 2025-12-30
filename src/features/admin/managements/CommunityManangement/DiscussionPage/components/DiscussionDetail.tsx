@@ -57,9 +57,9 @@ const DiscussionDetail = ({ discussionId, isOpen, onClose }: Props) => {
             {isLoading ? (
                 <div className="p-20 text-center"><Spin size="large" /></div>
             ) : (
-                <div className="flex flex-col h-[85vh]">
+                <div className="flex flex-col h-[85vh] pt-8">
                     {/* Header: Thông tin bài viết */}
-                    <div className="p-6 bg-white/5 border-b border-white/5">
+                    <div className="p-6 bg-white/5 border-b border-white/5 rounded-2xl">
                         <div className="flex justify-between items-start mb-4">
                             <div className="flex gap-3">
                                 <Avatar src={post?.user.avatar_url} icon={<UserOutlined />} className="border border-emerald-500/50" />
@@ -85,10 +85,7 @@ const DiscussionDetail = ({ discussionId, isOpen, onClose }: Props) => {
                         </h3>
                         {replies ? (replies.map(reply => (
                             <ReplyItem
-                                key={reply.reply_id}
                                 reply={reply}
-                                onReply={(c, pId) => handleSendReply(c, pId)}
-                                isSubmitting={isSubmitting}
                             />
                         ))) : (
                             <div>
@@ -98,25 +95,24 @@ const DiscussionDetail = ({ discussionId, isOpen, onClose }: Props) => {
                     </div>
 
                     {/* Footer: Ô nhập phản hồi nhanh của Admin */}
-                    <div className="p-4 bg-black/40 border-t border-white/5">
-                        <div className="flex gap-3">
-                            <Input.TextArea
-                                value={adminComment}
-                                onChange={(e) => setAdminComment(e.target.value)}
-                                placeholder="Viết phản hồi của Admin..."
-                                autoSize={{ minRows: 1, maxRows: 4 }}
-                                className="bg-white/5 border-white/10 text-white hover:border-emerald-500/50"
-                            />
-                            <Button
-                                type="primary"
-                                icon={<SendOutlined />}
-                                onClick={() => handleSendReply(adminComment)}
-                                loading={isSubmitting}
-                                className="h-full bg-emerald-600 border-none"
-                            >
-                                Gửi
-                            </Button>
-                        </div>
+                    <div className="p-4 border-white/5 flex items-center gap-3">
+                        <Input.TextArea
+                            size={"large"}
+                            value={adminComment}
+                            onChange={(e) => setAdminComment(e.target.value)}
+                            placeholder="Viết phản hồi của Admin..."
+                            autoSize={{ minRows: 1, maxRows: 4 }}
+                            className="bg-white/5 border-white/10 text-white hover:border-emerald-500/50"
+                        />
+                        <Button
+                            type="primary"
+                            icon={<SendOutlined />}
+                            onClick={() => handleSendReply(adminComment)}
+                            loading={isSubmitting}
+                            className="h-full bg-emerald-600 border-none"
+                        >
+                            Gửi
+                        </Button>
                     </div>
                 </div>
             )}

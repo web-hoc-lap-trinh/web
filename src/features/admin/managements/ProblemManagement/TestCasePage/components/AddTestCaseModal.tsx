@@ -1,27 +1,25 @@
-import type {IProblem} from "../../../../../../types/problem.types.ts";
-import React, {useEffect, useRef, useState} from "react";
+import React, {useState} from "react";
 import {
     CheckCircleOutlined,
     CloseOutlined,
     CodeOutlined,
     CodeSandboxOutlined,
-    DownOutlined,
     InfoCircleOutlined, StarFilled
 } from "@ant-design/icons";
 import {useCreateProblemTestCaseMutation} from "../../../../../../services/problem/problem.service.ts";
 import {createPortal} from "react-dom";
+import {message} from "antd";
 
 interface AddTestCaseModalProps {
-    problems: IProblem[];
+    problemId: number
     isOpen: boolean;
     onClose: () => void;
 }
 
-const AddTestCaseModal = ({problems, isOpen, onClose}: AddTestCaseModalProps) => {
+const AddTestCaseModal = ({problemId, isOpen, onClose}: AddTestCaseModalProps) => {
     const [createTestCase] = useCreateProblemTestCaseMutation()
 
     const [formData, setFormData] = useState({
-        problemId: problems[0]?.problem_id || 0,
         input_data: '',
         expected_output: '',
         explanation: '',
@@ -29,20 +27,7 @@ const AddTestCaseModal = ({problems, isOpen, onClose}: AddTestCaseModalProps) =>
         is_hidden: false,
         score: 10
     });
-    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-    const dropdownRef = useRef<HTMLDivElement>(null);
 
-    useEffect(() => {
-        const handleClickOutside = (event: MouseEvent) => {
-            if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-                setIsDropdownOpen(false);
-            }
-        };
-        document.addEventListener('mousedown', handleClickOutside);
-        return () => document.removeEventListener('mousedown', handleClickOutside);
-    }, []);
-
-    if (!isOpen) return null;
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
         const { name, value, type } = e.target as any;
@@ -53,7 +38,7 @@ const AddTestCaseModal = ({problems, isOpen, onClose}: AddTestCaseModalProps) =>
     const handleSubmit = async () => {
         try {
             await createTestCase({
-                id: formData.problemId,
+                problemId,
                 data: {
                     input_data: formData.input_data,
                     expected_output: formData.expected_output,
@@ -63,13 +48,15 @@ const AddTestCaseModal = ({problems, isOpen, onClose}: AddTestCaseModalProps) =>
                     score: formData.score,
                 }
             });
+            message.success("Tạo test case thành công");
             onClose();
         } catch (error) {
             console.error(error);
+            message.success("Tạo test case thất bại");
         }
     };
 
-    const selectedExTitle = problems.find(e => e.problem_id === formData.problemId)?.title || 'Chọn bài tập';
+    if (!isOpen) return null;
 
     return createPortal(
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
@@ -94,42 +81,6 @@ const AddTestCaseModal = ({problems, isOpen, onClose}: AddTestCaseModalProps) =>
 
                 {/* Body */}
                 <div className="p-8 space-y-7 overflow-y-auto scrollbar-hide">
-
-                    {/* Custom Exercise Selector */}
-                    <div className="space-y-2 relative" ref={dropdownRef}>
-                        <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Thuộc bài tập thực hành</label>
-                        <div
-                            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                            className={`flex items-center gap-3 px-4 py-4 bg-[#0f131a]/60 text-gray-200 rounded-2xl border transition-all cursor-pointer hover:border-emerald-500/30 group ${isDropdownOpen ? 'border-emerald-500/50 ring-2 ring-emerald-500/20' : 'border-white/10 shadow-inner'}`}
-                        >
-                            <CodeOutlined size={18} className={`${isDropdownOpen ? 'text-emerald-400' : 'text-gray-500'} transition-colors`} />
-                            <span className="flex-1 text-sm font-bold truncate">
-                {selectedExTitle}
-              </span>
-                            <DownOutlined size={18} className={`text-gray-500 transition-transform duration-300 ${isDropdownOpen ? 'rotate-180 text-emerald-400' : ''}`} />
-                        </div>
-
-                        {/* Dropdown Menu */}
-                        {isDropdownOpen && (
-                            <div className="absolute top-full left-0 w-full mt-2 bg-[#1a202c] border border-white/10 rounded-2xl shadow-2xl overflow-hidden z-50 animate-in fade-in slide-in-from-top-2 duration-200">
-                                <div className="max-h-56 overflow-y-auto py-2 scrollbar-hide">
-                                    {problems.map(ex => (
-                                        <div
-                                            key={ex.problem_id}
-                                            onClick={() => { setFormData(prev => ({...prev, problemId: ex.problem_id})); setIsDropdownOpen(false); }}
-                                            className={`px-4 py-3.5 flex items-center justify-between cursor-pointer transition-all hover:bg-emerald-500/10 ${formData.problemId === ex.problem_id ? 'text-emerald-400 bg-emerald-500/5' : 'text-gray-400'}`}
-                                        >
-                                            <div className="flex flex-col">
-                                                <span className="text-sm font-bold truncate max-w-[400px]">{ex.title}</span>
-                                            </div>
-                                            {formData.problemId === ex.problem_id && <CheckCircleOutlined size={18} />}
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                        )}
-                    </div>
-
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-7">
                         <div className="space-y-2">
                             <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1 flex items-center gap-1.5">

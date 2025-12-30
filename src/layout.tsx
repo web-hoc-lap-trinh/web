@@ -32,7 +32,17 @@ const UserLayout = () => {
 
 const AdminLayout = () => {
     return (
-        <ConfigProvider theme={{algorithm: theme.darkAlgorithm}}>
+        <ConfigProvider
+            theme={{
+                algorithm: theme.darkAlgorithm,
+                token: {
+                    colorPrimary: '#10b981', // Màu Emerald khi focus
+                    colorBgContainer: 'rgba(26, 32, 44, 0.6)', // Nền tối
+                    colorTextPlaceholder: '#64748b',
+                    colorText: '#ffffff',
+                    colorBorder: 'rgba(255, 255, 255, 0.1)',
+                },
+        }}>
             <div
                 className="flex h-screen w-full overflow-hidden font-sans selection:bg-emerald-500/30"
                 style={{
