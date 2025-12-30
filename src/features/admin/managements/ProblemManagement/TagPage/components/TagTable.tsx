@@ -92,6 +92,7 @@ const TagTable = ({
 
                 <div className="relative group w-96 flex flex-row gap-1">
                     <Select
+                        placeholder={"Status"}
                         size={"large"}
                         value={sort}
                         allowClear={true}
