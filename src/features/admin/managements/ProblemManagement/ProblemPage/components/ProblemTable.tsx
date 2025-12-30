@@ -224,6 +224,20 @@ const ProblemTable = ({
                     <div className="flex justify-end items-center gap-2">
                         <Select
                             size={"large"}
+                            value={difficultySortValue}
+                            placeholder={"Độ khó"}
+                            allowClear={true}
+                            style={{ width: 120 }}
+                            onChange={(e) => onDifficultySortChange(e)}
+                            options={[
+                                { value: 'EASY', label: 'Easy' },
+                                { value: 'MEDIUM', label: 'Medium' },
+                                { value: 'HARD', label: 'Hard' },
+                            ]}
+                        />
+                        <Select
+                            size={"large"}
+                            placeholder={"Mục"}
                             value={sortValue}
                             allowClear={true}
                             style={{ width: 150 }}
@@ -238,18 +252,7 @@ const ProblemTable = ({
                         />
                         <Select
                             size={"large"}
-                            value={difficultySortValue}
-                            allowClear={true}
-                            style={{ width: 120 }}
-                            onChange={(e) => onDifficultySortChange(e)}
-                            options={[
-                                { value: 'EASY', label: 'Easy' },
-                                { value: 'MEDIUM', label: 'Medium' },
-                                { value: 'HARD', label: 'Hard' },
-                            ]}
-                        />
-                        <Select
-                            size={"large"}
+                            placeholder={"Thứ tự"}
                             value={orderValue}
                             allowClear={true}
                             style={{ width: 120 }}

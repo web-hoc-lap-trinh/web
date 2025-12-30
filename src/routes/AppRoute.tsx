@@ -61,7 +61,6 @@ export const appRoutes: RouteObject[] = [
                     {path: "problem", element: <ProblemPage />},
                     {path: "testcase", element: <TestCasePage/>},
                     {path: "discussion", element: <DiscussionPage/>},
-                    // {path: "reply", element: <ReplyPage/>},
                     {path: "user", element: <AdminUserPage/>}
                 ]
             },

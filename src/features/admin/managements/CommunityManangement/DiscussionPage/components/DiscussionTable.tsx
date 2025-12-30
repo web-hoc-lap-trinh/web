@@ -119,6 +119,7 @@ const DiscussionTable = ({
                     />
                     <Select
                         size={"large"}
+                        placeholder={"Giải pháp"}
                         value={sort}
                         allowClear={true}
                         style={{ width: 170 }}

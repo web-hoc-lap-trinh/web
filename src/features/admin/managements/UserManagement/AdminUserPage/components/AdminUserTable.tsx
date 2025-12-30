@@ -1,12 +1,11 @@
 import type {IUser} from "../../../../../../types/user.types.ts";
-import {Input, message, Modal, Pagination, Select} from "antd";
+import {Input, message, Pagination, Select} from "antd";
 import {
     CheckOutlined, ClockCircleOutlined,
-    DeleteOutlined, ExclamationCircleOutlined,
     FireFilled,
     StopOutlined, UnorderedListOutlined, UserOutlined,
 } from "@ant-design/icons";
-import {useDeleteUserMutation, useUpdateUserStatusMutation} from "../../../../../../services/admin/admin.service.ts";
+import {useUpdateUserStatusMutation} from "../../../../../../services/admin/admin.service.ts";
 
 interface AdminUserTableProps {
     users: IUser[];
@@ -39,7 +38,6 @@ const AdminUserTable = ({
     onSortChange
 } : AdminUserTableProps) => {
     const [updateStatus] = useUpdateUserStatusMutation();
-    const [deleteUser, {isLoading: isDeleting}] = useDeleteUserMutation();
 
     const formatDateTime = (isoString: string) => {
         const date = new Date(isoString);
@@ -62,34 +60,6 @@ const AdminUserTable = ({
         } catch (error) {
             message.error(`Không thể thay đổi trạng thái. Vui lòng thử lại. [${error}]`);
         }
-    };
-
-    const handleDelete = (id: number, name: string) => {
-        Modal.confirm({
-            title: <span className="text-white">Xác nhận xóa nhãn</span>,
-            icon: <ExclamationCircleOutlined className="text-red-500" />,
-            content: (
-                <div className="text-gray-400">
-                    Bạn có chắc chắn muốn xóa nhãn <span className="text-emerald-400 font-bold">{name}</span>?
-                    Hành động này không thể hoàn tác.
-                </div>
-            ),
-            okText: 'Xóa ngay',
-            okType: 'danger',
-            cancelText: 'Hủy',
-            centered: true,
-            // Custom style để khớp với Dark Theme của bạn
-            className: "dark-confirm-modal",
-            async onOk() {
-                try {
-                    await deleteUser(id).unwrap();
-                    message.success('Đã xóa nhãn thành công');
-                } catch (error) {
-                    message.error('Không thể xóa nhãn này');
-                    console.log(error)
-                }
-            },
-        });
     };
 
     return (
@@ -207,13 +177,6 @@ const AdminUserTable = ({
                                                     <StopOutlined size={18} style={{ color: 'red' }} /> :
                                                     <CheckOutlined size={18} style={{ color: 'green' }} />
                                             }
-                                        </button>
-                                        <button
-                                            className="p-2 text-gray-400 hover:text-red-400 hover:bg-red-400/10 rounded-lg transition-all transform hover:scale-110"
-                                            onClick={() => handleDelete(user.user_id, user.full_name)}
-                                            disabled={isDeleting}
-                                        >
-                                            <DeleteOutlined size={18} />
                                         </button>
                                     </div>
                                 </td>
