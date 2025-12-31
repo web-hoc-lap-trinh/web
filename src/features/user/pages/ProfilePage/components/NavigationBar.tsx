@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useMemo } from "react";
 import { Avatar, Divider } from "antd";
 import { UserOutlined, LogoutOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
@@ -9,38 +9,15 @@ type Props = {
     setActiveTab: (tab: "profile" | "submissions") => void;
 };
 
-interface StoredUser {
-    full_name?: string;
-    email?: string;
-    avatar_url?: string; 
-}
-
 export default function NavigationBar({ activeTab, setActiveTab }: Props) {
     const navigate = useNavigate();
-    const { logout } = useAuth();
-    const [userInfo, setUserInfo] = useState({
-        name: "Người dùng",
-        handle: "@user",
-        avatar: ""
-    });
+    const { logout, user } = useAuth();
 
-    useEffect(() => {
-        try {
-            const storedString = localStorage.getItem("user");
-
-            if (storedString) {
-                const user: StoredUser = JSON.parse(storedString);
-
-                setUserInfo({
-                    name: user.full_name || "Người dùng",
-                    handle: user.email ? `@${user.email.split('@')[0]}` : "@user",
-                    avatar: user.avatar_url || ""
-                });
-            }
-        } catch (error) {
-            console.error("Lỗi đọc localStorage:", error);
-        }
-    }, []);
+    const userInfo = useMemo(() => ({
+        name: user?.full_name || "Người dùng",
+        handle: user?.email ? `@${user.email.split('@')[0]}` : "@user",
+        avatar: user?.avatar_url || "",
+    }), [user?.full_name, user?.email, user?.avatar_url]);
 
     return (
         <div className="bg-white/5 border border-white/10 rounded-2xl p-6 backdrop-blur-md shadow-xl">
